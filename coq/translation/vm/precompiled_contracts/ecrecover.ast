@@ -1,0 +1,306 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) ECRECOVER PRECOMPILED CONTRACT\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the ECRECOVER precompiled contract.\n')),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.elliptic_curve',
+            names=[
+                alias(name='SECP256K1N'),
+                alias(name='secp256k1_recover')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32'),
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.byte',
+            names=[
+                alias(name='left_pad_zero_bytes')],
+            level=0),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Evm')],
+            level=3),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_ECRECOVER'),
+                alias(name='charge_gas')],
+            level=3),
+        ImportFrom(
+            module='vm.memory',
+            names=[
+                alias(name='buffer_read')],
+            level=3),
+        FunctionDef(
+            name='ecrecover',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decrypts the address using elliptic curve DSA recovery mechanism and writes\n    the address to output.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='data',
+                        ctx=Load())),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_ECRECOVER', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='message_hash_bytes', ctx=Store())],
+                    value=Call(
+                        func=Name(id='buffer_read', ctx=Load()),
+                        args=[
+                            Name(id='data', ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Constant(value=32)],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='message_hash', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Hash32', ctx=Load()),
+                        args=[
+                            Name(id='message_hash_bytes', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='v', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='r', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=64)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='s', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=96)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Name(id='v', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=27)],
+                                        keywords=[])]),
+                            Compare(
+                                left=Name(id='v', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=28)],
+                                        keywords=[])])]),
+                    body=[
+                        Return()],
+                    orelse=[]),
+                If(
+                    test=BoolOp(
+                        op=Or(),
+                        values=[
+                            Compare(
+                                left=Call(
+                                    func=Name(id='U256', ctx=Load()),
+                                    args=[
+                                        Constant(value=0)],
+                                    keywords=[]),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Name(id='r', ctx=Load())]),
+                            Compare(
+                                left=Name(id='r', ctx=Load()),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Name(id='SECP256K1N', ctx=Load())])]),
+                    body=[
+                        Return()],
+                    orelse=[]),
+                If(
+                    test=BoolOp(
+                        op=Or(),
+                        values=[
+                            Compare(
+                                left=Call(
+                                    func=Name(id='U256', ctx=Load()),
+                                    args=[
+                                        Constant(value=0)],
+                                    keywords=[]),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Name(id='s', ctx=Load())]),
+                            Compare(
+                                left=Name(id='s', ctx=Load()),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Name(id='SECP256K1N', ctx=Load())])]),
+                    body=[
+                        Return()],
+                    orelse=[]),
+                Try(
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='public_key', ctx=Store())],
+                            value=Call(
+                                func=Name(id='secp256k1_recover', ctx=Load()),
+                                args=[
+                                    Name(id='r', ctx=Load()),
+                                    Name(id='s', ctx=Load()),
+                                    BinOp(
+                                        left=Name(id='v', ctx=Load()),
+                                        op=Sub(),
+                                        right=Call(
+                                            func=Name(id='U256', ctx=Load()),
+                                            args=[
+                                                Constant(value=27)],
+                                            keywords=[])),
+                                    Name(id='message_hash', ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            body=[
+                                Return()])],
+                    orelse=[],
+                    finalbody=[]),
+                Assign(
+                    targets=[
+                        Name(id='address', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Name(id='keccak256', ctx=Load()),
+                            args=[
+                                Name(id='public_key', ctx=Load())],
+                            keywords=[]),
+                        slice=Slice(
+                            lower=Constant(value=12),
+                            upper=Constant(value=32)),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='padded_address', ctx=Store())],
+                    value=Call(
+                        func=Name(id='left_pad_zero_bytes', ctx=Load()),
+                        args=[
+                            Name(id='address', ctx=Load()),
+                            Constant(value=32)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='output',
+                            ctx=Store())],
+                    value=Name(id='padded_address', ctx=Load()))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

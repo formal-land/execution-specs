@@ -1,0 +1,632 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Memory Instructions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementations of the EVM Memory instructions.\n')),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.numeric',
+            names=[
+                alias(name='ceil32')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=2),
+        ImportFrom(
+            module='gas',
+            names=[
+                alias(name='GAS_BASE'),
+                alias(name='GAS_COPY'),
+                alias(name='GAS_VERY_LOW'),
+                alias(name='calculate_gas_extend_memory'),
+                alias(name='charge_gas')],
+            level=2),
+        ImportFrom(
+            module='memory',
+            names=[
+                alias(name='memory_read_bytes'),
+                alias(name='memory_write')],
+            level=2),
+        ImportFrom(
+            module='stack',
+            names=[
+                alias(name='pop'),
+                alias(name='push')],
+            level=2),
+        FunctionDef(
+            name='mstore',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Stores a word to memory.\n    This also expands the memory, if the memory is\n    insufficient to store the word.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='start_position', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[]),
+                            attr='to_be_bytes32',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='extend_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='calculate_gas_extend_memory', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='start_position', ctx=Load()),
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='value', ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[])],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=Name(id='GAS_VERY_LOW', ctx=Load()),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='extend_memory', ctx=Load()),
+                                    attr='cost',
+                                    ctx=Load()))],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='memory',
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Attribute(
+                            value=Name(id='extend_memory', ctx=Load()),
+                            attr='expand_by',
+                            ctx=Load()))),
+                Expr(
+                    value=Call(
+                        func=Name(id='memory_write', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            Name(id='start_position', ctx=Load()),
+                            Name(id='value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='mstore8',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Stores a byte to memory.\n    This also expands the memory, if the memory is\n    insufficient to store the word.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='start_position', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='extend_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='calculate_gas_extend_memory', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='start_position', ctx=Load()),
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=1)],
+                                                keywords=[])],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=Name(id='GAS_VERY_LOW', ctx=Load()),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='extend_memory', ctx=Load()),
+                                    attr='cost',
+                                    ctx=Load()))],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='memory',
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Attribute(
+                            value=Name(id='extend_memory', ctx=Load()),
+                            attr='expand_by',
+                            ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='normalized_bytes_value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Bytes', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    BinOp(
+                                        left=Name(id='value', ctx=Load()),
+                                        op=BitAnd(),
+                                        right=Call(
+                                            func=Name(id='U256', ctx=Load()),
+                                            args=[
+                                                Constant(value=255)],
+                                            keywords=[]))],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='memory_write', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            Name(id='start_position', ctx=Load()),
+                            Name(id='normalized_bytes_value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='mload',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Load word from memory.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='start_position', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='extend_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='calculate_gas_extend_memory', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='start_position', ctx=Load()),
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=32)],
+                                                keywords=[])],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=Name(id='GAS_VERY_LOW', ctx=Load()),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='extend_memory', ctx=Load()),
+                                    attr='cost',
+                                    ctx=Load()))],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='memory',
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Attribute(
+                            value=Name(id='extend_memory', ctx=Load()),
+                            attr='expand_by',
+                            ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='memory_read_bytes', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='memory',
+                                        ctx=Load()),
+                                    Name(id='start_position', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Name(id='value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='msize',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Push the size of active memory in bytes onto the stack.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='evm', ctx=Load()),
+                                                attr='memory',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='mcopy',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Copy the bytes in memory from one location to another.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='destination', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='source', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='length', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='words', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Name(id='ceil32', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Name(id='length', ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        op=FloorDiv(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=32)],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='copy_gas_cost', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='GAS_COPY', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='words', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='extend_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='calculate_gas_extend_memory', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='source', ctx=Load()),
+                                            Name(id='length', ctx=Load())],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='destination', ctx=Load()),
+                                            Name(id='length', ctx=Load())],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=BinOp(
+                                    left=Name(id='GAS_VERY_LOW', ctx=Load()),
+                                    op=Add(),
+                                    right=Name(id='copy_gas_cost', ctx=Load())),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='extend_memory', ctx=Load()),
+                                    attr='cost',
+                                    ctx=Load()))],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='memory',
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Attribute(
+                            value=Name(id='extend_memory', ctx=Load()),
+                            attr='expand_by',
+                            ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='memory_read_bytes', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            Name(id='source', ctx=Load()),
+                            Name(id='length', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='memory_write', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            Name(id='destination', ctx=Load()),
+                            Name(id='value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])
