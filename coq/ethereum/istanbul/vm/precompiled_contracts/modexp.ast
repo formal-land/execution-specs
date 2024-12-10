@@ -1,0 +1,631 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) MODEXP PRECOMPILED CONTRACT\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the `MODEXP` precompiled contract.\n')),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Evm')],
+            level=3),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='charge_gas')],
+            level=3),
+        ImportFrom(
+            module='memory',
+            names=[
+                alias(name='buffer_read')],
+            level=2),
+        Assign(
+            targets=[
+                Name(id='GQUADDIVISOR', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=20)],
+                keywords=[])),
+        FunctionDef(
+            name='modexp',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculates `(base**exp) % modulus` for arbitrary sized `base`, `exp` and.\n    `modulus`. The return value is the same length as the modulus.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='data',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='base_length', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='exp_length', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='modulus_length', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U256', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=64)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=32)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='exp_start', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Name(id='U256', ctx=Load()),
+                            args=[
+                                Constant(value=96)],
+                            keywords=[]),
+                        op=Add(),
+                        right=Name(id='base_length', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='exp_head', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Uint', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Name(id='exp_start', ctx=Load()),
+                                    Call(
+                                        func=Name(id='min', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=32)],
+                                                keywords=[]),
+                                            Name(id='exp_length', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Call(
+                                func=Name(id='gas_cost', ctx=Load()),
+                                args=[
+                                    Name(id='base_length', ctx=Load()),
+                                    Name(id='modulus_length', ctx=Load()),
+                                    Name(id='exp_length', ctx=Load()),
+                                    Name(id='exp_head', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Name(id='base_length', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            Compare(
+                                left=Name(id='modulus_length', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='output',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Bytes', ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Return()],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='base', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Uint', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=96)],
+                                        keywords=[]),
+                                    Name(id='base_length', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='exp', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Uint', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Name(id='exp_start', ctx=Load()),
+                                    Name(id='exp_length', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='modulus_start', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='exp_start', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='exp_length', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='modulus', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Uint', ctx=Load()),
+                            attr='from_be_bytes',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='buffer_read', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Name(id='modulus_start', ctx=Load()),
+                                    Name(id='modulus_length', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='modulus', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='output',
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Bytes', ctx=Load()),
+                                    args=[
+                                        Constant(value=b'\x00')],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=Name(id='modulus_length', ctx=Load())))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='output',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='pow', ctx=Load()),
+                                        args=[
+                                            Name(id='base', ctx=Load()),
+                                            Name(id='exp', ctx=Load()),
+                                            Name(id='modulus', ctx=Load())],
+                                        keywords=[]),
+                                    attr='to_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Name(id='modulus_length', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value='big')],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='complexity',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='base_length',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='modulus_length',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Estimate the complexity of performing a modular exponentiation.\n\n    Parameters\n    ----------\n\n    base_length :\n        Length of the array representing the base integer.\n\n    modulus_length :\n        Length of the array representing the modulus integer.\n\n    Returns\n    -------\n\n    complexity : `Uint`\n        Complexity of performing the operation.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='max_length', ctx=Store())],
+                    value=Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Name(id='base_length', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Name(id='modulus_length', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='max_length', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=64)],
+                                keywords=[])]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Name(id='max_length', ctx=Load()),
+                                op=Pow(),
+                                right=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=2)],
+                                    keywords=[])))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='max_length', ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=1024)],
+                                        keywords=[])]),
+                            body=[
+                                Return(
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='max_length', ctx=Load()),
+                                                    op=Pow(),
+                                                    right=Call(
+                                                        func=Name(id='Uint', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=2)],
+                                                        keywords=[])),
+                                                op=FloorDiv(),
+                                                right=Call(
+                                                    func=Name(id='Uint', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=4)],
+                                                    keywords=[])),
+                                            op=Add(),
+                                            right=BinOp(
+                                                left=Call(
+                                                    func=Name(id='Uint', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=96)],
+                                                    keywords=[]),
+                                                op=Mult(),
+                                                right=Name(id='max_length', ctx=Load()))),
+                                        op=Sub(),
+                                        right=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Constant(value=3072)],
+                                            keywords=[])))],
+                            orelse=[
+                                Return(
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='max_length', ctx=Load()),
+                                                    op=Pow(),
+                                                    right=Call(
+                                                        func=Name(id='Uint', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=2)],
+                                                        keywords=[])),
+                                                op=FloorDiv(),
+                                                right=Call(
+                                                    func=Name(id='Uint', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=16)],
+                                                    keywords=[])),
+                                            op=Add(),
+                                            right=BinOp(
+                                                left=Call(
+                                                    func=Name(id='Uint', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=480)],
+                                                    keywords=[]),
+                                                op=Mult(),
+                                                right=Name(id='max_length', ctx=Load()))),
+                                        op=Sub(),
+                                        right=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Constant(value=199680)],
+                                            keywords=[])))])])],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='iterations',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='exponent_length',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='exponent_head',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculate the number of iterations required to perform a modular\n    exponentiation.\n\n    Parameters\n    ----------\n\n    exponent_length :\n        Length of the array representing the exponent integer.\n\n    exponent_head :\n        First 32 bytes of the exponent (with leading zero padding if it is\n        shorter than 32 bytes), as an unsigned integer.\n\n    Returns\n    -------\n\n    iterations : `Uint`\n        Number of iterations.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='exponent_length', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Constant(value=32)],
+                                keywords=[])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='adjusted_exp_length', ctx=Store())],
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='max', ctx=Load()),
+                                        args=[
+                                            Constant(value=0),
+                                            BinOp(
+                                                left=Call(
+                                                    func=Name(id='int', ctx=Load()),
+                                                    args=[
+                                                        Call(
+                                                            func=Attribute(
+                                                                value=Name(id='exponent_head', ctx=Load()),
+                                                                attr='bit_length',
+                                                                ctx=Load()),
+                                                            args=[],
+                                                            keywords=[])],
+                                                    keywords=[]),
+                                                op=Sub(),
+                                                right=Constant(value=1))],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='adjusted_exp_length', ctx=Store())],
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value=8),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Call(
+                                                    func=Name(id='int', ctx=Load()),
+                                                    args=[
+                                                        Name(id='exponent_length', ctx=Load())],
+                                                    keywords=[]),
+                                                op=Sub(),
+                                                right=Constant(value=32))),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='max', ctx=Load()),
+                                            args=[
+                                                Constant(value=0),
+                                                BinOp(
+                                                    left=Call(
+                                                        func=Name(id='int', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='exponent_head', ctx=Load()),
+                                                                    attr='bit_length',
+                                                                    ctx=Load()),
+                                                                args=[],
+                                                                keywords=[])],
+                                                        keywords=[]),
+                                                    op=Sub(),
+                                                    right=Constant(value=1))],
+                                            keywords=[]))],
+                                keywords=[]))]),
+                Return(
+                    value=Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Name(id='adjusted_exp_length', ctx=Load()),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='gas_cost',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='base_length',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='modulus_length',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='exponent_length',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='exponent_head',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculate the gas cost of performing a modular exponentiation.\n\n    Parameters\n    ----------\n\n    base_length :\n        Length of the array representing the base integer.\n\n    modulus_length :\n        Length of the array representing the modulus integer.\n\n    exponent_length :\n        Length of the array representing the exponent integer.\n\n    exponent_head :\n        First 32 bytes of the exponent (with leading zero padding if it is\n        shorter than 32 bytes), as an unsigned integer.\n\n    Returns\n    -------\n\n    gas_cost : `Uint`\n        Gas required for performing the operation.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='multiplication_complexity', ctx=Store())],
+                    value=Call(
+                        func=Name(id='complexity', ctx=Load()),
+                        args=[
+                            Name(id='base_length', ctx=Load()),
+                            Name(id='modulus_length', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='iteration_count', ctx=Store())],
+                    value=Call(
+                        func=Name(id='iterations', ctx=Load()),
+                        args=[
+                            Name(id='exponent_length', ctx=Load()),
+                            Name(id='exponent_head', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='cost', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='multiplication_complexity', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='iteration_count', ctx=Load()))),
+                AugAssign(
+                    target=Name(id='cost', ctx=Store()),
+                    op=FloorDiv(),
+                    value=Name(id='GQUADDIVISOR', ctx=Load())),
+                Return(
+                    value=Name(id='cost', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load()))],
+    type_ignores=[])

@@ -1,0 +1,18 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe Shanghai fork brings staking withdrawals to the execution layer, adds a\npush-zero EVM instruction, limits the maximum size of initialization\nbytecode, and deprecates the self-destruct EVM instruction.\n')),
+        ImportFrom(
+            module='ethereum.fork_criteria',
+            names=[
+                alias(name='ByTimestamp')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='FORK_CRITERIA', ctx=Store())],
+            value=Call(
+                func=Name(id='ByTimestamp', ctx=Load()),
+                args=[
+                    Constant(value=1681338455)],
+                keywords=[]))],
+    type_ignores=[])

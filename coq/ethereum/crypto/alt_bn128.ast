@@ -1,0 +1,1113 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe alt_bn128 curve\n^^^^^^^^^^^^^^^^^^^\n')),
+        ImportFrom(
+            names=[
+                alias(name='elliptic_curve'),
+                alias(name='finite_field')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='ALT_BN128_PRIME', ctx=Store())],
+            value=Constant(value=21888242871839275222246405745257275088696311157297823662689037894645226208583)),
+        Assign(
+            targets=[
+                Name(id='ALT_BN128_CURVE_ORDER', ctx=Store())],
+            value=Constant(value=21888242871839275222246405745257275088548364400416034343698204186575808495617)),
+        Assign(
+            targets=[
+                Name(id='ATE_PAIRING_COUNT', ctx=Store())],
+            value=Constant(value=29793968203157093289)),
+        Assign(
+            targets=[
+                Name(id='ATE_PAIRING_COUNT_BITS', ctx=Store())],
+            value=Constant(value=63)),
+        ClassDef(
+            name='BNF',
+            bases=[
+                Attribute(
+                    value=Name(id='finite_field', ctx=Load()),
+                    attr='PrimeField',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The prime field over which the alt_bn128 curve is defined.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='PRIME', ctx=Store())],
+                    value=Name(id='ALT_BN128_PRIME', ctx=Load()))],
+            decorator_list=[]),
+        ClassDef(
+            name='BNP',
+            bases=[
+                Attribute(
+                    value=Name(id='elliptic_curve', ctx=Load()),
+                    attr='EllipticCurve',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The alt_bn128 curve.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='FIELD', ctx=Store())],
+                    value=Name(id='BNF', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='A', ctx=Store())],
+                    value=Call(
+                        func=Name(id='BNF', ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='B', ctx=Store())],
+                    value=Call(
+                        func=Name(id='BNF', ctx=Load()),
+                        args=[
+                            Constant(value=3)],
+                        keywords=[]))],
+            decorator_list=[]),
+        ClassDef(
+            name='BNF2',
+            bases=[
+                Attribute(
+                    value=Name(id='finite_field', ctx=Load()),
+                    attr='GaloisField',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    `BNF` extended with a square root of 1 (`i`).\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='PRIME', ctx=Store())],
+                    value=Name(id='ALT_BN128_PRIME', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='MODULUS', ctx=Store())],
+                    value=Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=0)],
+                        ctx=Load())),
+                AnnAssign(
+                    target=Name(id='i', ctx=Store()),
+                    annotation=Constant(value='BNF2'),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='i_plus_9', ctx=Store()),
+                    annotation=Constant(value='BNF2'),
+                    simple=1)],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF2', ctx=Load()),
+                    attr='FROBENIUS_COEFFICIENTS',
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='BNF2', ctx=Load()),
+                    attr='calculate_frobenius_coefficients',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF2', ctx=Load()),
+                    attr='i',
+                    ctx=Store())],
+            value=Call(
+                func=Name(id='BNF2', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=0),
+                            Constant(value=1)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF2', ctx=Load()),
+                    attr='i_plus_9',
+                    ctx=Store())],
+            value=Call(
+                func=Name(id='BNF2', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=9),
+                            Constant(value=1)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        ClassDef(
+            name='BNP2',
+            bases=[
+                Attribute(
+                    value=Name(id='elliptic_curve', ctx=Load()),
+                    attr='EllipticCurve',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A twist of `BNP`. This is actually the same curve as `BNP` under a change\n    of variable, but that change of variable is only possible over the larger\n    field `BNP12`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='FIELD', ctx=Store())],
+                    value=Name(id='BNF2', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='A', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='BNF2', ctx=Load()),
+                            attr='zero',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='B', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='BNF2', ctx=Load()),
+                                attr='from_int',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=3)],
+                            keywords=[]),
+                        op=Div(),
+                        right=BinOp(
+                            left=Attribute(
+                                value=Name(id='BNF2', ctx=Load()),
+                                attr='i',
+                                ctx=Load()),
+                            op=Add(),
+                            right=Call(
+                                func=Attribute(
+                                    value=Name(id='BNF2', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=9)],
+                                keywords=[]))))],
+            decorator_list=[]),
+        ClassDef(
+            name='BNF12',
+            bases=[
+                Attribute(
+                    value=Name(id='finite_field', ctx=Load()),
+                    attr='GaloisField',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    `BNF2` extended by adding a 6th root of `9 + i` called `w` (omega).\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='PRIME', ctx=Store())],
+                    value=Name(id='ALT_BN128_PRIME', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='MODULUS', ctx=Store())],
+                    value=Tuple(
+                        elts=[
+                            Constant(value=82),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=18)),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0)],
+                        ctx=Load())),
+                AnnAssign(
+                    target=Name(id='w', ctx=Store()),
+                    annotation=Constant(value='BNF12'),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='i_plus_9', ctx=Store()),
+                    annotation=Constant(value='BNF12'),
+                    simple=1),
+                FunctionDef(
+                    name='__mul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Constant(value='BNF12')),
+                            arg(
+                                arg='right',
+                                annotation=Constant(value='BNF12'))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Multiplication special cased for BNF12.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='mul', ctx=Store())],
+                            value=BinOp(
+                                left=List(
+                                    elts=[
+                                        Constant(value=0)],
+                                    ctx=Load()),
+                                op=Mult(),
+                                right=Constant(value=23))),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=12)],
+                                keywords=[]),
+                            body=[
+                                For(
+                                    target=Name(id='j', ctx=Store()),
+                                    iter=Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            Constant(value=12)],
+                                        keywords=[]),
+                                    body=[
+                                        AugAssign(
+                                            target=Subscript(
+                                                value=Name(id='mul', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Name(id='j', ctx=Load())),
+                                                ctx=Store()),
+                                            op=Add(),
+                                            value=BinOp(
+                                                left=Subscript(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    slice=Name(id='i', ctx=Load()),
+                                                    ctx=Load()),
+                                                op=Mult(),
+                                                right=Subscript(
+                                                    value=Name(id='right', ctx=Load()),
+                                                    slice=Name(id='j', ctx=Load()),
+                                                    ctx=Load())))],
+                                    orelse=[])],
+                            orelse=[]),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=22),
+                                    Constant(value=11),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[]),
+                            body=[
+                                AugAssign(
+                                    target=Subscript(
+                                        value=Name(id='mul', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Sub(),
+                                            right=Constant(value=6)),
+                                        ctx=Store()),
+                                    op=Sub(),
+                                    value=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='mul', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        op=Mult(),
+                                        right=UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=18)))),
+                                AugAssign(
+                                    target=Subscript(
+                                        value=Name(id='mul', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Sub(),
+                                            right=Constant(value=12)),
+                                        ctx=Store()),
+                                    op=Sub(),
+                                    value=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='mul', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        op=Mult(),
+                                        right=Constant(value=82)))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='BNF12', ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='mul', ctx=Load()),
+                                        slice=Slice(
+                                            upper=Constant(value=12)),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value='BNF12'))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF12', ctx=Load()),
+                    attr='FROBENIUS_COEFFICIENTS',
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='BNF12', ctx=Load()),
+                    attr='calculate_frobenius_coefficients',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF12', ctx=Load()),
+                    attr='w',
+                    ctx=Store())],
+            value=Call(
+                func=Name(id='BNF12', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0),
+                            Constant(value=0)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='BNF12', ctx=Load()),
+                    attr='i_plus_9',
+                    ctx=Store())],
+            value=BinOp(
+                left=Attribute(
+                    value=Name(id='BNF12', ctx=Load()),
+                    attr='w',
+                    ctx=Load()),
+                op=Pow(),
+                right=Constant(value=6))),
+        Expr(
+            value=Constant(value='autoapi_noindex')),
+        ClassDef(
+            name='BNP12',
+            bases=[
+                Attribute(
+                    value=Name(id='elliptic_curve', ctx=Load()),
+                    attr='EllipticCurve',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The same curve as `BNP`, but defined over the larger field. This curve has\n    both subgroups of order `ALT_BN128_CURVE_ORDER` and allows pairings to be\n    computed.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='FIELD', ctx=Store())],
+                    value=Name(id='BNF12', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='A', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='BNF12', ctx=Load()),
+                            attr='zero',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='B', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='BNF12', ctx=Load()),
+                            attr='from_int',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3)],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='bnf2_to_bnf12',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='x',
+                        annotation=Name(id='BNF2', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Lift a field element in `BNF2` to `BNF12`.\n    ')),
+                Return(
+                    value=BinOp(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='BNF12', ctx=Load()),
+                                attr='from_int',
+                                ctx=Load()),
+                            args=[
+                                Subscript(
+                                    value=Name(id='x', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load())],
+                            keywords=[]),
+                        op=Add(),
+                        right=BinOp(
+                            left=Call(
+                                func=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='x', ctx=Load()),
+                                        slice=Constant(value=1),
+                                        ctx=Load())],
+                                keywords=[]),
+                            op=Mult(),
+                            right=BinOp(
+                                left=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='i_plus_9',
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Name(id='BNF12', ctx=Load()),
+                                        attr='from_int',
+                                        ctx=Load()),
+                                    args=[
+                                        Constant(value=9)],
+                                    keywords=[])))))],
+            decorator_list=[],
+            returns=Name(id='BNF12', ctx=Load())),
+        FunctionDef(
+            name='bnp_to_bnp12',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='p',
+                        annotation=Name(id='BNP', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Lift a point from `BNP` to `BNP12`.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='BNP12', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='p', ctx=Load()),
+                                                attr='x',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='p', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='BNP12', ctx=Load())),
+        FunctionDef(
+            name='twist',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='p',
+                        annotation=Name(id='BNP2', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Apply to twist to change variables from the curve `BNP2` to `BNP12`.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='BNP12', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='bnf2_to_bnf12', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='p', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=BinOp(
+                                    left=Attribute(
+                                        value=Name(id='BNF12', ctx=Load()),
+                                        attr='w',
+                                        ctx=Load()),
+                                    op=Pow(),
+                                    right=Constant(value=2))),
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='bnf2_to_bnf12', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='p', ctx=Load()),
+                                            attr='y',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=BinOp(
+                                    left=Attribute(
+                                        value=Name(id='BNF12', ctx=Load()),
+                                        attr='w',
+                                        ctx=Load()),
+                                    op=Pow(),
+                                    right=Constant(value=3)))],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='BNP12', ctx=Load())),
+        FunctionDef(
+            name='linefunc',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='p1',
+                        annotation=Name(id='BNP12', ctx=Load())),
+                    arg(
+                        arg='p2',
+                        annotation=Name(id='BNP12', ctx=Load())),
+                    arg(
+                        arg='t',
+                        annotation=Name(id='BNP12', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Evaluate the function defining the line between points `p1` and `p2` at the\n    point `t`. The mathematical significance of this function is that is has\n    divisor `(p1) + (p2) + (p1 + p2) - 3(O)`.\n\n    Note: Abstract mathematical presentations of Miller's algorithm often\n    specify the divisor `(p1) + (p2) - (p1 + p2) - (O)`. This turns out not to\n    matter.\n    ")),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='p1', ctx=Load()),
+                            attr='x',
+                            ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='p2', ctx=Load()),
+                                attr='x',
+                                ctx=Load())]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='lam', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Attribute(
+                                        value=Name(id='p2', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()),
+                                    op=Sub(),
+                                    right=Attribute(
+                                        value=Name(id='p1', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load())),
+                                op=Div(),
+                                right=BinOp(
+                                    left=Attribute(
+                                        value=Name(id='p2', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    op=Sub(),
+                                    right=Attribute(
+                                        value=Name(id='p1', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load())))),
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='lam', ctx=Load()),
+                                    op=Mult(),
+                                    right=BinOp(
+                                        left=Attribute(
+                                            value=Name(id='t', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Attribute(
+                                            value=Name(id='p1', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load()))),
+                                op=Sub(),
+                                right=BinOp(
+                                    left=Attribute(
+                                        value=Name(id='t', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()),
+                                    op=Sub(),
+                                    right=Attribute(
+                                        value=Name(id='p1', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()))))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='p1', ctx=Load()),
+                                    attr='y',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='p2', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='lam', ctx=Store())],
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Call(
+                                                func=Attribute(
+                                                    value=Name(id='BNF12', ctx=Load()),
+                                                    attr='from_int',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value=3)],
+                                                keywords=[]),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Attribute(
+                                                    value=Name(id='p1', ctx=Load()),
+                                                    attr='x',
+                                                    ctx=Load()),
+                                                op=Pow(),
+                                                right=Constant(value=2))),
+                                        op=Div(),
+                                        right=BinOp(
+                                            left=Call(
+                                                func=Attribute(
+                                                    value=Name(id='BNF12', ctx=Load()),
+                                                    attr='from_int',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value=2)],
+                                                keywords=[]),
+                                            op=Mult(),
+                                            right=Attribute(
+                                                value=Name(id='p1', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load())))),
+                                Return(
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Name(id='lam', ctx=Load()),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Attribute(
+                                                    value=Name(id='t', ctx=Load()),
+                                                    attr='x',
+                                                    ctx=Load()),
+                                                op=Sub(),
+                                                right=Attribute(
+                                                    value=Name(id='p1', ctx=Load()),
+                                                    attr='x',
+                                                    ctx=Load()))),
+                                        op=Sub(),
+                                        right=BinOp(
+                                            left=Attribute(
+                                                value=Name(id='t', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load()),
+                                            op=Sub(),
+                                            right=Attribute(
+                                                value=Name(id='p1', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load()))))],
+                            orelse=[
+                                Return(
+                                    value=BinOp(
+                                        left=Attribute(
+                                            value=Name(id='t', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Attribute(
+                                            value=Name(id='p1', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load())))])])],
+            decorator_list=[],
+            returns=Name(id='BNF12', ctx=Load())),
+        FunctionDef(
+            name='miller_loop',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='q',
+                        annotation=Name(id='BNP12', ctx=Load())),
+                    arg(
+                        arg='p',
+                        annotation=Name(id='BNP12', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    The core of the pairing algorithm.\n    ')),
+                If(
+                    test=BoolOp(
+                        op=Or(),
+                        values=[
+                            Compare(
+                                left=Name(id='p', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='BNP12', ctx=Load()),
+                                            attr='point_at_infinity',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])]),
+                            Compare(
+                                left=Name(id='q', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='BNP12', ctx=Load()),
+                                            attr='point_at_infinity',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])])]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='BNF12', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='r', ctx=Store())],
+                    value=Name(id='q', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='f', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='BNF12', ctx=Load()),
+                            attr='from_int',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[])),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='ATE_PAIRING_COUNT_BITS', ctx=Load()),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='f', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='f', ctx=Load()),
+                                    op=Mult(),
+                                    right=Name(id='f', ctx=Load())),
+                                op=Mult(),
+                                right=Call(
+                                    func=Name(id='linefunc', ctx=Load()),
+                                    args=[
+                                        Name(id='r', ctx=Load()),
+                                        Name(id='r', ctx=Load()),
+                                        Name(id='p', ctx=Load())],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='r', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='r', ctx=Load()),
+                                    attr='double',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        If(
+                            test=BinOp(
+                                left=BinOp(
+                                    left=Name(id='ATE_PAIRING_COUNT', ctx=Load()),
+                                    op=Sub(),
+                                    right=Constant(value=1)),
+                                op=BitAnd(),
+                                right=BinOp(
+                                    left=Constant(value=2),
+                                    op=Pow(),
+                                    right=Name(id='i', ctx=Load()))),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='f', ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='f', ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Name(id='linefunc', ctx=Load()),
+                                            args=[
+                                                Name(id='r', ctx=Load()),
+                                                Name(id='q', ctx=Load()),
+                                                Name(id='p', ctx=Load())],
+                                            keywords=[]))),
+                                Assign(
+                                    targets=[
+                                        Name(id='r', ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='r', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='q', ctx=Load())))],
+                            orelse=[])],
+                    orelse=[]),
+                Assert(
+                    test=Compare(
+                        left=Name(id='r', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='q', ctx=Load()),
+                                    attr='mul_by',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Name(id='ATE_PAIRING_COUNT', ctx=Load()),
+                                        op=Sub(),
+                                        right=Constant(value=1))],
+                                keywords=[])])),
+                Assign(
+                    targets=[
+                        Name(id='q1', ctx=Store())],
+                    value=Call(
+                        func=Name(id='BNP12', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='q', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    attr='frobenius',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='q', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()),
+                                    attr='frobenius',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='nq2', ctx=Store())],
+                    value=Call(
+                        func=Name(id='BNP12', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='q1', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    attr='frobenius',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='q1', ctx=Load()),
+                                            attr='y',
+                                            ctx=Load()),
+                                        attr='frobenius',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='f', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='f', ctx=Load()),
+                        op=Mult(),
+                        right=Call(
+                            func=Name(id='linefunc', ctx=Load()),
+                            args=[
+                                Name(id='r', ctx=Load()),
+                                Name(id='q1', ctx=Load()),
+                                Name(id='p', ctx=Load())],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='r', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='r', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='q1', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='f', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='f', ctx=Load()),
+                        op=Mult(),
+                        right=Call(
+                            func=Name(id='linefunc', ctx=Load()),
+                            args=[
+                                Name(id='r', ctx=Load()),
+                                Name(id='nq2', ctx=Load()),
+                                Name(id='p', ctx=Load())],
+                            keywords=[]))),
+                Return(
+                    value=BinOp(
+                        left=Name(id='f', ctx=Load()),
+                        op=Pow(),
+                        right=BinOp(
+                            left=BinOp(
+                                left=BinOp(
+                                    left=Name(id='ALT_BN128_PRIME', ctx=Load()),
+                                    op=Pow(),
+                                    right=Constant(value=12)),
+                                op=Sub(),
+                                right=Constant(value=1)),
+                            op=FloorDiv(),
+                            right=Name(id='ALT_BN128_CURVE_ORDER', ctx=Load()))))],
+            decorator_list=[],
+            returns=Name(id='BNF12', ctx=Load())),
+        FunctionDef(
+            name='pairing',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='q',
+                        annotation=Name(id='BNP2', ctx=Load())),
+                    arg(
+                        arg='p',
+                        annotation=Name(id='BNP', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Compute the pairing of `q` and `p`.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='miller_loop', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='twist', ctx=Load()),
+                                args=[
+                                    Name(id='q', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='bnp_to_bnp12', ctx=Load()),
+                                args=[
+                                    Name(id='p', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='BNF12', ctx=Load()))],
+    type_ignores=[])

@@ -1,0 +1,2259 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\n.. _rlp:\n\nRecursive Length Prefix (RLP) Encoding\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nDefines the serialization and deserialization format used throughout Ethereum.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='astuple'),
+                alias(name='fields'),
+                alias(name='is_dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='ClassVar'),
+                alias(name='Dict'),
+                alias(name='Protocol'),
+                alias(name='Sequence'),
+                alias(name='Tuple'),
+                alias(name='Type'),
+                alias(name='TypeAlias'),
+                alias(name='TypeVar'),
+                alias(name='Union'),
+                alias(name='cast'),
+                alias(name='get_args'),
+                alias(name='get_origin'),
+                alias(name='get_type_hints'),
+                alias(name='overload')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='FixedBytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='FixedUnsigned'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32'),
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.exceptions',
+            names=[
+                alias(name='RLPDecodingError'),
+                alias(name='RLPEncodingError')],
+            level=0),
+        ClassDef(
+            name='RLP',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    [`Protocol`] that describes the requirements to be RLP-encodable.\n\n    [`Protocol`]: https://docs.python.org/3/library/typing.html#typing.Protocol\n    ')),
+                AnnAssign(
+                    target=Name(id='__dataclass_fields__', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='ClassVar', ctx=Load()),
+                        slice=Name(id='Dict', ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[]),
+        AnnAssign(
+            target=Name(id='Simple', ctx=Store()),
+            annotation=Name(id='TypeAlias', ctx=Load()),
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Constant(value='Simple'),
+                            ctx=Load()),
+                        Name(id='bytes', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()),
+            simple=1),
+        AnnAssign(
+            target=Name(id='Extended', ctx=Store()),
+            annotation=Name(id='TypeAlias', ctx=Load()),
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Constant(value='Extended'),
+                            ctx=Load()),
+                        Name(id='bytearray', ctx=Load()),
+                        Name(id='bytes', ctx=Load()),
+                        Name(id='Uint', ctx=Load()),
+                        Name(id='FixedUnsigned', ctx=Load()),
+                        Name(id='str', ctx=Load()),
+                        Name(id='bool', ctx=Load()),
+                        Name(id='RLP', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()),
+            simple=1),
+        FunctionDef(
+            name='encode',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='raw_data',
+                        annotation=Name(id='Extended', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encodes `raw_data` into a sequence of bytes using RLP.\n\n    Parameters\n    ----------\n    raw_data :\n        A `Bytes`, `Uint`, `Uint256` or sequence of `RLP` encodable\n        objects.\n\n    Returns\n    -------\n    encoded : `ethereum.base_types.Bytes`\n        The RLP encoded bytes representing `raw_data`.\n    ')),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='raw_data', ctx=Load()),
+                            Name(id='Sequence', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='raw_data', ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='bytearray', ctx=Load()),
+                                            Name(id='bytes', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='encode_bytes', ctx=Load()),
+                                        args=[
+                                            Name(id='raw_data', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='raw_data', ctx=Load()),
+                                            Name(id='str', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Return(
+                                            value=Call(
+                                                func=Name(id='encode_bytes', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='raw_data', ctx=Load()),
+                                                            attr='encode',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Return(
+                                            value=Call(
+                                                func=Name(id='encode_sequence', ctx=Load()),
+                                                args=[
+                                                    Name(id='raw_data', ctx=Load())],
+                                                keywords=[]))])])],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='raw_data', ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='Uint', ctx=Load()),
+                                            Name(id='FixedUnsigned', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='encode', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='raw_data', ctx=Load()),
+                                                    attr='to_be_bytes',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='raw_data', ctx=Load()),
+                                            Name(id='bool', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        If(
+                                            test=Name(id='raw_data', ctx=Load()),
+                                            body=[
+                                                Return(
+                                                    value=Call(
+                                                        func=Name(id='encode_bytes', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=b'\x01')],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                Return(
+                                                    value=Call(
+                                                        func=Name(id='encode_bytes', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=b'')],
+                                                        keywords=[]))])],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Name(id='is_dataclass', ctx=Load()),
+                                                args=[
+                                                    Name(id='raw_data', ctx=Load())],
+                                                keywords=[]),
+                                            body=[
+                                                Return(
+                                                    value=Call(
+                                                        func=Name(id='encode', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Name(id='astuple', ctx=Load()),
+                                                                args=[
+                                                                    Name(id='raw_data', ctx=Load())],
+                                                                keywords=[])],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                Raise(
+                                                    exc=Call(
+                                                        func=Name(id='RLPEncodingError', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Attribute(
+                                                                    value=Constant(value='RLP Encoding of type {} is not supported'),
+                                                                    attr='format',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Call(
+                                                                        func=Name(id='type', ctx=Load()),
+                                                                        args=[
+                                                                            Name(id='raw_data', ctx=Load())],
+                                                                        keywords=[])],
+                                                                keywords=[])],
+                                                        keywords=[]))])])])])],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='encode_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='raw_bytes',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encodes `raw_bytes`, a sequence of bytes, using RLP.\n\n    Parameters\n    ----------\n    raw_bytes :\n        Bytes to encode with RLP.\n\n    Returns\n    -------\n    encoded : `ethereum.base_types.Bytes`\n        The RLP encoded bytes representing `raw_bytes`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='len_raw_data', ctx=Store())],
+                    value=Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='raw_bytes', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Name(id='len_raw_data', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=1)]),
+                            Compare(
+                                left=Subscript(
+                                    value=Name(id='raw_bytes', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=128)])]),
+                    body=[
+                        Return(
+                            value=Name(id='raw_bytes', ctx=Load()))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='len_raw_data', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=56)]),
+                            body=[
+                                Return(
+                                    value=BinOp(
+                                        left=Call(
+                                            func=Name(id='bytes', ctx=Load()),
+                                            args=[
+                                                List(
+                                                    elts=[
+                                                        BinOp(
+                                                            left=Constant(value=128),
+                                                            op=Add(),
+                                                            right=Name(id='len_raw_data', ctx=Load()))],
+                                                    ctx=Load())],
+                                            keywords=[]),
+                                        op=Add(),
+                                        right=Name(id='raw_bytes', ctx=Load())))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='len_raw_data_as_be', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Name(id='len_raw_data', ctx=Load())],
+                                                keywords=[]),
+                                            attr='to_be_bytes',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Return(
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Call(
+                                                func=Name(id='bytes', ctx=Load()),
+                                                args=[
+                                                    List(
+                                                        elts=[
+                                                            BinOp(
+                                                                left=Constant(value=183),
+                                                                op=Add(),
+                                                                right=Call(
+                                                                    func=Name(id='len', ctx=Load()),
+                                                                    args=[
+                                                                        Name(id='len_raw_data_as_be', ctx=Load())],
+                                                                    keywords=[]))],
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            op=Add(),
+                                            right=Name(id='len_raw_data_as_be', ctx=Load())),
+                                        op=Add(),
+                                        right=Name(id='raw_bytes', ctx=Load())))])])],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='encode_sequence',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='raw_sequence',
+                        annotation=Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Name(id='Extended', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encodes a list of RLP encodable objects (`raw_sequence`) using RLP.\n\n    Parameters\n    ----------\n    raw_sequence :\n            Sequence of RLP encodable objects.\n\n    Returns\n    -------\n    encoded : `ethereum.base_types.Bytes`\n        The RLP encoded bytes representing `raw_sequence`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='joined_encodings', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_joined_encodings', ctx=Load()),
+                        args=[
+                            Name(id='raw_sequence', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='len_joined_encodings', ctx=Store())],
+                    value=Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='joined_encodings', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='len_joined_encodings', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=56)]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Bytes', ctx=Load()),
+                                    args=[
+                                        List(
+                                            elts=[
+                                                BinOp(
+                                                    left=Constant(value=192),
+                                                    op=Add(),
+                                                    right=Name(id='len_joined_encodings', ctx=Load()))],
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Add(),
+                                right=Name(id='joined_encodings', ctx=Load())))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='len_joined_encodings_as_be', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Name(id='len_joined_encodings', ctx=Load())],
+                                        keywords=[]),
+                                    attr='to_be_bytes',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Call(
+                                        func=Name(id='Bytes', ctx=Load()),
+                                        args=[
+                                            List(
+                                                elts=[
+                                                    BinOp(
+                                                        left=Constant(value=247),
+                                                        op=Add(),
+                                                        right=Call(
+                                                            func=Name(id='len', ctx=Load()),
+                                                            args=[
+                                                                Name(id='len_joined_encodings_as_be', ctx=Load())],
+                                                            keywords=[]))],
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    op=Add(),
+                                    right=Name(id='len_joined_encodings_as_be', ctx=Load())),
+                                op=Add(),
+                                right=Name(id='joined_encodings', ctx=Load())))])],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='get_joined_encodings',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='raw_sequence',
+                        annotation=Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Name(id='Extended', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain concatenation of rlp encoding for each item in the sequence\n    raw_sequence.\n\n    Parameters\n    ----------\n    raw_sequence :\n        Sequence to encode with RLP.\n\n    Returns\n    -------\n    joined_encodings : `ethereum.base_types.Bytes`\n        The concatenated RLP encoded bytes for each item in sequence\n        raw_sequence.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Constant(value=b''),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            GeneratorExp(
+                                elt=Call(
+                                    func=Name(id='encode', ctx=Load()),
+                                    args=[
+                                        Name(id='item', ctx=Load())],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='item', ctx=Store()),
+                                        iter=Name(id='raw_sequence', ctx=Load()),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='decode',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='encoded_data',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decodes an integer, byte sequence, or list of RLP encodable objects\n    from the byte sequence `encoded_data`, using RLP.\n\n    Parameters\n    ----------\n    encoded_data :\n        A sequence of bytes, in RLP form.\n\n    Returns\n    -------\n    decoded_data : `RLP`\n        Object decoded from `encoded_data`.\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='encoded_data', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='RLPDecodingError', ctx=Load()),
+                                args=[
+                                    Constant(value='Cannot decode empty bytestring')],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Subscript(
+                            value=Name(id='encoded_data', ctx=Load()),
+                            slice=Constant(value=0),
+                            ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Constant(value=191)]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='decode_to_bytes', ctx=Load()),
+                                args=[
+                                    Name(id='encoded_data', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        Return(
+                            value=Call(
+                                func=Name(id='decode_to_sequence', ctx=Load()),
+                                args=[
+                                    Name(id='encoded_data', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Name(id='Simple', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='U', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='U')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Name(id='Extended', ctx=Load()))])),
+        FunctionDef(
+            name='decode_to',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='cls',
+                        annotation=Subscript(
+                            value=Name(id='Type', ctx=Load()),
+                            slice=Name(id='U', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='encoded_data',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decode the bytes in `encoded_data` to an object of type `cls`. `cls` can be\n    a `Bytes` subclass, a dataclass, `Uint`, `U256` or `Tuple[cls]`.\n\n    Parameters\n    ----------\n    cls: `Type[U]`\n        The type to decode to.\n    encoded_data :\n        A sequence of bytes, in RLP form.\n\n    Returns\n    -------\n    decoded_data : `U`\n        Object decoded from `encoded_data`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='decoded', ctx=Store())],
+                    value=Call(
+                        func=Name(id='decode', ctx=Load()),
+                        args=[
+                            Name(id='encoded_data', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='_deserialize_to', ctx=Load()),
+                        args=[
+                            Name(id='cls', ctx=Load()),
+                            Name(id='decoded', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='class_',
+                        annotation=Subscript(
+                            value=Name(id='Type', ctx=Load()),
+                            slice=Name(id='U', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Pass()],
+            decorator_list=[
+                Name(id='overload', ctx=Load())],
+            returns=Name(id='U', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='class_',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Pass()],
+            decorator_list=[
+                Name(id='overload', ctx=Load())],
+            returns=Name(id='Extended', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='class_',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='isinstance', ctx=Load()),
+                            args=[
+                                Name(id='class_', ctx=Load()),
+                                Name(id='type', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='_deserialize_to_annotation', ctx=Load()),
+                                args=[
+                                    Name(id='class_', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='is_dataclass', ctx=Load()),
+                                args=[
+                                    Name(id='class_', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='_deserialize_to_dataclass', ctx=Load()),
+                                        args=[
+                                            Name(id='class_', ctx=Load()),
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='issubclass', ctx=Load()),
+                                        args=[
+                                            Name(id='class_', ctx=Load()),
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='Uint', ctx=Load()),
+                                                    Name(id='FixedUnsigned', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Return(
+                                            value=Call(
+                                                func=Name(id='_deserialize_to_uint', ctx=Load()),
+                                                args=[
+                                                    Name(id='class_', ctx=Load()),
+                                                    Name(id='value', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Name(id='issubclass', ctx=Load()),
+                                                args=[
+                                                    Name(id='class_', ctx=Load()),
+                                                    Tuple(
+                                                        elts=[
+                                                            Name(id='Bytes', ctx=Load()),
+                                                            Name(id='FixedBytes', ctx=Load())],
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            body=[
+                                                Return(
+                                                    value=Call(
+                                                        func=Name(id='_deserialize_to_bytes', ctx=Load()),
+                                                        args=[
+                                                            Name(id='class_', ctx=Load()),
+                                                            Name(id='value', ctx=Load())],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                If(
+                                                    test=Compare(
+                                                        left=Name(id='class_', ctx=Load()),
+                                                        ops=[
+                                                            Is()],
+                                                        comparators=[
+                                                            Name(id='bool', ctx=Load())]),
+                                                    body=[
+                                                        Return(
+                                                            value=Call(
+                                                                func=Name(id='_deserialize_to_bool', ctx=Load()),
+                                                                args=[
+                                                                    Name(id='value', ctx=Load())],
+                                                                keywords=[]))],
+                                                    orelse=[
+                                                        Raise(
+                                                            exc=Call(
+                                                                func=Name(id='NotImplementedError', ctx=Load()),
+                                                                args=[
+                                                                    Name(id='class_', ctx=Load())],
+                                                                keywords=[]))])])])])])],
+            decorator_list=[],
+            returns=Name(id='Extended', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_dataclass',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='cls',
+                        annotation=Subscript(
+                            value=Name(id='Type', ctx=Load()),
+                            slice=Name(id='U', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='decoded',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assert(
+                    test=Call(
+                        func=Name(id='is_dataclass', ctx=Load()),
+                        args=[
+                            Name(id='cls', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='hints', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_type_hints', ctx=Load()),
+                        args=[
+                            Name(id='cls', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='target_fields', ctx=Store())],
+                    value=Call(
+                        func=Name(id='fields', ctx=Load()),
+                        args=[
+                            Name(id='cls', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='decoded', ctx=Load()),
+                            Name(id='bytes', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='RLPDecodingError', ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='got `bytes` while decoding `'),
+                                            FormattedValue(
+                                                value=Attribute(
+                                                    value=Name(id='cls', ctx=Load()),
+                                                    attr='__name__',
+                                                    ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='`')])],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='target_fields', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='decoded', ctx=Load())],
+                                keywords=[])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='name', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='cls', ctx=Load()),
+                                attr='__name__',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='actual', ctx=Store())],
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='decoded', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='expected', ctx=Store())],
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='target_fields', ctx=Load())],
+                                keywords=[])),
+                        Raise(
+                            exc=Call(
+                                func=Name(id='RLPDecodingError', ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='`'),
+                                            FormattedValue(
+                                                value=Name(id='name', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='` needs '),
+                                            FormattedValue(
+                                                value=Name(id='expected', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value=' field(s), but got '),
+                                            FormattedValue(
+                                                value=Name(id='actual', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value=' instead')])],
+                                keywords=[]))],
+                    orelse=[]),
+                AnnAssign(
+                    target=Name(id='values', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='str', ctx=Load()),
+                                Name(id='Any', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Dict(keys=[], values=[]),
+                    simple=1),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='value', ctx=Store()),
+                            Name(id='target_field', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Name(id='zip', ctx=Load()),
+                        args=[
+                            Name(id='decoded', ctx=Load()),
+                            Name(id='target_fields', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='resolved_type', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='hints', ctx=Load()),
+                                slice=Attribute(
+                                    value=Name(id='target_field', ctx=Load()),
+                                    attr='name',
+                                    ctx=Load()),
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='values', ctx=Load()),
+                                    slice=Attribute(
+                                        value=Name(id='target_field', ctx=Load()),
+                                        attr='name',
+                                        ctx=Load()),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='_deserialize_to', ctx=Load()),
+                                args=[
+                                    Name(id='resolved_type', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cls', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                value=Name(id='values', ctx=Load()))])),
+                Assert(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='result', ctx=Load()),
+                            Name(id='cls', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='cast', ctx=Load()),
+                        args=[
+                            Name(id='U', ctx=Load()),
+                            Name(id='result', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_bool',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='value', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=b'')]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=b'\x01')]),
+                            body=[
+                                Return(
+                                    value=Constant(value=True))],
+                            orelse=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))])])],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='class_',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Type', ctx=Load()),
+                                        slice=Name(id='Bytes', ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='Type', ctx=Load()),
+                                        slice=Name(id='FixedBytes', ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='isinstance', ctx=Load()),
+                            args=[
+                                Name(id='value', ctx=Load()),
+                                Name(id='bytes', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Raise(
+                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                    orelse=[]),
+                Try(
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='class_', ctx=Load()),
+                                args=[
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            name='e',
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()),
+                                    cause=Name(id='e', ctx=Load()))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Bytes', ctx=Load()),
+                        Name(id='FixedBytes', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_uint',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='class_',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Type', ctx=Load()),
+                                        slice=Name(id='Uint', ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='Type', ctx=Load()),
+                                        slice=Name(id='FixedUnsigned', ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='decoded',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='isinstance', ctx=Load()),
+                            args=[
+                                Name(id='decoded', ctx=Load()),
+                                Name(id='bytes', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Raise(
+                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                    orelse=[]),
+                Try(
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='class_', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='decoded', ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            name='e',
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()),
+                                    cause=Name(id='e', ctx=Load()))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Uint', ctx=Load()),
+                        Name(id='FixedUnsigned', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_annotation',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='annotation',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='origin', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_origin', ctx=Load()),
+                        args=[
+                            Name(id='annotation', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='origin', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Name(id='Union', ctx=Load())]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='_deserialize_to_union', ctx=Load()),
+                                args=[
+                                    Name(id='annotation', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='origin', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='Tuple', ctx=Load()),
+                                            Name(id='tuple', ctx=Load())],
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='_deserialize_to_tuple', ctx=Load()),
+                                        args=[
+                                            Name(id='annotation', ctx=Load()),
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='origin', ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Raise(
+                                            exc=Call(
+                                                func=Name(id='Exception', ctx=Load()),
+                                                args=[
+                                                    Name(id='annotation', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Raise(
+                                            exc=Call(
+                                                func=Name(id='NotImplementedError', ctx=Load()),
+                                                args=[
+                                                    JoinedStr(
+                                                        values=[
+                                                            Constant(value='RLP non-type '),
+                                                            FormattedValue(
+                                                                value=Name(id='origin', ctx=Load()),
+                                                                conversion=114)])],
+                                                keywords=[]))])])])],
+            decorator_list=[],
+            returns=Name(id='Extended', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_union',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='annotation',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='arguments', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_args', ctx=Load()),
+                        args=[
+                            Name(id='annotation', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='successes', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='failures', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='argument', ctx=Store()),
+                    iter=Name(id='arguments', ctx=Load()),
+                    body=[
+                        Try(
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='success', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='_deserialize_to', ctx=Load()),
+                                        args=[
+                                            Name(id='argument', ctx=Load()),
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='Exception', ctx=Load()),
+                                    name='e',
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='failures', ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='e', ctx=Load())],
+                                                keywords=[])),
+                                        Continue()])],
+                            orelse=[],
+                            finalbody=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='successes', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='success', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='successes', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)]),
+                    body=[
+                        Return(
+                            value=Subscript(
+                                value=Name(id='successes', ctx=Load()),
+                                slice=Constant(value=0),
+                                ctx=Load()))],
+                    orelse=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Name(id='successes', ctx=Load())),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='RLPDecodingError', ctx=Load()),
+                                        args=[
+                                            JoinedStr(
+                                                values=[
+                                                    Constant(value='no matching union variant\n'),
+                                                    FormattedValue(
+                                                        value=Name(id='failures', ctx=Load()),
+                                                        conversion=114)])],
+                                        keywords=[]))],
+                            orelse=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='RLPDecodingError', ctx=Load()),
+                                        args=[
+                                            Constant(value='multiple matching union variants')],
+                                        keywords=[]))])])],
+            decorator_list=[],
+            returns=Name(id='Extended', ctx=Load())),
+        FunctionDef(
+            name='_deserialize_to_tuple',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='annotation',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='values',
+                        annotation=Name(id='Simple', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='values', ctx=Load()),
+                            Name(id='bytes', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Raise(
+                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='arguments', ctx=Store())],
+                    value=Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='get_args', ctx=Load()),
+                                args=[
+                                    Name(id='annotation', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Subscript(
+                            value=Name(id='arguments', ctx=Load()),
+                            slice=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)),
+                            ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Name(id='Ellipsis', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='arguments', ctx=Load()),
+                                    attr='pop',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='fill_count', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='values', ctx=Load())],
+                                    keywords=[]),
+                                op=Sub(),
+                                right=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='arguments', ctx=Load())],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='arguments', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='list', ctx=Load()),
+                                    args=[
+                                        Name(id='arguments', ctx=Load())],
+                                    keywords=[]),
+                                op=Add(),
+                                right=BinOp(
+                                    left=List(
+                                        elts=[
+                                            Subscript(
+                                                value=Name(id='arguments', ctx=Load()),
+                                                slice=UnaryOp(
+                                                    op=USub(),
+                                                    operand=Constant(value=1)),
+                                                ctx=Load())],
+                                        ctx=Load()),
+                                    op=Mult(),
+                                    right=Name(id='fill_count', ctx=Load()))))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='decoded', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='argument', ctx=Store()),
+                            Name(id='value', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Name(id='zip', ctx=Load()),
+                        args=[
+                            Name(id='arguments', ctx=Load()),
+                            Name(id='values', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='decoded', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='_deserialize_to', ctx=Load()),
+                                        args=[
+                                            Name(id='argument', ctx=Load()),
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[
+                            Name(id='decoded', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Sequence', ctx=Load()),
+                slice=Name(id='Extended', ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='decode_to_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='encoded_bytes',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decodes a rlp encoded byte stream assuming that the decoded data\n    should be of type `bytes`.\n\n    Parameters\n    ----------\n    encoded_bytes :\n        RLP encoded byte stream.\n\n    Returns\n    -------\n    decoded : `ethereum.base_types.Bytes`\n        RLP decoded Bytes data\n    ')),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='encoded_bytes', ctx=Load())],
+                                    keywords=[]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=1)]),
+                            Compare(
+                                left=Subscript(
+                                    value=Name(id='encoded_bytes', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=128)])]),
+                    body=[
+                        Return(
+                            value=Name(id='encoded_bytes', ctx=Load()))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Subscript(
+                                    value=Name(id='encoded_bytes', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Constant(value=183)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='len_raw_data', ctx=Store())],
+                                    value=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='encoded_bytes', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Constant(value=128))),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='len_raw_data', ctx=Load()),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Name(id='encoded_bytes', ctx=Load())],
+                                                keywords=[])]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='raw_data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='encoded_bytes', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=1),
+                                            upper=BinOp(
+                                                left=Constant(value=1),
+                                                op=Add(),
+                                                right=Name(id='len_raw_data', ctx=Load()))),
+                                        ctx=Load())),
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Compare(
+                                                left=Name(id='len_raw_data', ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=1)]),
+                                            Compare(
+                                                left=Subscript(
+                                                    value=Name(id='raw_data', ctx=Load()),
+                                                    slice=Constant(value=0),
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Lt()],
+                                                comparators=[
+                                                    Constant(value=128)])]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                Return(
+                                    value=Name(id='raw_data', ctx=Load()))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='decoded_data_start_idx', ctx=Store())],
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Constant(value=1),
+                                            op=Add(),
+                                            right=Subscript(
+                                                value=Name(id='encoded_bytes', ctx=Load()),
+                                                slice=Constant(value=0),
+                                                ctx=Load())),
+                                        op=Sub(),
+                                        right=Constant(value=183))),
+                                If(
+                                    test=Compare(
+                                        left=BinOp(
+                                            left=Name(id='decoded_data_start_idx', ctx=Load()),
+                                            op=Sub(),
+                                            right=Constant(value=1)),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Name(id='encoded_bytes', ctx=Load())],
+                                                keywords=[])]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                If(
+                                    test=Compare(
+                                        left=Subscript(
+                                            value=Name(id='encoded_bytes', ctx=Load()),
+                                            slice=Constant(value=1),
+                                            ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='len_decoded_data', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='Uint', ctx=Load()),
+                                                    attr='from_be_bytes',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='encoded_bytes', ctx=Load()),
+                                                        slice=Slice(
+                                                            lower=Constant(value=1),
+                                                            upper=Name(id='decoded_data_start_idx', ctx=Load())),
+                                                        ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='len_decoded_data', ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Constant(value=56)]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='decoded_data_end_idx', ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='decoded_data_start_idx', ctx=Load()),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='int', ctx=Load()),
+                                            args=[
+                                                Name(id='len_decoded_data', ctx=Load())],
+                                            keywords=[]))),
+                                If(
+                                    test=Compare(
+                                        left=BinOp(
+                                            left=Name(id='decoded_data_end_idx', ctx=Load()),
+                                            op=Sub(),
+                                            right=Constant(value=1)),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Name(id='encoded_bytes', ctx=Load())],
+                                                keywords=[])]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                    orelse=[]),
+                                Return(
+                                    value=Subscript(
+                                        value=Name(id='encoded_bytes', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Name(id='decoded_data_start_idx', ctx=Load()),
+                                            upper=Name(id='decoded_data_end_idx', ctx=Load())),
+                                        ctx=Load()))])])],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='decode_to_sequence',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='encoded_sequence',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decodes a rlp encoded byte stream assuming that the decoded data\n    should be of type `Sequence` of objects.\n\n    Parameters\n    ----------\n    encoded_sequence :\n        An RLP encoded Sequence.\n\n    Returns\n    -------\n    decoded : `Sequence[RLP]`\n        Sequence of objects decoded from `encoded_sequence`.\n    ')),
+                If(
+                    test=Compare(
+                        left=Subscript(
+                            value=Name(id='encoded_sequence', ctx=Load()),
+                            slice=Constant(value=0),
+                            ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Constant(value=247)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='len_joined_encodings', ctx=Store())],
+                            value=BinOp(
+                                left=Subscript(
+                                    value=Name(id='encoded_sequence', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Constant(value=192))),
+                        If(
+                            test=Compare(
+                                left=Name(id='len_joined_encodings', ctx=Load()),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='encoded_sequence', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='joined_encodings', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='encoded_sequence', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=1),
+                                    upper=BinOp(
+                                        left=Constant(value=1),
+                                        op=Add(),
+                                        right=Name(id='len_joined_encodings', ctx=Load()))),
+                                ctx=Load()))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='joined_encodings_start_idx', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Constant(value=1),
+                                    op=Add(),
+                                    right=Subscript(
+                                        value=Name(id='encoded_sequence', ctx=Load()),
+                                        slice=Constant(value=0),
+                                        ctx=Load())),
+                                op=Sub(),
+                                right=Constant(value=247))),
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='joined_encodings_start_idx', ctx=Load()),
+                                    op=Sub(),
+                                    right=Constant(value=1)),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='encoded_sequence', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Subscript(
+                                    value=Name(id='encoded_sequence', ctx=Load()),
+                                    slice=Constant(value=1),
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='len_joined_encodings', ctx=Store())],
+                            value=Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='Uint', ctx=Load()),
+                                            attr='from_be_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='encoded_sequence', ctx=Load()),
+                                                slice=Slice(
+                                                    lower=Constant(value=1),
+                                                    upper=Name(id='joined_encodings_start_idx', ctx=Load())),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='len_joined_encodings', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=56)]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='joined_encodings_end_idx', ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='joined_encodings_start_idx', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='len_joined_encodings', ctx=Load()))),
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='joined_encodings_end_idx', ctx=Load()),
+                                    op=Sub(),
+                                    right=Constant(value=1)),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='encoded_sequence', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='joined_encodings', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='encoded_sequence', ctx=Load()),
+                                slice=Slice(
+                                    lower=Name(id='joined_encodings_start_idx', ctx=Load()),
+                                    upper=Name(id='joined_encodings_end_idx', ctx=Load())),
+                                ctx=Load()))]),
+                Return(
+                    value=Call(
+                        func=Name(id='decode_joined_encodings', ctx=Load()),
+                        args=[
+                            Name(id='joined_encodings', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Sequence', ctx=Load()),
+                slice=Name(id='Simple', ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='decode_joined_encodings',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='joined_encodings',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decodes `joined_encodings`, which is a concatenation of RLP encoded\n    objects.\n\n    Parameters\n    ----------\n    joined_encodings :\n        concatenation of RLP encoded objects\n\n    Returns\n    -------\n    decoded : `List[RLP]`\n        A list of objects decoded from `joined_encodings`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='decoded_sequence', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='item_start_idx', ctx=Store())],
+                    value=Constant(value=0)),
+                While(
+                    test=Compare(
+                        left=Name(id='item_start_idx', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='joined_encodings', ctx=Load())],
+                                keywords=[])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='encoded_item_length', ctx=Store())],
+                            value=Call(
+                                func=Name(id='decode_item_length', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='joined_encodings', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Name(id='item_start_idx', ctx=Load())),
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Name(id='item_start_idx', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='encoded_item_length', ctx=Load())),
+                                    op=Sub(),
+                                    right=Constant(value=1)),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='joined_encodings', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='encoded_item', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='joined_encodings', ctx=Load()),
+                                slice=Slice(
+                                    lower=Name(id='item_start_idx', ctx=Load()),
+                                    upper=BinOp(
+                                        left=Name(id='item_start_idx', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='encoded_item_length', ctx=Load()))),
+                                ctx=Load())),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='decoded_sequence', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='decode', ctx=Load()),
+                                        args=[
+                                            Name(id='encoded_item', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        AugAssign(
+                            target=Name(id='item_start_idx', ctx=Store()),
+                            op=Add(),
+                            value=Name(id='encoded_item_length', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='decoded_sequence', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Sequence', ctx=Load()),
+                slice=Name(id='Simple', ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='decode_item_length',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='encoded_data',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Find the length of the rlp encoding for the first object in the\n    encoded sequence.\n    Here `encoded_data` refers to concatenation of rlp encoding for each\n    item in a sequence.\n\n    NOTE - This is a helper function not described in the spec. It was\n    introduced as the spec doesn't discuss about decoding the RLP encoded\n    data.\n\n    Parameters\n    ----------\n    encoded_data :\n        RLP encoded data for a sequence of objects.\n\n    Returns\n    -------\n    rlp_length : `int`\n    ")),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='encoded_data', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Raise(
+                            exc=Name(id='RLPDecodingError', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='first_rlp_byte', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='encoded_data', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='length_length', ctx=Store())],
+                    value=Constant(value=0)),
+                Assign(
+                    targets=[
+                        Name(id='decoded_data_length', ctx=Store())],
+                    value=Constant(value=0)),
+                If(
+                    test=Compare(
+                        left=Name(id='first_rlp_byte', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=128)]),
+                    body=[
+                        Return(
+                            value=Constant(value=1))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='first_rlp_byte', ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Constant(value=183)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='decoded_data_length', ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='first_rlp_byte', ctx=Load()),
+                                        op=Sub(),
+                                        right=Constant(value=128)))],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='first_rlp_byte', ctx=Load()),
+                                        ops=[
+                                            LtE()],
+                                        comparators=[
+                                            Constant(value=191)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='length_length', ctx=Store())],
+                                            value=BinOp(
+                                                left=Name(id='first_rlp_byte', ctx=Load()),
+                                                op=Sub(),
+                                                right=Constant(value=183))),
+                                        If(
+                                            test=Compare(
+                                                left=Name(id='length_length', ctx=Load()),
+                                                ops=[
+                                                    GtE()],
+                                                comparators=[
+                                                    Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='encoded_data', ctx=Load())],
+                                                        keywords=[])]),
+                                            body=[
+                                                Raise(
+                                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                            orelse=[]),
+                                        If(
+                                            test=Compare(
+                                                left=Subscript(
+                                                    value=Name(id='encoded_data', ctx=Load()),
+                                                    slice=Constant(value=1),
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=0)]),
+                                            body=[
+                                                Raise(
+                                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                            orelse=[]),
+                                        Assign(
+                                            targets=[
+                                                Name(id='decoded_data_length', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='int', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='Uint', ctx=Load()),
+                                                            attr='from_be_bytes',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='encoded_data', ctx=Load()),
+                                                                slice=Slice(
+                                                                    lower=Constant(value=1),
+                                                                    upper=BinOp(
+                                                                        left=Constant(value=1),
+                                                                        op=Add(),
+                                                                        right=Name(id='length_length', ctx=Load()))),
+                                                                ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Name(id='first_rlp_byte', ctx=Load()),
+                                                ops=[
+                                                    LtE()],
+                                                comparators=[
+                                                    Constant(value=247)]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='decoded_data_length', ctx=Store())],
+                                                    value=BinOp(
+                                                        left=Name(id='first_rlp_byte', ctx=Load()),
+                                                        op=Sub(),
+                                                        right=Constant(value=192)))],
+                                            orelse=[
+                                                If(
+                                                    test=Compare(
+                                                        left=Name(id='first_rlp_byte', ctx=Load()),
+                                                        ops=[
+                                                            LtE()],
+                                                        comparators=[
+                                                            Constant(value=255)]),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='length_length', ctx=Store())],
+                                                            value=BinOp(
+                                                                left=Name(id='first_rlp_byte', ctx=Load()),
+                                                                op=Sub(),
+                                                                right=Constant(value=247))),
+                                                        If(
+                                                            test=Compare(
+                                                                left=Name(id='length_length', ctx=Load()),
+                                                                ops=[
+                                                                    GtE()],
+                                                                comparators=[
+                                                                    Call(
+                                                                        func=Name(id='len', ctx=Load()),
+                                                                        args=[
+                                                                            Name(id='encoded_data', ctx=Load())],
+                                                                        keywords=[])]),
+                                                            body=[
+                                                                Raise(
+                                                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                                            orelse=[]),
+                                                        If(
+                                                            test=Compare(
+                                                                left=Subscript(
+                                                                    value=Name(id='encoded_data', ctx=Load()),
+                                                                    slice=Constant(value=1),
+                                                                    ctx=Load()),
+                                                                ops=[
+                                                                    Eq()],
+                                                                comparators=[
+                                                                    Constant(value=0)]),
+                                                            body=[
+                                                                Raise(
+                                                                    exc=Name(id='RLPDecodingError', ctx=Load()))],
+                                                            orelse=[]),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='decoded_data_length', ctx=Store())],
+                                                            value=Call(
+                                                                func=Name(id='int', ctx=Load()),
+                                                                args=[
+                                                                    Call(
+                                                                        func=Attribute(
+                                                                            value=Name(id='Uint', ctx=Load()),
+                                                                            attr='from_be_bytes',
+                                                                            ctx=Load()),
+                                                                        args=[
+                                                                            Subscript(
+                                                                                value=Name(id='encoded_data', ctx=Load()),
+                                                                                slice=Slice(
+                                                                                    lower=Constant(value=1),
+                                                                                    upper=BinOp(
+                                                                                        left=Constant(value=1),
+                                                                                        op=Add(),
+                                                                                        right=Name(id='length_length', ctx=Load()))),
+                                                                                ctx=Load())],
+                                                                        keywords=[])],
+                                                                keywords=[]))],
+                                                    orelse=[])])])])]),
+                Return(
+                    value=BinOp(
+                        left=BinOp(
+                            left=Constant(value=1),
+                            op=Add(),
+                            right=Name(id='length_length', ctx=Load())),
+                        op=Add(),
+                        right=Name(id='decoded_data_length', ctx=Load())))],
+            decorator_list=[],
+            returns=Name(id='int', ctx=Load())),
+        FunctionDef(
+            name='rlp_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='data',
+                        annotation=Name(id='Extended', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the keccak-256 hash of the rlp encoding of the passed in data.\n\n    Parameters\n    ----------\n    data :\n        The data for which we need the rlp hash.\n\n    Returns\n    -------\n    hash : `Hash32`\n        The rlp hash of the passed in data.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='keccak256', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='encode', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash32', ctx=Load()))],
+    type_ignores=[])

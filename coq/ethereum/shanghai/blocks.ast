@@ -1,0 +1,272 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nA `Block` is a single link in the chain that is Ethereum. Each `Block` contains\na `Header` and zero or more transactions. Each `Header` contains associated\nmetadata like the block number, parent block hash, and how much gas was\nconsumed by its transactions.\n\nTogether, these blocks form a cryptographically secure journal recording the\nhistory of all state transitions that have happened since the genesis of the\nchain.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Tuple'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes8'),
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='slotted_freezable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=2),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address'),
+                alias(name='Bloom'),
+                alias(name='Root')],
+            level=1),
+        ImportFrom(
+            module='transactions',
+            names=[
+                alias(name='LegacyTransaction')],
+            level=1),
+        ClassDef(
+            name='Withdrawal',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Withdrawals that have been validated on the consensus layer.\n    ')),
+                AnnAssign(
+                    target=Name(id='index', ctx=Store()),
+                    annotation=Name(id='U64', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='validator_index', ctx=Store()),
+                    annotation=Name(id='U64', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='address', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='amount', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Header',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Header portion of a block on the chain.\n    ')),
+                AnnAssign(
+                    target=Name(id='parent_hash', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='ommers_hash', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='coinbase', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state_root', ctx=Store()),
+                    annotation=Name(id='Root', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='transactions_root', ctx=Store()),
+                    annotation=Name(id='Root', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='receipt_root', ctx=Store()),
+                    annotation=Name(id='Root', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='bloom', ctx=Store()),
+                    annotation=Name(id='Bloom', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='difficulty', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='number', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_limit', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_used', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='timestamp', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='extra_data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='prev_randao', ctx=Store()),
+                    annotation=Name(id='Bytes32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='Bytes8', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='base_fee_per_gas', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='withdrawals_root', ctx=Store()),
+                    annotation=Name(id='Root', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Block',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A complete block.\n    ')),
+                AnnAssign(
+                    target=Name(id='header', ctx=Store()),
+                    annotation=Name(id='Header', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='transactions', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Subscript(
+                                    value=Name(id='Union', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='Bytes', ctx=Load()),
+                                            Name(id='LegacyTransaction', ctx=Load())],
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='ommers', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Header', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='withdrawals', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Withdrawal', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Log',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Data record produced during the execution of a transaction.\n    ')),
+                AnnAssign(
+                    target=Name(id='address', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='topics', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Hash32', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='data', ctx=Store()),
+                    annotation=Name(id='bytes', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Receipt',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Result of a transaction.\n    ')),
+                AnnAssign(
+                    target=Name(id='succeeded', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='cumulative_gas_used', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='bloom', ctx=Store()),
+                    annotation=Name(id='Bloom', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='logs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Log', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())])],
+    type_ignores=[])

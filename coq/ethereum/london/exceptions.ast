@@ -1,0 +1,72 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nExceptions specific to this fork.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Final')],
+            level=0),
+        ImportFrom(
+            module='ethereum.exceptions',
+            names=[
+                alias(name='InvalidTransaction')],
+            level=0),
+        ClassDef(
+            name='TransactionTypeError',
+            bases=[
+                Name(id='InvalidTransaction', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Unknown [EIP-2718] transaction type byte.\n\n    [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718\n    ')),
+                AnnAssign(
+                    target=Name(id='transaction_type', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Final', ctx=Load()),
+                        slice=Name(id='int', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    The type byte of the transaction that caused the error.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='transaction_type',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='super', ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    attr='__init__',
+                                    ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='unknown transaction type `'),
+                                            FormattedValue(
+                                                value=Name(id='transaction_type', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='`')])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='transaction_type',
+                                    ctx=Store())],
+                            value=Name(id='transaction_type', ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[])],
+    type_ignores=[])

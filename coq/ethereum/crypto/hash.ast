@@ -1,0 +1,121 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nCryptographic Hash Functions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nCryptographic hashing functions.\n')),
+        ImportFrom(
+            module='Crypto.Hash',
+            names=[
+                alias(name='keccak')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes32'),
+                alias(name='Bytes64')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='Hash32', ctx=Store())],
+            value=Name(id='Bytes32', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='Hash64', ctx=Store())],
+            value=Name(id='Bytes64', ctx=Load())),
+        FunctionDef(
+            name='keccak256',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='buffer',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Computes the keccak256 hash of the input `buffer`.\n\n    Parameters\n    ----------\n    buffer :\n        Input for the hashing function.\n\n    Returns\n    -------\n    hash : `ethereum.base_types.Hash32`\n        Output of the hash function.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='k', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='keccak', ctx=Load()),
+                            attr='new',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='digest_bits',
+                                value=Constant(value=256))])),
+                Return(
+                    value=Call(
+                        func=Name(id='Hash32', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='k', ctx=Load()),
+                                            attr='update',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='buffer', ctx=Load())],
+                                        keywords=[]),
+                                    attr='digest',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash32', ctx=Load())),
+        FunctionDef(
+            name='keccak512',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='buffer',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Computes the keccak512 hash of the input `buffer`.\n\n    Parameters\n    ----------\n    buffer :\n        Input for the hashing function.\n\n    Returns\n    -------\n    hash : `ethereum.base_types.Hash32`\n        Output of the hash function.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='k', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='keccak', ctx=Load()),
+                            attr='new',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='digest_bits',
+                                value=Constant(value=512))])),
+                Return(
+                    value=Call(
+                        func=Name(id='Hash64', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='k', ctx=Load()),
+                                            attr='update',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='buffer', ctx=Load())],
+                                        keywords=[]),
+                                    attr='digest',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash64', ctx=Load()))],
+    type_ignores=[])

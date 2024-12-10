@@ -1,0 +1,1107 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nTypes and functions for beginning a new chain.\n\n_Genesis_ is the term for the beginning of a new chain, and so a genesis block\nis a block with no parent (its [`parent_hash`] is all zeros.)\n\nThe genesis configuration for a chain is specified with a\n[`GenesisConfiguration`], and genesis blocks are created with\n[`add_genesis_block`].\n\n[`parent_hash`]: ref:ethereum.frontier.blocks.Header.parent_hash\n[`GenesisConfiguration`]: ref:ethereum.genesis.GenesisConfiguration\n[`add_genesis_block`]: ref:ethereum.genesis.add_genesis_block\n')),
+        Import(
+            names=[
+                alias(name='json')]),
+        Import(
+            names=[
+                alias(name='pkgutil')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Callable'),
+                alias(name='Dict'),
+                alias(name='Generic'),
+                alias(name='Type'),
+                alias(name='TypeVar')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes8'),
+                alias(name='Bytes32'),
+                alias(name='FixedBytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='slotted_freezable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='rlp')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils',
+            names=[
+                alias(name='has_field')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes'),
+                alias(name='hex_to_bytes8'),
+                alias(name='hex_to_bytes32'),
+                alias(name='hex_to_u256'),
+                alias(name='hex_to_uint')],
+            level=0),
+        ClassDef(
+            name='GenesisConfiguration',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Configuration for the first block of an Ethereum chain.\n\n    Specifies the allocation of ether set out in the pre-sale, and some of\n    the fields of the genesis block.\n    ')),
+                AnnAssign(
+                    target=Name(id='chain_id', ctx=Store()),
+                    annotation=Name(id='U64', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value="\n    Discriminant between diverged blockchains; `1` for Ethereum's main network.\n    ")),
+                AnnAssign(
+                    target=Name(id='difficulty', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    See [`difficulty`] (and subsequent forks.)\n\n    [`difficulty`]: ref:ethereum.frontier.blocks.Header.difficulty\n    ')),
+                AnnAssign(
+                    target=Name(id='extra_data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    See [`extra_data`] (and subsequent forks.)\n\n    [`extra_data`]: ref:ethereum.frontier.blocks.Header.extra_data\n    ')),
+                AnnAssign(
+                    target=Name(id='gas_limit', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    See [`gas_limit`] (and subsequent forks.)\n\n    [`gas_limit`]: ref:ethereum.frontier.blocks.Header.gas_limit\n    ')),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='Bytes8', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    See [`nonce`] (and subsequent forks.)\n\n    [`nonce`]: ref:ethereum.frontier.blocks.Header.nonce\n    ')),
+                AnnAssign(
+                    target=Name(id='timestamp', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    See [`timestamp`] (and subsequent forks.)\n\n    [`timestamp`]: ref:ethereum.frontier.blocks.Header.timestamp\n    ')),
+                AnnAssign(
+                    target=Name(id='initial_accounts', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='str', ctx=Load()),
+                                Name(id='Dict', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    State of the blockchain at genesis.\n    '))],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='get_genesis_configuration',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='genesis_file',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Read a genesis configuration from the given JSON file path.\n\n    The genesis file should be present in the `assets` directory.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='genesis_path', ctx=Store())],
+                    value=JoinedStr(
+                        values=[
+                            Constant(value='assets/'),
+                            FormattedValue(
+                                value=Name(id='genesis_file', ctx=Load()),
+                                conversion=-1)])),
+                Assign(
+                    targets=[
+                        Name(id='genesis_bytes', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='pkgutil', ctx=Load()),
+                            attr='get_data',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ethereum'),
+                            Name(id='genesis_path', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='genesis_bytes', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='Unable to read genesis from `'),
+                                            FormattedValue(
+                                                value=Name(id='genesis_path', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='`')])],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='genesis_data', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='json', ctx=Load()),
+                            attr='loads',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='genesis_bytes', ctx=Load()),
+                                    attr='decode',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='GenesisConfiguration', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='chain_id',
+                                value=Call(
+                                    func=Name(id='U64', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Subscript(
+                                                value=Name(id='genesis_data', ctx=Load()),
+                                                slice=Constant(value='config'),
+                                                ctx=Load()),
+                                            slice=Constant(value='chainId'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='difficulty',
+                                value=Call(
+                                    func=Name(id='hex_to_uint', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='genesis_data', ctx=Load()),
+                                            slice=Constant(value='difficulty'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='extra_data',
+                                value=Call(
+                                    func=Name(id='hex_to_bytes', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='genesis_data', ctx=Load()),
+                                            slice=Constant(value='extraData'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='gas_limit',
+                                value=Call(
+                                    func=Name(id='hex_to_uint', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='genesis_data', ctx=Load()),
+                                            slice=Constant(value='gasLimit'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='nonce',
+                                value=Call(
+                                    func=Name(id='hex_to_bytes8', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='genesis_data', ctx=Load()),
+                                            slice=Constant(value='nonce'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='timestamp',
+                                value=Call(
+                                    func=Name(id='hex_or_base_10_str_to_u256', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='genesis_data', ctx=Load()),
+                                            slice=Constant(value='timestamp'),
+                                            ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='initial_accounts',
+                                value=Subscript(
+                                    value=Name(id='genesis_data', ctx=Load()),
+                                    slice=Constant(value='alloc'),
+                                    ctx=Load()))]))],
+            decorator_list=[],
+            returns=Name(id='GenesisConfiguration', ctx=Load())),
+        FunctionDef(
+            name='hex_or_base_10_str_to_u256',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='balance',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert a string in either hexadecimal or base-10 to a `U256`.\n    ')),
+                If(
+                    test=Call(
+                        func=Attribute(
+                            value=Name(id='balance', ctx=Load()),
+                            attr='startswith',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='0x')],
+                        keywords=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Name(id='balance', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        Return(
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='balance', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='AddressT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='AddressT')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Name(id='FixedBytes', ctx=Load()))])),
+        Assign(
+            targets=[
+                Name(id='AccountT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='AccountT')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='StateT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='StateT')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='TrieT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='TrieT')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='BloomT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='BloomT')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='HeaderT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='HeaderT')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='BlockT', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='BlockT')],
+                keywords=[])),
+        ClassDef(
+            name='GenesisFork',
+            bases=[
+                Subscript(
+                    value=Name(id='Generic', ctx=Load()),
+                    slice=Tuple(
+                        elts=[
+                            Name(id='AddressT', ctx=Load()),
+                            Name(id='AccountT', ctx=Load()),
+                            Name(id='StateT', ctx=Load()),
+                            Name(id='TrieT', ctx=Load()),
+                            Name(id='BloomT', ctx=Load()),
+                            Name(id='HeaderT', ctx=Load()),
+                            Name(id='BlockT', ctx=Load())],
+                        ctx=Load()),
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Pointers to the various types and functions required to build a genesis\n    block.\n    ')),
+                AnnAssign(
+                    target=Name(id='Address', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='FixedBytes', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='Account', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='Uint', ctx=Load()),
+                                        Name(id='U256', ctx=Load()),
+                                        Name(id='bytes', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='AccountT', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='Trie', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='bool', ctx=Load()),
+                                        Name(id='object', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='TrieT', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='Bloom', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='FixedBytes', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='Header', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='HeaderT', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='Block', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='BlockT', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='hex_to_address', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='str', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='AddressT', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='set_account', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='StateT', ctx=Load()),
+                                        Name(id='AddressT', ctx=Load()),
+                                        Name(id='AccountT', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='object', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='set_storage', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='StateT', ctx=Load()),
+                                        Name(id='AddressT', ctx=Load()),
+                                        Name(id='Bytes32', ctx=Load()),
+                                        Name(id='U256', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='object', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state_root', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='StateT', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='Hash32', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='root', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Callable', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                List(
+                                    elts=[
+                                        Name(id='TrieT', ctx=Load())],
+                                    ctx=Load()),
+                                Name(id='object', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='add_genesis_block',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hardfork',
+                        annotation=Subscript(
+                            value=Name(id='GenesisFork', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='AddressT', ctx=Load()),
+                                    Name(id='AccountT', ctx=Load()),
+                                    Name(id='StateT', ctx=Load()),
+                                    Name(id='TrieT', ctx=Load()),
+                                    Name(id='BloomT', ctx=Load()),
+                                    Name(id='HeaderT', ctx=Load()),
+                                    Name(id='BlockT', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='chain',
+                        annotation=Name(id='Any', ctx=Load())),
+                    arg(
+                        arg='genesis',
+                        annotation=Name(id='GenesisConfiguration', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Adds the genesis block to an empty blockchain.\n\n    The genesis block is an entirely sui generis block (unique) that is not\n    governed by the general rules applying to all other Ethereum blocks.\n    Instead, the only consensus requirement is that it must be identical to\n    the block added by this function.\n\n    The mainnet genesis configuration was originally created using the\n    `mk_genesis_block.py` script. It is long since defunct, but is still\n    available at <https://github.com/ethereum/genesis_block_generator>.\n\n    The initial state is populated with balances based on the Ethereum presale\n    that happened on the Bitcoin blockchain. Additional ether worth 1.98% of\n    the presale was given to the foundation.\n\n    The `state_root` is set to the root of the initial state. The `gas_limit`\n    and `difficulty` are set to suitable starting values. In particular the\n    low gas limit made sending transactions impossible in the early stages of\n    Frontier.\n\n    The `nonce` field is `0x42` referencing Douglas Adams\' "HitchHiker\'s Guide\n    to the Galaxy".\n\n    The `extra_data` field contains the hash of block `1028201` on\n    the pre-launch Olympus testnet. The creation of block `1028201` on Olympus\n    marked the "starting gun" for Ethereum block creation. Including its hash\n    in the genesis block ensured a fair launch of the Ethereum mining process.\n\n    The remaining fields are set to appropriate default values.\n\n    On testnets the genesis configuration usually allocates 1 wei to addresses\n    `0x00` to `0xFF` to avoid edge cases around precompiles being created or\n    cleared (by [EIP-161]).\n\n    [EIP-161]: https://eips.ethereum.org/EIPS/eip-161\n    ')),
+                AnnAssign(
+                    target=Name(id='Address', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='FixedBytes', ctx=Load()),
+                        ctx=Load()),
+                    value=Attribute(
+                        value=Name(id='hardfork', ctx=Load()),
+                        attr='Address',
+                        ctx=Load()),
+                    simple=1),
+                Assert(
+                    test=Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Address', ctx=Load()),
+                            Name(id='FixedBytes', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='hex_address', ctx=Store()),
+                            Name(id='account', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='initial_accounts',
+                                ctx=Load()),
+                            attr='items',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='address', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='hex_to_address',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='hex_address', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='set_account',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='chain', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load()),
+                                    Name(id='address', ctx=Load()),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='hardfork', ctx=Load()),
+                                            attr='Account',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='int', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='account', ctx=Load()),
+                                                                    attr='get',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='nonce'),
+                                                                    Constant(value='0')],
+                                                                keywords=[])],
+                                                        keywords=[])],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='hex_or_base_10_str_to_u256', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='account', ctx=Load()),
+                                                            attr='get',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Constant(value='balance'),
+                                                            Constant(value=0)],
+                                                        keywords=[])],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='account', ctx=Load()),
+                                                            attr='get',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Constant(value='code'),
+                                                            Constant(value='0x')],
+                                                        keywords=[])],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[])),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='key', ctx=Store()),
+                                    Name(id='value', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='account', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='storage'),
+                                            Dict(keys=[], values=[])],
+                                        keywords=[]),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='hardfork', ctx=Load()),
+                                            attr='set_storage',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='chain', ctx=Load()),
+                                                attr='state',
+                                                ctx=Load()),
+                                            Name(id='address', ctx=Load()),
+                                            Call(
+                                                func=Name(id='hex_to_bytes32', ctx=Load()),
+                                                args=[
+                                                    Name(id='key', ctx=Load())],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='hex_to_u256', ctx=Load()),
+                                                args=[
+                                                    Name(id='value', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='fields', ctx=Store())],
+                    value=Dict(
+                        keys=[
+                            Constant(value='parent_hash'),
+                            Constant(value='ommers_hash'),
+                            Constant(value='coinbase'),
+                            Constant(value='state_root'),
+                            Constant(value='transactions_root'),
+                            Constant(value='receipt_root'),
+                            Constant(value='bloom'),
+                            Constant(value='difficulty'),
+                            Constant(value='number'),
+                            Constant(value='gas_limit'),
+                            Constant(value='gas_used'),
+                            Constant(value='timestamp'),
+                            Constant(value='extra_data'),
+                            Constant(value='nonce')],
+                        values=[
+                            Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Constant(value=32))],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='rlp_hash',
+                                    ctx=Load()),
+                                args=[
+                                    Tuple(elts=[], ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Address', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Attribute(
+                                            value=Name(id='Address', ctx=Load()),
+                                            attr='LENGTH',
+                                            ctx=Load()))],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='state_root',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='chain', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='root',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='hardfork', ctx=Load()),
+                                            attr='Trie',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=False),
+                                            Constant(value=None)],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='root',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='hardfork', ctx=Load()),
+                                            attr='Trie',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=False),
+                                            Constant(value=None)],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='Bloom',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Constant(value=256))],
+                                keywords=[]),
+                            Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='difficulty',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]),
+                            Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='gas_limit',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]),
+                            Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='timestamp',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='extra_data',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='genesis', ctx=Load()),
+                                attr='nonce',
+                                ctx=Load())])),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='mix_digest')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='mix_digest'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Constant(value=32))],
+                                keywords=[]))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='prev_randao'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Constant(value=32))],
+                                keywords=[]))]),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='base_fee_per_gas')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='base_fee_per_gas'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=10),
+                                        op=Pow(),
+                                        right=Constant(value=9))],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='withdrawals_root')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='withdrawals_root'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='hardfork', ctx=Load()),
+                                    attr='root',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='hardfork', ctx=Load()),
+                                            attr='Trie',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=False),
+                                            Constant(value=None)],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='blob_gas_used')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='blob_gas_used'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='U64', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='excess_blob_gas')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='excess_blob_gas'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='U64', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Header',
+                                ctx=Load()),
+                            Constant(value='parent_beacon_block_root')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='fields', ctx=Load()),
+                                    slice=Constant(value='parent_beacon_block_root'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=b'\x00'),
+                                        op=Mult(),
+                                        right=Constant(value=32))],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='genesis_header', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='hardfork', ctx=Load()),
+                            attr='Header',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                value=Name(id='fields', ctx=Load()))])),
+                Assign(
+                    targets=[
+                        Name(id='block_fields', ctx=Store())],
+                    value=Dict(
+                        keys=[
+                            Constant(value='header'),
+                            Constant(value='transactions'),
+                            Constant(value='ommers')],
+                        values=[
+                            Name(id='genesis_header', ctx=Load()),
+                            Tuple(elts=[], ctx=Load()),
+                            Tuple(elts=[], ctx=Load())])),
+                If(
+                    test=Call(
+                        func=Name(id='has_field', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='hardfork', ctx=Load()),
+                                attr='Block',
+                                ctx=Load()),
+                            Constant(value='withdrawals')],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='block_fields', ctx=Load()),
+                                    slice=Constant(value='withdrawals'),
+                                    ctx=Store())],
+                            value=Tuple(elts=[], ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='genesis_block', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='hardfork', ctx=Load()),
+                            attr='Block',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                value=Name(id='block_fields', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='chain', ctx=Load()),
+                                attr='blocks',
+                                ctx=Load()),
+                            attr='append',
+                            ctx=Load()),
+                        args=[
+                            Name(id='genesis_block', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='chain', ctx=Load()),
+                            attr='chain_id',
+                            ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='genesis', ctx=Load()),
+                        attr='chain_id',
+                        ctx=Load()))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

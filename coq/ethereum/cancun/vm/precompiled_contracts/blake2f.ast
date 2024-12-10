@@ -1,0 +1,137 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Blake2 PRECOMPILED CONTRACT\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the `Blake2` precompiled contract.\n')),
+        ImportFrom(
+            module='ethereum.crypto.blake2',
+            names=[
+                alias(name='Blake2b')],
+            level=0),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Evm')],
+            level=3),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_BLAKE2_PER_ROUND'),
+                alias(name='charge_gas')],
+            level=3),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='InvalidParameter')],
+            level=2),
+        FunctionDef(
+            name='blake2f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Writes the Blake2 hash to output.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='data',
+                        ctx=Load())),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='data', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Constant(value=213)]),
+                    body=[
+                        Raise(
+                            exc=Name(id='InvalidParameter', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='blake2b', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Blake2b', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='rounds', ctx=Store()),
+                                Name(id='h', ctx=Store()),
+                                Name(id='m', ctx=Store()),
+                                Name(id='t_0', ctx=Store()),
+                                Name(id='t_1', ctx=Store()),
+                                Name(id='f', ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='blake2b', ctx=Load()),
+                            attr='get_blake2_parameters',
+                            ctx=Load()),
+                        args=[
+                            Name(id='data', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=Name(id='GAS_BLAKE2_PER_ROUND', ctx=Load()),
+                                op=Mult(),
+                                right=Name(id='rounds', ctx=Load()))],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='f', ctx=Load()),
+                        ops=[
+                            NotIn()],
+                        comparators=[
+                            List(
+                                elts=[
+                                    Constant(value=0),
+                                    Constant(value=1)],
+                                ctx=Load())]),
+                    body=[
+                        Raise(
+                            exc=Name(id='InvalidParameter', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='output',
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='blake2b', ctx=Load()),
+                            attr='compress',
+                            ctx=Load()),
+                        args=[
+                            Name(id='rounds', ctx=Load()),
+                            Name(id='h', ctx=Load()),
+                            Name(id='m', ctx=Load()),
+                            Name(id='t_0', ctx=Load()),
+                            Name(id='t_1', ctx=Load()),
+                            Name(id='f', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

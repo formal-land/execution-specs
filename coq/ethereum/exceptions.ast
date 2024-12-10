@@ -1,0 +1,59 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nError types common across all Ethereum forks.\n')),
+        ClassDef(
+            name='EthereumException',
+            bases=[
+                Name(id='Exception', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Base class for all exceptions _expected_ to be thrown during normal\n    operation.\n    '))],
+            decorator_list=[]),
+        ClassDef(
+            name='InvalidBlock',
+            bases=[
+                Name(id='EthereumException', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Thrown when a block being processed is found to be invalid.\n    '))],
+            decorator_list=[]),
+        ClassDef(
+            name='InvalidTransaction',
+            bases=[
+                Name(id='EthereumException', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Thrown when a transaction being processed is found to be invalid.\n    '))],
+            decorator_list=[]),
+        ClassDef(
+            name='RLPDecodingError',
+            bases=[
+                Name(id='EthereumException', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Indicates that RLP decoding failed.\n    '))],
+            decorator_list=[]),
+        ClassDef(
+            name='RLPEncodingError',
+            bases=[
+                Name(id='EthereumException', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Indicates that RLP encoding failed.\n    '))],
+            decorator_list=[]),
+        ClassDef(
+            name='InvalidSenderError',
+            bases=[
+                Name(id='InvalidTransaction', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Thrown when a transaction originates from an account that cannot send\n    transactions.\n    '))],
+            decorator_list=[])],
+    type_ignores=[])

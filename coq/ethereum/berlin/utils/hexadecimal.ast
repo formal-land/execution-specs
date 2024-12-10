@@ -1,0 +1,124 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nUtility Functions For Hexadecimal Strings\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nHexadecimal utility functions used in this specification, specific to\nBerlin types.\n')),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='remove_hex_prefix')],
+            level=0),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address'),
+                alias(name='Bloom'),
+                alias(name='Root')],
+            level=2),
+        FunctionDef(
+            name='hex_to_root',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to trie root.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to trie root.\n\n    Returns\n    -------\n    root : `Root`\n        Trie root obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Root', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Root', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bloom',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to bloom.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to bloom.\n\n    Returns\n    -------\n    bloom : `Bloom`\n        Bloom obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Bloom', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bloom', ctx=Load())),
+        FunctionDef(
+            name='hex_to_address',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to Address (20 bytes).\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to Address.\n\n    Returns\n    -------\n    address : `Address`\n        The address obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Address', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                                args=[
+                                                    Name(id='hex_string', ctx=Load())],
+                                                keywords=[]),
+                                            attr='rjust',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=40),
+                                            Constant(value='0')],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Address', ctx=Load()))],
+    type_ignores=[])

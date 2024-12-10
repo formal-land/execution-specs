@@ -1,0 +1,1648 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEVM Instruction Encoding (Opcodes)\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nMachine readable representations of EVM instructions, and a mapping to their\nimplementations.\n')),
+        Import(
+            names=[
+                alias(name='enum')]),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Callable'),
+                alias(name='Dict')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='arithmetic', asname='arithmetic_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='bitwise', asname='bitwise_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='block', asname='block_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='comparison', asname='comparison_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='control_flow', asname='control_flow_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='environment', asname='environment_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='keccak', asname='keccak_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='log', asname='log_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='memory', asname='memory_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='stack', asname='stack_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='storage', asname='storage_instructions')],
+            level=1),
+        ImportFrom(
+            names=[
+                alias(name='system', asname='system_instructions')],
+            level=1),
+        ClassDef(
+            name='Ops',
+            bases=[
+                Attribute(
+                    value=Name(id='enum', ctx=Load()),
+                    attr='Enum',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Enum for EVM Opcodes\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='ADD', ctx=Store())],
+                    value=Constant(value=1)),
+                Assign(
+                    targets=[
+                        Name(id='MUL', ctx=Store())],
+                    value=Constant(value=2)),
+                Assign(
+                    targets=[
+                        Name(id='SUB', ctx=Store())],
+                    value=Constant(value=3)),
+                Assign(
+                    targets=[
+                        Name(id='DIV', ctx=Store())],
+                    value=Constant(value=4)),
+                Assign(
+                    targets=[
+                        Name(id='SDIV', ctx=Store())],
+                    value=Constant(value=5)),
+                Assign(
+                    targets=[
+                        Name(id='MOD', ctx=Store())],
+                    value=Constant(value=6)),
+                Assign(
+                    targets=[
+                        Name(id='SMOD', ctx=Store())],
+                    value=Constant(value=7)),
+                Assign(
+                    targets=[
+                        Name(id='ADDMOD', ctx=Store())],
+                    value=Constant(value=8)),
+                Assign(
+                    targets=[
+                        Name(id='MULMOD', ctx=Store())],
+                    value=Constant(value=9)),
+                Assign(
+                    targets=[
+                        Name(id='EXP', ctx=Store())],
+                    value=Constant(value=10)),
+                Assign(
+                    targets=[
+                        Name(id='SIGNEXTEND', ctx=Store())],
+                    value=Constant(value=11)),
+                Assign(
+                    targets=[
+                        Name(id='LT', ctx=Store())],
+                    value=Constant(value=16)),
+                Assign(
+                    targets=[
+                        Name(id='GT', ctx=Store())],
+                    value=Constant(value=17)),
+                Assign(
+                    targets=[
+                        Name(id='SLT', ctx=Store())],
+                    value=Constant(value=18)),
+                Assign(
+                    targets=[
+                        Name(id='SGT', ctx=Store())],
+                    value=Constant(value=19)),
+                Assign(
+                    targets=[
+                        Name(id='EQ', ctx=Store())],
+                    value=Constant(value=20)),
+                Assign(
+                    targets=[
+                        Name(id='ISZERO', ctx=Store())],
+                    value=Constant(value=21)),
+                Assign(
+                    targets=[
+                        Name(id='AND', ctx=Store())],
+                    value=Constant(value=22)),
+                Assign(
+                    targets=[
+                        Name(id='OR', ctx=Store())],
+                    value=Constant(value=23)),
+                Assign(
+                    targets=[
+                        Name(id='XOR', ctx=Store())],
+                    value=Constant(value=24)),
+                Assign(
+                    targets=[
+                        Name(id='NOT', ctx=Store())],
+                    value=Constant(value=25)),
+                Assign(
+                    targets=[
+                        Name(id='BYTE', ctx=Store())],
+                    value=Constant(value=26)),
+                Assign(
+                    targets=[
+                        Name(id='KECCAK', ctx=Store())],
+                    value=Constant(value=32)),
+                Assign(
+                    targets=[
+                        Name(id='ADDRESS', ctx=Store())],
+                    value=Constant(value=48)),
+                Assign(
+                    targets=[
+                        Name(id='BALANCE', ctx=Store())],
+                    value=Constant(value=49)),
+                Assign(
+                    targets=[
+                        Name(id='ORIGIN', ctx=Store())],
+                    value=Constant(value=50)),
+                Assign(
+                    targets=[
+                        Name(id='CALLER', ctx=Store())],
+                    value=Constant(value=51)),
+                Assign(
+                    targets=[
+                        Name(id='CALLVALUE', ctx=Store())],
+                    value=Constant(value=52)),
+                Assign(
+                    targets=[
+                        Name(id='CALLDATALOAD', ctx=Store())],
+                    value=Constant(value=53)),
+                Assign(
+                    targets=[
+                        Name(id='CALLDATASIZE', ctx=Store())],
+                    value=Constant(value=54)),
+                Assign(
+                    targets=[
+                        Name(id='CALLDATACOPY', ctx=Store())],
+                    value=Constant(value=55)),
+                Assign(
+                    targets=[
+                        Name(id='CODESIZE', ctx=Store())],
+                    value=Constant(value=56)),
+                Assign(
+                    targets=[
+                        Name(id='CODECOPY', ctx=Store())],
+                    value=Constant(value=57)),
+                Assign(
+                    targets=[
+                        Name(id='GASPRICE', ctx=Store())],
+                    value=Constant(value=58)),
+                Assign(
+                    targets=[
+                        Name(id='EXTCODESIZE', ctx=Store())],
+                    value=Constant(value=59)),
+                Assign(
+                    targets=[
+                        Name(id='EXTCODECOPY', ctx=Store())],
+                    value=Constant(value=60)),
+                Assign(
+                    targets=[
+                        Name(id='BLOCKHASH', ctx=Store())],
+                    value=Constant(value=64)),
+                Assign(
+                    targets=[
+                        Name(id='COINBASE', ctx=Store())],
+                    value=Constant(value=65)),
+                Assign(
+                    targets=[
+                        Name(id='TIMESTAMP', ctx=Store())],
+                    value=Constant(value=66)),
+                Assign(
+                    targets=[
+                        Name(id='NUMBER', ctx=Store())],
+                    value=Constant(value=67)),
+                Assign(
+                    targets=[
+                        Name(id='DIFFICULTY', ctx=Store())],
+                    value=Constant(value=68)),
+                Assign(
+                    targets=[
+                        Name(id='GASLIMIT', ctx=Store())],
+                    value=Constant(value=69)),
+                Assign(
+                    targets=[
+                        Name(id='STOP', ctx=Store())],
+                    value=Constant(value=0)),
+                Assign(
+                    targets=[
+                        Name(id='JUMP', ctx=Store())],
+                    value=Constant(value=86)),
+                Assign(
+                    targets=[
+                        Name(id='JUMPI', ctx=Store())],
+                    value=Constant(value=87)),
+                Assign(
+                    targets=[
+                        Name(id='PC', ctx=Store())],
+                    value=Constant(value=88)),
+                Assign(
+                    targets=[
+                        Name(id='GAS', ctx=Store())],
+                    value=Constant(value=90)),
+                Assign(
+                    targets=[
+                        Name(id='JUMPDEST', ctx=Store())],
+                    value=Constant(value=91)),
+                Assign(
+                    targets=[
+                        Name(id='SLOAD', ctx=Store())],
+                    value=Constant(value=84)),
+                Assign(
+                    targets=[
+                        Name(id='SSTORE', ctx=Store())],
+                    value=Constant(value=85)),
+                Assign(
+                    targets=[
+                        Name(id='POP', ctx=Store())],
+                    value=Constant(value=80)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH1', ctx=Store())],
+                    value=Constant(value=96)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH2', ctx=Store())],
+                    value=Constant(value=97)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH3', ctx=Store())],
+                    value=Constant(value=98)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH4', ctx=Store())],
+                    value=Constant(value=99)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH5', ctx=Store())],
+                    value=Constant(value=100)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH6', ctx=Store())],
+                    value=Constant(value=101)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH7', ctx=Store())],
+                    value=Constant(value=102)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH8', ctx=Store())],
+                    value=Constant(value=103)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH9', ctx=Store())],
+                    value=Constant(value=104)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH10', ctx=Store())],
+                    value=Constant(value=105)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH11', ctx=Store())],
+                    value=Constant(value=106)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH12', ctx=Store())],
+                    value=Constant(value=107)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH13', ctx=Store())],
+                    value=Constant(value=108)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH14', ctx=Store())],
+                    value=Constant(value=109)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH15', ctx=Store())],
+                    value=Constant(value=110)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH16', ctx=Store())],
+                    value=Constant(value=111)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH17', ctx=Store())],
+                    value=Constant(value=112)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH18', ctx=Store())],
+                    value=Constant(value=113)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH19', ctx=Store())],
+                    value=Constant(value=114)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH20', ctx=Store())],
+                    value=Constant(value=115)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH21', ctx=Store())],
+                    value=Constant(value=116)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH22', ctx=Store())],
+                    value=Constant(value=117)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH23', ctx=Store())],
+                    value=Constant(value=118)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH24', ctx=Store())],
+                    value=Constant(value=119)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH25', ctx=Store())],
+                    value=Constant(value=120)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH26', ctx=Store())],
+                    value=Constant(value=121)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH27', ctx=Store())],
+                    value=Constant(value=122)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH28', ctx=Store())],
+                    value=Constant(value=123)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH29', ctx=Store())],
+                    value=Constant(value=124)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH30', ctx=Store())],
+                    value=Constant(value=125)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH31', ctx=Store())],
+                    value=Constant(value=126)),
+                Assign(
+                    targets=[
+                        Name(id='PUSH32', ctx=Store())],
+                    value=Constant(value=127)),
+                Assign(
+                    targets=[
+                        Name(id='DUP1', ctx=Store())],
+                    value=Constant(value=128)),
+                Assign(
+                    targets=[
+                        Name(id='DUP2', ctx=Store())],
+                    value=Constant(value=129)),
+                Assign(
+                    targets=[
+                        Name(id='DUP3', ctx=Store())],
+                    value=Constant(value=130)),
+                Assign(
+                    targets=[
+                        Name(id='DUP4', ctx=Store())],
+                    value=Constant(value=131)),
+                Assign(
+                    targets=[
+                        Name(id='DUP5', ctx=Store())],
+                    value=Constant(value=132)),
+                Assign(
+                    targets=[
+                        Name(id='DUP6', ctx=Store())],
+                    value=Constant(value=133)),
+                Assign(
+                    targets=[
+                        Name(id='DUP7', ctx=Store())],
+                    value=Constant(value=134)),
+                Assign(
+                    targets=[
+                        Name(id='DUP8', ctx=Store())],
+                    value=Constant(value=135)),
+                Assign(
+                    targets=[
+                        Name(id='DUP9', ctx=Store())],
+                    value=Constant(value=136)),
+                Assign(
+                    targets=[
+                        Name(id='DUP10', ctx=Store())],
+                    value=Constant(value=137)),
+                Assign(
+                    targets=[
+                        Name(id='DUP11', ctx=Store())],
+                    value=Constant(value=138)),
+                Assign(
+                    targets=[
+                        Name(id='DUP12', ctx=Store())],
+                    value=Constant(value=139)),
+                Assign(
+                    targets=[
+                        Name(id='DUP13', ctx=Store())],
+                    value=Constant(value=140)),
+                Assign(
+                    targets=[
+                        Name(id='DUP14', ctx=Store())],
+                    value=Constant(value=141)),
+                Assign(
+                    targets=[
+                        Name(id='DUP15', ctx=Store())],
+                    value=Constant(value=142)),
+                Assign(
+                    targets=[
+                        Name(id='DUP16', ctx=Store())],
+                    value=Constant(value=143)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP1', ctx=Store())],
+                    value=Constant(value=144)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP2', ctx=Store())],
+                    value=Constant(value=145)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP3', ctx=Store())],
+                    value=Constant(value=146)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP4', ctx=Store())],
+                    value=Constant(value=147)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP5', ctx=Store())],
+                    value=Constant(value=148)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP6', ctx=Store())],
+                    value=Constant(value=149)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP7', ctx=Store())],
+                    value=Constant(value=150)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP8', ctx=Store())],
+                    value=Constant(value=151)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP9', ctx=Store())],
+                    value=Constant(value=152)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP10', ctx=Store())],
+                    value=Constant(value=153)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP11', ctx=Store())],
+                    value=Constant(value=154)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP12', ctx=Store())],
+                    value=Constant(value=155)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP13', ctx=Store())],
+                    value=Constant(value=156)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP14', ctx=Store())],
+                    value=Constant(value=157)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP15', ctx=Store())],
+                    value=Constant(value=158)),
+                Assign(
+                    targets=[
+                        Name(id='SWAP16', ctx=Store())],
+                    value=Constant(value=159)),
+                Assign(
+                    targets=[
+                        Name(id='MLOAD', ctx=Store())],
+                    value=Constant(value=81)),
+                Assign(
+                    targets=[
+                        Name(id='MSTORE', ctx=Store())],
+                    value=Constant(value=82)),
+                Assign(
+                    targets=[
+                        Name(id='MSTORE8', ctx=Store())],
+                    value=Constant(value=83)),
+                Assign(
+                    targets=[
+                        Name(id='MSIZE', ctx=Store())],
+                    value=Constant(value=89)),
+                Assign(
+                    targets=[
+                        Name(id='LOG0', ctx=Store())],
+                    value=Constant(value=160)),
+                Assign(
+                    targets=[
+                        Name(id='LOG1', ctx=Store())],
+                    value=Constant(value=161)),
+                Assign(
+                    targets=[
+                        Name(id='LOG2', ctx=Store())],
+                    value=Constant(value=162)),
+                Assign(
+                    targets=[
+                        Name(id='LOG3', ctx=Store())],
+                    value=Constant(value=163)),
+                Assign(
+                    targets=[
+                        Name(id='LOG4', ctx=Store())],
+                    value=Constant(value=164)),
+                Assign(
+                    targets=[
+                        Name(id='CREATE', ctx=Store())],
+                    value=Constant(value=240)),
+                Assign(
+                    targets=[
+                        Name(id='CALL', ctx=Store())],
+                    value=Constant(value=241)),
+                Assign(
+                    targets=[
+                        Name(id='CALLCODE', ctx=Store())],
+                    value=Constant(value=242)),
+                Assign(
+                    targets=[
+                        Name(id='RETURN', ctx=Store())],
+                    value=Constant(value=243)),
+                Assign(
+                    targets=[
+                        Name(id='DELEGATECALL', ctx=Store())],
+                    value=Constant(value=244)),
+                Assign(
+                    targets=[
+                        Name(id='SELFDESTRUCT', ctx=Store())],
+                    value=Constant(value=255))],
+            decorator_list=[]),
+        AnnAssign(
+            target=Name(id='op_implementation', ctx=Store()),
+            annotation=Subscript(
+                value=Name(id='Dict', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Ops', ctx=Load()),
+                        Name(id='Callable', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()),
+            value=Dict(
+                keys=[
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='STOP',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='ADD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MUL',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SUB',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DIV',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SDIV',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MOD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SMOD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='ADDMOD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MULMOD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='EXP',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SIGNEXTEND',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='GT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SLT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SGT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='EQ',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='ISZERO',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='AND',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='OR',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='XOR',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='NOT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='BYTE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='KECCAK',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SLOAD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='BLOCKHASH',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='COINBASE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='TIMESTAMP',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='NUMBER',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DIFFICULTY',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='GASLIMIT',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MLOAD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MSTORE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MSTORE8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='MSIZE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='ADDRESS',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='BALANCE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='ORIGIN',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLER',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLVALUE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLDATALOAD',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLDATASIZE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLDATACOPY',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CODESIZE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CODECOPY',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='GASPRICE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='EXTCODESIZE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='EXTCODECOPY',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SSTORE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='JUMP',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='JUMPI',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PC',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='GAS',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='JUMPDEST',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='POP',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH17',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH18',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH19',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH20',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH21',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH22',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH23',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH24',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH25',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH26',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH27',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH28',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH29',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH30',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH31',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='PUSH32',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DUP16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SWAP16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LOG0',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LOG1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LOG2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LOG3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='LOG4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CREATE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='RETURN',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALL',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='CALLCODE',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='DELEGATECALL',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='Ops', ctx=Load()),
+                        attr='SELFDESTRUCT',
+                        ctx=Load())],
+                values=[
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='stop',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='add',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='mul',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='sub',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='div',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='sdiv',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='mod',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='smod',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='addmod',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='mulmod',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='exp',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='arithmetic_instructions', ctx=Load()),
+                        attr='signextend',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='less_than',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='greater_than',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='signed_less_than',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='signed_greater_than',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='equal',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='comparison_instructions', ctx=Load()),
+                        attr='is_zero',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='bitwise_instructions', ctx=Load()),
+                        attr='bitwise_and',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='bitwise_instructions', ctx=Load()),
+                        attr='bitwise_or',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='bitwise_instructions', ctx=Load()),
+                        attr='bitwise_xor',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='bitwise_instructions', ctx=Load()),
+                        attr='bitwise_not',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='bitwise_instructions', ctx=Load()),
+                        attr='get_byte',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='keccak_instructions', ctx=Load()),
+                        attr='keccak',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='storage_instructions', ctx=Load()),
+                        attr='sload',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='block_hash',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='coinbase',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='timestamp',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='number',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='difficulty',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='block_instructions', ctx=Load()),
+                        attr='gas_limit',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='memory_instructions', ctx=Load()),
+                        attr='mload',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='memory_instructions', ctx=Load()),
+                        attr='mstore',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='memory_instructions', ctx=Load()),
+                        attr='mstore8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='memory_instructions', ctx=Load()),
+                        attr='msize',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='address',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='balance',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='origin',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='caller',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='callvalue',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='calldataload',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='calldatasize',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='calldatacopy',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='codesize',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='codecopy',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='gasprice',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='extcodesize',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='environment_instructions', ctx=Load()),
+                        attr='extcodecopy',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='storage_instructions', ctx=Load()),
+                        attr='sstore',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='jump',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='jumpi',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='pc',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='gas_left',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='control_flow_instructions', ctx=Load()),
+                        attr='jumpdest',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='pop',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push17',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push18',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push19',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push20',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push21',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push22',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push23',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push24',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push25',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push26',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push27',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push28',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push29',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push30',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push31',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='push32',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='dup16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap5',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap6',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap7',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap8',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap9',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap10',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap11',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap12',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap13',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap14',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap15',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='stack_instructions', ctx=Load()),
+                        attr='swap16',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='log_instructions', ctx=Load()),
+                        attr='log0',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='log_instructions', ctx=Load()),
+                        attr='log1',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='log_instructions', ctx=Load()),
+                        attr='log2',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='log_instructions', ctx=Load()),
+                        attr='log3',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='log_instructions', ctx=Load()),
+                        attr='log4',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='create',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='return_',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='call',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='callcode',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='delegatecall',
+                        ctx=Load()),
+                    Attribute(
+                        value=Name(id='system_instructions', ctx=Load()),
+                        attr='selfdestruct',
+                        ctx=Load())]),
+            simple=1)],
+    type_ignores=[])

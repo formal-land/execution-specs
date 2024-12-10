@@ -1,0 +1,501 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM)\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThe abstract computer which runs the code stored in an\n`.fork_types.Account`.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Set'),
+                alias(name='Tuple'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes0')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=0),
+        ImportFrom(
+            module='blocks',
+            names=[
+                alias(name='Log')],
+            level=2),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=2),
+        ImportFrom(
+            module='state',
+            names=[
+                alias(name='State'),
+                alias(name='account_exists_and_is_empty')],
+            level=2),
+        ImportFrom(
+            module='precompiled_contracts',
+            names=[
+                alias(name='RIPEMD160_ADDRESS')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='__all__', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value='Environment'),
+                    Constant(value='Evm'),
+                    Constant(value='Message')],
+                ctx=Load())),
+        ClassDef(
+            name='Environment',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Items external to the virtual machine itself, provided by the environment.\n    ')),
+                AnnAssign(
+                    target=Name(id='caller', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='block_hashes', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='Hash32', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='origin', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='coinbase', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='number', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_limit', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_price', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='time', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='difficulty', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state', ctx=Store()),
+                    annotation=Name(id='State', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='traces', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='dict', ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Message',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Items that are used by contract creation or message call.\n    ')),
+                AnnAssign(
+                    target=Name(id='caller', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='target', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Union', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Bytes0', ctx=Load()),
+                                Name(id='Address', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='current_target', ctx=Store()),
+                    annotation=Name(id='Address', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='value', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code_address', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Address', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='depth', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='should_transfer_value', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='parent_evm', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Constant(value='Evm'),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Evm',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='The internal state of the virtual machine.')),
+                AnnAssign(
+                    target=Name(id='pc', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='stack', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='U256', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='memory', ctx=Store()),
+                    annotation=Name(id='bytearray', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_left', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='env', ctx=Store()),
+                    annotation=Name(id='Environment', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='valid_jump_destinations', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Set', ctx=Load()),
+                        slice=Name(id='Uint', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='logs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Log', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='refund_counter', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='running', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='message', ctx=Store()),
+                    annotation=Name(id='Message', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='output', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='accounts_to_delete', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Set', ctx=Load()),
+                        slice=Name(id='Address', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='touched_accounts', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Set', ctx=Load()),
+                        slice=Name(id='Address', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Exception', ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='incorporate_child_on_success',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load())),
+                    arg(
+                        arg='child_evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Incorporate the state of a successful `child_evm` into the parent `evm`.\n\n    Parameters\n    ----------\n    evm :\n        The parent `EVM`.\n    child_evm :\n        The child evm to incorporate.\n    ')),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='gas_left',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Attribute(
+                        value=Name(id='child_evm', ctx=Load()),
+                        attr='gas_left',
+                        ctx=Load())),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='logs',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Attribute(
+                        value=Name(id='child_evm', ctx=Load()),
+                        attr='logs',
+                        ctx=Load())),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='refund_counter',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Attribute(
+                        value=Name(id='child_evm', ctx=Load()),
+                        attr='refund_counter',
+                        ctx=Load())),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='accounts_to_delete',
+                                ctx=Load()),
+                            attr='update',
+                            ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='child_evm', ctx=Load()),
+                                attr='accounts_to_delete',
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='touched_accounts',
+                                ctx=Load()),
+                            attr='update',
+                            ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='child_evm', ctx=Load()),
+                                attr='touched_accounts',
+                                ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Call(
+                        func=Name(id='account_exists_and_is_empty', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='env',
+                                    ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='child_evm', ctx=Load()),
+                                    attr='message',
+                                    ctx=Load()),
+                                attr='current_target',
+                                ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='touched_accounts',
+                                        ctx=Load()),
+                                    attr='add',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='child_evm', ctx=Load()),
+                                            attr='message',
+                                            ctx=Load()),
+                                        attr='current_target',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='incorporate_child_on_error',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load())),
+                    arg(
+                        arg='child_evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Incorporate the state of an unsuccessful `child_evm` into the parent `evm`.\n\n    Parameters\n    ----------\n    evm :\n        The parent `EVM`.\n    child_evm :\n        The child evm to incorporate.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='RIPEMD160_ADDRESS', ctx=Load()),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='child_evm', ctx=Load()),
+                                attr='touched_accounts',
+                                ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='touched_accounts',
+                                        ctx=Load()),
+                                    attr='add',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='RIPEMD160_ADDRESS', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Attribute(
+                                value=Name(id='child_evm', ctx=Load()),
+                                attr='message',
+                                ctx=Load()),
+                            attr='current_target',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='RIPEMD160_ADDRESS', ctx=Load())]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='account_exists_and_is_empty', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='state',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='child_evm', ctx=Load()),
+                                            attr='message',
+                                            ctx=Load()),
+                                        attr='current_target',
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='evm', ctx=Load()),
+                                                attr='touched_accounts',
+                                                ctx=Load()),
+                                            attr='add',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='RIPEMD160_ADDRESS', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[]),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='gas_left',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Attribute(
+                        value=Name(id='child_evm', ctx=Load()),
+                        attr='gas_left',
+                        ctx=Load()))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

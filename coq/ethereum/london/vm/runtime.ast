@@ -1,0 +1,180 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Runtime Operations\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nRuntime related operations used while executing EVM code.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Set')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='Uint'),
+                alias(name='ulen')],
+            level=0),
+        ImportFrom(
+            module='instructions',
+            names=[
+                alias(name='Ops')],
+            level=1),
+        FunctionDef(
+            name='get_valid_jump_destinations',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='code',
+                        annotation=Name(id='bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Analyze the evm code to obtain the set of valid jump destinations.\n\n    Valid jump destinations are defined as follows:\n        * The jump destination is less than the length of the code.\n        * The jump destination should have the `JUMPDEST` opcode (0x5B).\n        * The jump destination shouldn't be part of the data corresponding to\n          `PUSH-N` opcodes.\n\n    Note - Jump destinations are 0-indexed.\n\n    Parameters\n    ----------\n    code :\n        The EVM code which is to be executed.\n\n    Returns\n    -------\n    valid_jump_destinations: `Set[Uint]`\n        The set of valid jump destinations in the code.\n    ")),
+                Assign(
+                    targets=[
+                        Name(id='valid_jump_destinations', ctx=Store())],
+                    value=Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='pc', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])),
+                While(
+                    test=Compare(
+                        left=Name(id='pc', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Call(
+                                func=Name(id='ulen', ctx=Load()),
+                                args=[
+                                    Name(id='code', ctx=Load())],
+                                keywords=[])]),
+                    body=[
+                        Try(
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='current_opcode', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Ops', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='code', ctx=Load()),
+                                                slice=Name(id='pc', ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='ValueError', ctx=Load()),
+                                    body=[
+                                        AugAssign(
+                                            target=Name(id='pc', ctx=Store()),
+                                            op=Add(),
+                                            value=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Constant(value=1)],
+                                                keywords=[])),
+                                        Continue()])],
+                            orelse=[],
+                            finalbody=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='current_opcode', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='Ops', ctx=Load()),
+                                        attr='JUMPDEST',
+                                        ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='valid_jump_destinations', ctx=Load()),
+                                            attr='add',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='pc', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='Ops', ctx=Load()),
+                                                attr='PUSH1',
+                                                ctx=Load()),
+                                            attr='value',
+                                            ctx=Load()),
+                                        ops=[
+                                            LtE(),
+                                            LtE()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='current_opcode', ctx=Load()),
+                                                attr='value',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='Ops', ctx=Load()),
+                                                    attr='PUSH32',
+                                                    ctx=Load()),
+                                                attr='value',
+                                                ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='push_data_size', ctx=Store())],
+                                            value=BinOp(
+                                                left=BinOp(
+                                                    left=Attribute(
+                                                        value=Name(id='current_opcode', ctx=Load()),
+                                                        attr='value',
+                                                        ctx=Load()),
+                                                    op=Sub(),
+                                                    right=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='Ops', ctx=Load()),
+                                                            attr='PUSH1',
+                                                            ctx=Load()),
+                                                        attr='value',
+                                                        ctx=Load())),
+                                                op=Add(),
+                                                right=Constant(value=1))),
+                                        AugAssign(
+                                            target=Name(id='pc', ctx=Store()),
+                                            op=Add(),
+                                            value=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Name(id='push_data_size', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[])]),
+                        AugAssign(
+                            target=Name(id='pc', ctx=Store()),
+                            op=Add(),
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='valid_jump_destinations', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Set', ctx=Load()),
+                slice=Name(id='Uint', ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])

@@ -1,0 +1,39 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value="\n### Introduction\n\nSeeing as internet connections have been vastly expanding across the\nworld, spreading information has become as cheap as ever. Bitcoin, for\nexample, has demonstrated the possibility of creating a decentralized,\ntrade system that is accessible around the world. Namecoin is another\nsystem that built off of Bitcoin's currency structure to create other\nsimple technological applications.\n\nEthereum's goal is to create a cryptographically secure system in which\nany and all types of transaction-based concepts can be built. It provides\nan exceptionally accessible and decentralized system to build software\nand execute transactions.\n\nThis package contains a reference implementation, written as simply as\npossible, to aid in defining the behavior of Ethereum clients.\n")),
+        Import(
+            names=[
+                alias(name='sys')]),
+        Assign(
+            targets=[
+                Name(id='__version__', ctx=Store())],
+            value=Constant(value='0.1.0')),
+        Assign(
+            targets=[
+                Name(id='EVM_RECURSION_LIMIT', ctx=Store())],
+            value=BinOp(
+                left=Constant(value=1024),
+                op=Mult(),
+                right=Constant(value=12))),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='sys', ctx=Load()),
+                    attr='setrecursionlimit',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Name(id='EVM_RECURSION_LIMIT', ctx=Load()),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='sys', ctx=Load()),
+                                    attr='getrecursionlimit',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

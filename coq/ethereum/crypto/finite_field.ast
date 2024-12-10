@@ -1,0 +1,2896 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nFinite Fields\n^^^^^^^^^^^^^\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Iterable'),
+                alias(name='List'),
+                alias(name='Tuple'),
+                alias(name='Type'),
+                alias(name='TypeVar'),
+                alias(name='cast')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='typing_extensions',
+            names=[
+                alias(name='Protocol')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='F', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='F')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Constant(value='Field'))])),
+        ClassDef(
+            name='Field',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A type protocol for defining fields.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='__slots__', ctx=Store())],
+                    value=Tuple(elts=[], ctx=Load())),
+                FunctionDef(
+                    name='zero',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='F', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='from_int',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='F', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='n',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__radd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__add__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__iadd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__sub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__rsub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__mul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__rmul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__imul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__pow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='exponent',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__ipow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__neg__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load())),
+                FunctionDef(
+                    name='__truediv__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value=Ellipsis))],
+                    decorator_list=[],
+                    returns=Name(id='F', ctx=Load()))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='T', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='T')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Constant(value='PrimeField'))])),
+        ClassDef(
+            name='PrimeField',
+            bases=[
+                Name(id='int', ctx=Load()),
+                Name(id='Field', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Superclass for integers modulo a prime. Not intended to be used\n    directly, but rather to be subclassed.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='__slots__', ctx=Store())],
+                    value=Tuple(elts=[], ctx=Load())),
+                AnnAssign(
+                    target=Name(id='PRIME', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='from_be_bytes',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='buffer',
+                                annotation=Constant(value='Bytes'))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Converts a sequence of bytes into a element of the field.\n        Parameters\n        ----------\n        buffer :\n            Bytes to decode.\n        Returns\n        -------\n        self : `T`\n            Unsigned integer decoded from `buffer`.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='cls', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='from_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='buffer', ctx=Load()),
+                                            Constant(value='big')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='zero',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cls', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    Constant(value=0)],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='from_int',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='n',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='cls', ctx=Load()),
+                                args=[
+                                    Name(id='n', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__new__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='value',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='int', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    BinOp(
+                                        left=Name(id='value', ctx=Load()),
+                                        op=Mod(),
+                                        right=Attribute(
+                                            value=Name(id='cls', ctx=Load()),
+                                            attr='PRIME',
+                                            ctx=Load()))],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__radd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__add__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='left', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__add__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='right', ctx=Load()),
+                                        Name(id='int', ctx=Load())],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__add__',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load()),
+                                            Name(id='right', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__iadd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__add__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__sub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='right', ctx=Load()),
+                                        Name(id='int', ctx=Load())],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__sub__',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load()),
+                                            Name(id='right', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__rsub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='left', ctx=Load()),
+                                        Name(id='int', ctx=Load())],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__rsub__',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load()),
+                                            Name(id='left', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__mul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='right', ctx=Load()),
+                                        Name(id='int', ctx=Load())],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__mul__',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load()),
+                                            Name(id='right', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__rmul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__mul__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='left', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__imul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__mul__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='__floordiv__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__rfloordiv__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__ifloordiv__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__divmod__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__rdivmod__', ctx=Store())],
+                    value=Constant(value=None)),
+                FunctionDef(
+                    name='__pow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='exponent',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__pow__',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='int', ctx=Load()),
+                                                args=[
+                                                    Name(id='self', ctx=Load())],
+                                                keywords=[]),
+                                            Name(id='exponent', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='PRIME',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='__rpow__', ctx=Store())],
+                    value=Constant(value=None)),
+                FunctionDef(
+                    name='__ipow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__pow__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='__and__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__or__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__xor__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__rxor__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__ixor__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__rshift__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__lshift__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__irshift__', ctx=Store())],
+                    value=Constant(value=None)),
+                Assign(
+                    targets=[
+                        Name(id='__ilshift__', ctx=Store())],
+                    value=Constant(value=None)),
+                FunctionDef(
+                    name='__neg__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='__neg__',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__truediv__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Name(id='self', ctx=Load()),
+                                op=Mult(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Name(id='right', ctx=Load()),
+                                        attr='multiplicative_inverse',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[])))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='multiplicative_inverse',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Name(id='self', ctx=Load()),
+                                op=Pow(),
+                                right=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1))))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='to_be_bytes32',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Converts this arbitrarily sized unsigned integer into its big endian\n        representation with exactly 32 bytes.\n        Returns\n        -------\n        big_endian : `Bytes32`\n            Big endian (most significant bits first) representation.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='Bytes32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='to_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=32),
+                                            Constant(value='big')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value='Bytes32'))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='U', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='U')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Constant(value='GaloisField'))])),
+        ClassDef(
+            name='GaloisField',
+            bases=[
+                Name(id='tuple', ctx=Load()),
+                Name(id='Field', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Superclass for defining finite fields. Not intended to be used\n    directly, but rather to be subclassed.\n\n    Fields are represented as `F_p[x]/(x^n + ...)` where the `MODULUS` is a\n    tuple of the non-leading coefficients of the defining polynomial. For\n    example `x^3 + 2x^2 + 3x + 4` is `(2, 3, 4)`.\n\n    In practice the polynomial is likely to be sparse and you should overload\n    the `__mul__()` function to take advantage of this fact.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='__slots__', ctx=Store())],
+                    value=Tuple(elts=[], ctx=Load())),
+                AnnAssign(
+                    target=Name(id='PRIME', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='MODULUS', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='int', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='FROBENIUS_COEFFICIENTS', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Constant(value='GaloisField'),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='zero',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='U', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cls', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    BinOp(
+                                        left=List(
+                                            elts=[
+                                                Constant(value=0)],
+                                            ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='cls', ctx=Load()),
+                                                    attr='MODULUS',
+                                                    ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='from_int',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='U', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='n',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cls', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    BinOp(
+                                        left=List(
+                                            elts=[
+                                                Name(id='n', ctx=Load())],
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=BinOp(
+                                            left=List(
+                                                elts=[
+                                                    Constant(value=0)],
+                                                ctx=Load()),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Call(
+                                                    func=Name(id='len', ctx=Load()),
+                                                    args=[
+                                                        Attribute(
+                                                            value=Name(id='cls', ctx=Load()),
+                                                            attr='MODULUS',
+                                                            ctx=Load())],
+                                                    keywords=[]),
+                                                op=Sub(),
+                                                right=Constant(value=1))))],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__new__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='U', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='iterable',
+                                annotation=Subscript(
+                                    value=Name(id='Iterable', ctx=Load()),
+                                    slice=Name(id='int', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='self', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='tuple', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    GeneratorExp(
+                                        elt=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Mod(),
+                                            right=Attribute(
+                                                value=Name(id='cls', ctx=Load()),
+                                                attr='PRIME',
+                                                ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Name(id='x', ctx=Store()),
+                                                iter=Name(id='iterable', ctx=Load()),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[])),
+                        Assert(
+                            test=Compare(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='self', ctx=Load())],
+                                    keywords=[]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='cls', ctx=Load()),
+                                                attr='MODULUS',
+                                                ctx=Load())],
+                                        keywords=[])])),
+                        Return(
+                            value=Name(id='self', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__add__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='right', ctx=Load()),
+                                        Call(
+                                            func=Name(id='type', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    GeneratorExp(
+                                        elt=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Add(),
+                                            right=Name(id='y', ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Tuple(
+                                                    elts=[
+                                                        Name(id='x', ctx=Store()),
+                                                        Name(id='y', ctx=Store())],
+                                                    ctx=Store()),
+                                                iter=Call(
+                                                    func=Name(id='cast', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='Iterable', ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='Tuple', ctx=Load()),
+                                                                slice=Tuple(
+                                                                    elts=[
+                                                                        Name(id='int', ctx=Load()),
+                                                                        Name(id='int', ctx=Load())],
+                                                                    ctx=Load()),
+                                                                ctx=Load()),
+                                                            ctx=Load()),
+                                                        Call(
+                                                            func=Name(id='zip', ctx=Load()),
+                                                            args=[
+                                                                Name(id='self', ctx=Load()),
+                                                                Name(id='right', ctx=Load())],
+                                                            keywords=[])],
+                                                    keywords=[]),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__radd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__add__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='left', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__iadd__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__add__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__sub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='right', ctx=Load()),
+                                        Call(
+                                            func=Name(id='type', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        AnnAssign(
+                            target=Name(id='x', ctx=Store()),
+                            annotation=Name(id='int', ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='y', ctx=Store()),
+                            annotation=Name(id='int', ctx=Load()),
+                            simple=1),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    GeneratorExp(
+                                        elt=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Sub(),
+                                            right=Name(id='y', ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Tuple(
+                                                    elts=[
+                                                        Name(id='x', ctx=Store()),
+                                                        Name(id='y', ctx=Store())],
+                                                    ctx=Store()),
+                                                iter=Call(
+                                                    func=Name(id='cast', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='Iterable', ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='Tuple', ctx=Load()),
+                                                                slice=Tuple(
+                                                                    elts=[
+                                                                        Name(id='int', ctx=Load()),
+                                                                        Name(id='int', ctx=Load())],
+                                                                    ctx=Load()),
+                                                                ctx=Load()),
+                                                            ctx=Load()),
+                                                        Call(
+                                                            func=Name(id='zip', ctx=Load()),
+                                                            args=[
+                                                                Name(id='self', ctx=Load()),
+                                                                Name(id='right', ctx=Load())],
+                                                            keywords=[])],
+                                                    keywords=[]),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__rsub__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='left', ctx=Load()),
+                                        Call(
+                                            func=Name(id='type', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Name(id='NotImplemented', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    GeneratorExp(
+                                        elt=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Sub(),
+                                            right=Name(id='y', ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Tuple(
+                                                    elts=[
+                                                        Name(id='x', ctx=Store()),
+                                                        Name(id='y', ctx=Store())],
+                                                    ctx=Store()),
+                                                iter=Call(
+                                                    func=Name(id='cast', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='Iterable', ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='Tuple', ctx=Load()),
+                                                                slice=Tuple(
+                                                                    elts=[
+                                                                        Name(id='int', ctx=Load()),
+                                                                        Name(id='int', ctx=Load())],
+                                                                    ctx=Load()),
+                                                                ctx=Load()),
+                                                            ctx=Load()),
+                                                        Call(
+                                                            func=Name(id='zip', ctx=Load()),
+                                                            args=[
+                                                                Name(id='left', ctx=Load()),
+                                                                Name(id='self', ctx=Load())],
+                                                            keywords=[])],
+                                                    keywords=[]),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__mul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='modulus', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='MODULUS',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='degree', ctx=Store())],
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='modulus', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='prime', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='PRIME',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='mul', ctx=Store())],
+                            value=BinOp(
+                                left=List(
+                                    elts=[
+                                        Constant(value=0)],
+                                    ctx=Load()),
+                                op=Mult(),
+                                right=BinOp(
+                                    left=Name(id='degree', ctx=Load()),
+                                    op=Mult(),
+                                    right=Constant(value=2)))),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='degree', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                For(
+                                    target=Name(id='j', ctx=Store()),
+                                    iter=Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            Name(id='degree', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        AugAssign(
+                                            target=Subscript(
+                                                value=Name(id='mul', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Name(id='j', ctx=Load())),
+                                                ctx=Store()),
+                                            op=Add(),
+                                            value=BinOp(
+                                                left=Subscript(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    slice=Name(id='i', ctx=Load()),
+                                                    ctx=Load()),
+                                                op=Mult(),
+                                                right=Subscript(
+                                                    value=Name(id='right', ctx=Load()),
+                                                    slice=Name(id='j', ctx=Load()),
+                                                    ctx=Load())))],
+                                    orelse=[])],
+                            orelse=[]),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Name(id='degree', ctx=Load()),
+                                            op=Mult(),
+                                            right=Constant(value=2)),
+                                        op=Sub(),
+                                        right=Constant(value=1)),
+                                    BinOp(
+                                        left=Name(id='degree', ctx=Load()),
+                                        op=Sub(),
+                                        right=Constant(value=1)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[]),
+                            body=[
+                                For(
+                                    target=Name(id='j', ctx=Store()),
+                                    iter=Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=Name(id='i', ctx=Load()),
+                                                op=Sub(),
+                                                right=Name(id='degree', ctx=Load())),
+                                            Name(id='i', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        AugAssign(
+                                            target=Subscript(
+                                                value=Name(id='mul', ctx=Load()),
+                                                slice=Name(id='j', ctx=Load()),
+                                                ctx=Store()),
+                                            op=Sub(),
+                                            value=BinOp(
+                                                left=BinOp(
+                                                    left=Subscript(
+                                                        value=Name(id='mul', ctx=Load()),
+                                                        slice=Name(id='i', ctx=Load()),
+                                                        ctx=Load()),
+                                                    op=Mult(),
+                                                    right=Subscript(
+                                                        value=Name(id='modulus', ctx=Load()),
+                                                        slice=BinOp(
+                                                            left=Name(id='degree', ctx=Load()),
+                                                            op=Sub(),
+                                                            right=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Sub(),
+                                                                right=Name(id='j', ctx=Load()))),
+                                                        ctx=Load())),
+                                                op=Mod(),
+                                                right=Name(id='prime', ctx=Load())))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Subscript(
+                                        value=Name(id='mul', ctx=Load()),
+                                        slice=Slice(
+                                            upper=Name(id='degree', ctx=Load())),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__rmul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='left',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__mul__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='left', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__imul__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__mul__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__truediv__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Name(id='self', ctx=Load()),
+                                op=Mult(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Name(id='right', ctx=Load()),
+                                        attr='multiplicative_inverse',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[])))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__neg__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    GeneratorExp(
+                                        elt=UnaryOp(
+                                            op=USub(),
+                                            operand=Name(id='a', ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Name(id='a', ctx=Store()),
+                                                iter=Name(id='self', ctx=Load()),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='scalar_mul',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='x',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Multiply a field element by a integer. This is faster than using\n        `from_int()` and field multiplication.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    GeneratorExp(
+                                        elt=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Mult(),
+                                            right=Name(id='n', ctx=Load())),
+                                        generators=[
+                                            comprehension(
+                                                target=Name(id='n', ctx=Store()),
+                                                iter=Name(id='self', ctx=Load()),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='deg',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        This is a support function for `multiplicative_inverse()`.\n        ')),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='MODULUS',
+                                                    ctx=Load())],
+                                            keywords=[]),
+                                        op=Sub(),
+                                        right=Constant(value=1)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Subscript(
+                                            value=Name(id='self', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        ops=[
+                                            NotEq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Return(
+                                            value=Name(id='i', ctx=Load()))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Raise(
+                            exc=Call(
+                                func=Name(id='ValueError', ctx=Load()),
+                                args=[
+                                    Constant(value='deg() does not support zero')],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load())),
+                FunctionDef(
+                    name='multiplicative_inverse',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Calculate the multiplicative inverse. Uses the Euclidean algorithm.\n        ')),
+                        AnnAssign(
+                            target=Name(id='x2', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='List', ctx=Load()),
+                                slice=Name(id='int', ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        Assign(
+                            targets=[
+                                Name(id='p', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='PRIME',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='x1', ctx=Store()),
+                                        Name(id='f1', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='list', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='MODULUS',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    BinOp(
+                                        left=List(
+                                            elts=[
+                                                Constant(value=0)],
+                                            ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[]))],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='x2', ctx=Store()),
+                                        Name(id='f2', ctx=Store()),
+                                        Name(id='d2', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='list', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    BinOp(
+                                        left=List(
+                                            elts=[
+                                                Constant(value=1)],
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=BinOp(
+                                            left=List(
+                                                elts=[
+                                                    Constant(value=0)],
+                                                ctx=Load()),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Call(
+                                                    func=Name(id='len', ctx=Load()),
+                                                    args=[
+                                                        Name(id='self', ctx=Load())],
+                                                    keywords=[]),
+                                                op=Sub(),
+                                                right=Constant(value=1)))),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='deg',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='q_0', ctx=Store())],
+                            value=Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='x2', ctx=Load()),
+                                        slice=Name(id='d2', ctx=Load()),
+                                        ctx=Load()),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1)),
+                                    Name(id='p', ctx=Load())],
+                                keywords=[])),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='d2', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='x1', ctx=Load()),
+                                            slice=BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='x1', ctx=Load())],
+                                                        keywords=[])),
+                                                op=Sub(),
+                                                right=Name(id='d2', ctx=Load())),
+                                            ctx=Store())],
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='x1', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Call(
+                                                            func=Name(id='len', ctx=Load()),
+                                                            args=[
+                                                                Name(id='x1', ctx=Load())],
+                                                            keywords=[])),
+                                                    op=Sub(),
+                                                    right=Name(id='d2', ctx=Load())),
+                                                ctx=Load()),
+                                            op=Sub(),
+                                            right=BinOp(
+                                                left=Name(id='q_0', ctx=Load()),
+                                                op=Mult(),
+                                                right=Subscript(
+                                                    value=Name(id='x2', ctx=Load()),
+                                                    slice=Name(id='i', ctx=Load()),
+                                                    ctx=Load()))),
+                                        op=Mod(),
+                                        right=Name(id='p', ctx=Load()))),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='f1', ctx=Load()),
+                                            slice=BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='x1', ctx=Load())],
+                                                        keywords=[])),
+                                                op=Sub(),
+                                                right=Name(id='d2', ctx=Load())),
+                                            ctx=Store())],
+                                    value=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='f1', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Call(
+                                                            func=Name(id='len', ctx=Load()),
+                                                            args=[
+                                                                Name(id='x1', ctx=Load())],
+                                                            keywords=[])),
+                                                    op=Sub(),
+                                                    right=Name(id='d2', ctx=Load())),
+                                                ctx=Load()),
+                                            op=Sub(),
+                                            right=BinOp(
+                                                left=Name(id='q_0', ctx=Load()),
+                                                op=Mult(),
+                                                right=Subscript(
+                                                    value=Name(id='f2', ctx=Load()),
+                                                    slice=Name(id='i', ctx=Load()),
+                                                    ctx=Load()))),
+                                        op=Mod(),
+                                        right=Name(id='p', ctx=Load())))],
+                            orelse=[]),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='MODULUS',
+                                                    ctx=Load())],
+                                            keywords=[]),
+                                        op=Sub(),
+                                        right=Constant(value=1)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Subscript(
+                                            value=Name(id='x1', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        ops=[
+                                            NotEq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='d1', ctx=Store())],
+                                            value=Name(id='i', ctx=Load())),
+                                        Break()],
+                                    orelse=[])],
+                            orelse=[]),
+                        While(
+                            test=Constant(value=True),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='d1', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='ans', ctx=Store())],
+                                            value=Name(id='f1', ctx=Load())),
+                                        Assign(
+                                            targets=[
+                                                Name(id='q', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='pow', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='x1', ctx=Load()),
+                                                        slice=Constant(value=0),
+                                                        ctx=Load()),
+                                                    UnaryOp(
+                                                        op=USub(),
+                                                        operand=Constant(value=1)),
+                                                    Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='PRIME',
+                                                        ctx=Load())],
+                                                keywords=[])),
+                                        For(
+                                            target=Name(id='i', ctx=Store()),
+                                            iter=Call(
+                                                func=Name(id='range', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='ans', ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]),
+                                            body=[
+                                                AugAssign(
+                                                    target=Subscript(
+                                                        value=Name(id='ans', ctx=Load()),
+                                                        slice=Name(id='i', ctx=Load()),
+                                                        ctx=Store()),
+                                                    op=Mult(),
+                                                    value=Name(id='q', ctx=Load()))],
+                                            orelse=[]),
+                                        Break()],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Name(id='d2', ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=0)]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='ans', ctx=Store())],
+                                                    value=Name(id='f2', ctx=Load())),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='q', ctx=Store())],
+                                                    value=Call(
+                                                        func=Name(id='pow', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='x2', ctx=Load()),
+                                                                slice=Constant(value=0),
+                                                                ctx=Load()),
+                                                            UnaryOp(
+                                                                op=USub(),
+                                                                operand=Constant(value=1)),
+                                                            Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='PRIME',
+                                                                ctx=Load())],
+                                                        keywords=[])),
+                                                For(
+                                                    target=Name(id='i', ctx=Store()),
+                                                    iter=Call(
+                                                        func=Name(id='range', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Name(id='len', ctx=Load()),
+                                                                args=[
+                                                                    Name(id='ans', ctx=Load())],
+                                                                keywords=[])],
+                                                        keywords=[]),
+                                                    body=[
+                                                        AugAssign(
+                                                            target=Name(id='ans', ctx=Store()),
+                                                            op=Mult(),
+                                                            value=Name(id='q', ctx=Load()))],
+                                                    orelse=[]),
+                                                Break()],
+                                            orelse=[])]),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='d1', ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Name(id='d2', ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='q', ctx=Store())],
+                                            value=BinOp(
+                                                left=Subscript(
+                                                    value=Name(id='x2', ctx=Load()),
+                                                    slice=Name(id='d2', ctx=Load()),
+                                                    ctx=Load()),
+                                                op=Mult(),
+                                                right=Call(
+                                                    func=Name(id='pow', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='x1', ctx=Load()),
+                                                            slice=Name(id='d1', ctx=Load()),
+                                                            ctx=Load()),
+                                                        UnaryOp(
+                                                            op=USub(),
+                                                            operand=Constant(value=1)),
+                                                        Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='PRIME',
+                                                            ctx=Load())],
+                                                    keywords=[]))),
+                                        For(
+                                            target=Name(id='i', ctx=Store()),
+                                            iter=Call(
+                                                func=Name(id='range', ctx=Load()),
+                                                args=[
+                                                    BinOp(
+                                                        left=Call(
+                                                            func=Name(id='len', ctx=Load()),
+                                                            args=[
+                                                                Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='MODULUS',
+                                                                    ctx=Load())],
+                                                            keywords=[]),
+                                                        op=Sub(),
+                                                        right=BinOp(
+                                                            left=Name(id='d2', ctx=Load()),
+                                                            op=Sub(),
+                                                            right=Name(id='d1', ctx=Load())))],
+                                                keywords=[]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Name(id='x2', ctx=Load()),
+                                                            slice=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Add(),
+                                                                right=BinOp(
+                                                                    left=Name(id='d2', ctx=Load()),
+                                                                    op=Sub(),
+                                                                    right=Name(id='d1', ctx=Load()))),
+                                                            ctx=Store())],
+                                                    value=BinOp(
+                                                        left=BinOp(
+                                                            left=Subscript(
+                                                                value=Name(id='x2', ctx=Load()),
+                                                                slice=BinOp(
+                                                                    left=Name(id='i', ctx=Load()),
+                                                                    op=Add(),
+                                                                    right=BinOp(
+                                                                        left=Name(id='d2', ctx=Load()),
+                                                                        op=Sub(),
+                                                                        right=Name(id='d1', ctx=Load()))),
+                                                                ctx=Load()),
+                                                            op=Sub(),
+                                                            right=BinOp(
+                                                                left=Name(id='q', ctx=Load()),
+                                                                op=Mult(),
+                                                                right=Subscript(
+                                                                    value=Name(id='x1', ctx=Load()),
+                                                                    slice=Name(id='i', ctx=Load()),
+                                                                    ctx=Load()))),
+                                                        op=Mod(),
+                                                        right=Name(id='p', ctx=Load()))),
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Name(id='f2', ctx=Load()),
+                                                            slice=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Add(),
+                                                                right=BinOp(
+                                                                    left=Name(id='d2', ctx=Load()),
+                                                                    op=Sub(),
+                                                                    right=Name(id='d1', ctx=Load()))),
+                                                            ctx=Store())],
+                                                    value=BinOp(
+                                                        left=BinOp(
+                                                            left=Subscript(
+                                                                value=Name(id='f2', ctx=Load()),
+                                                                slice=BinOp(
+                                                                    left=Name(id='i', ctx=Load()),
+                                                                    op=Add(),
+                                                                    right=BinOp(
+                                                                        left=Name(id='d2', ctx=Load()),
+                                                                        op=Sub(),
+                                                                        right=Name(id='d1', ctx=Load()))),
+                                                                ctx=Load()),
+                                                            op=Sub(),
+                                                            right=BinOp(
+                                                                left=Name(id='q', ctx=Load()),
+                                                                op=Mult(),
+                                                                right=Subscript(
+                                                                    value=Name(id='f1', ctx=Load()),
+                                                                    slice=Name(id='i', ctx=Load()),
+                                                                    ctx=Load()))),
+                                                        op=Mod(),
+                                                        right=Name(id='p', ctx=Load())))],
+                                            orelse=[]),
+                                        While(
+                                            test=Compare(
+                                                left=Subscript(
+                                                    value=Name(id='x2', ctx=Load()),
+                                                    slice=Name(id='d2', ctx=Load()),
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=0)]),
+                                            body=[
+                                                AugAssign(
+                                                    target=Name(id='d2', ctx=Store()),
+                                                    op=Sub(),
+                                                    value=Constant(value=1))],
+                                            orelse=[])],
+                                    orelse=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='q', ctx=Store())],
+                                            value=BinOp(
+                                                left=Subscript(
+                                                    value=Name(id='x1', ctx=Load()),
+                                                    slice=Name(id='d1', ctx=Load()),
+                                                    ctx=Load()),
+                                                op=Mult(),
+                                                right=Call(
+                                                    func=Name(id='pow', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='x2', ctx=Load()),
+                                                            slice=Name(id='d2', ctx=Load()),
+                                                            ctx=Load()),
+                                                        UnaryOp(
+                                                            op=USub(),
+                                                            operand=Constant(value=1)),
+                                                        Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='PRIME',
+                                                            ctx=Load())],
+                                                    keywords=[]))),
+                                        For(
+                                            target=Name(id='i', ctx=Store()),
+                                            iter=Call(
+                                                func=Name(id='range', ctx=Load()),
+                                                args=[
+                                                    BinOp(
+                                                        left=Call(
+                                                            func=Name(id='len', ctx=Load()),
+                                                            args=[
+                                                                Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='MODULUS',
+                                                                    ctx=Load())],
+                                                            keywords=[]),
+                                                        op=Sub(),
+                                                        right=BinOp(
+                                                            left=Name(id='d1', ctx=Load()),
+                                                            op=Sub(),
+                                                            right=Name(id='d2', ctx=Load())))],
+                                                keywords=[]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Name(id='x1', ctx=Load()),
+                                                            slice=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Add(),
+                                                                right=BinOp(
+                                                                    left=Name(id='d1', ctx=Load()),
+                                                                    op=Sub(),
+                                                                    right=Name(id='d2', ctx=Load()))),
+                                                            ctx=Store())],
+                                                    value=BinOp(
+                                                        left=BinOp(
+                                                            left=Subscript(
+                                                                value=Name(id='x1', ctx=Load()),
+                                                                slice=BinOp(
+                                                                    left=Name(id='i', ctx=Load()),
+                                                                    op=Add(),
+                                                                    right=BinOp(
+                                                                        left=Name(id='d1', ctx=Load()),
+                                                                        op=Sub(),
+                                                                        right=Name(id='d2', ctx=Load()))),
+                                                                ctx=Load()),
+                                                            op=Sub(),
+                                                            right=BinOp(
+                                                                left=Name(id='q', ctx=Load()),
+                                                                op=Mult(),
+                                                                right=Subscript(
+                                                                    value=Name(id='x2', ctx=Load()),
+                                                                    slice=Name(id='i', ctx=Load()),
+                                                                    ctx=Load()))),
+                                                        op=Mod(),
+                                                        right=Name(id='p', ctx=Load()))),
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Name(id='f1', ctx=Load()),
+                                                            slice=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Add(),
+                                                                right=BinOp(
+                                                                    left=Name(id='d1', ctx=Load()),
+                                                                    op=Sub(),
+                                                                    right=Name(id='d2', ctx=Load()))),
+                                                            ctx=Store())],
+                                                    value=BinOp(
+                                                        left=BinOp(
+                                                            left=Subscript(
+                                                                value=Name(id='f1', ctx=Load()),
+                                                                slice=BinOp(
+                                                                    left=Name(id='i', ctx=Load()),
+                                                                    op=Add(),
+                                                                    right=BinOp(
+                                                                        left=Name(id='d1', ctx=Load()),
+                                                                        op=Sub(),
+                                                                        right=Name(id='d2', ctx=Load()))),
+                                                                ctx=Load()),
+                                                            op=Sub(),
+                                                            right=BinOp(
+                                                                left=Name(id='q', ctx=Load()),
+                                                                op=Mult(),
+                                                                right=Subscript(
+                                                                    value=Name(id='f2', ctx=Load()),
+                                                                    slice=Name(id='i', ctx=Load()),
+                                                                    ctx=Load()))),
+                                                        op=Mod(),
+                                                        right=Name(id='p', ctx=Load())))],
+                                            orelse=[]),
+                                        While(
+                                            test=Compare(
+                                                left=Subscript(
+                                                    value=Name(id='x1', ctx=Load()),
+                                                    slice=Name(id='d1', ctx=Load()),
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=0)]),
+                                            body=[
+                                                AugAssign(
+                                                    target=Name(id='d1', ctx=Store()),
+                                                    op=Sub(),
+                                                    value=Constant(value=1))],
+                                            orelse=[])])],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='ans', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__pow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='exponent',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='degree', ctx=Store())],
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='MODULUS',
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='exponent', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='self', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='multiplicative_inverse',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='exponent', ctx=Store())],
+                                    value=UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='exponent', ctx=Load())))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='res', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    BinOp(
+                                        left=List(
+                                            elts=[
+                                                Constant(value=1)],
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=BinOp(
+                                            left=List(
+                                                elts=[
+                                                    Constant(value=0)],
+                                                ctx=Load()),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=Name(id='degree', ctx=Load()),
+                                                op=Sub(),
+                                                right=Constant(value=1))))],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='s', ctx=Store())],
+                            value=Name(id='self', ctx=Load())),
+                        While(
+                            test=Compare(
+                                left=Name(id='exponent', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=BinOp(
+                                            left=Name(id='exponent', ctx=Load()),
+                                            op=Mod(),
+                                            right=Constant(value=2)),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=1)]),
+                                    body=[
+                                        AugAssign(
+                                            target=Name(id='res', ctx=Store()),
+                                            op=Mult(),
+                                            value=Name(id='s', ctx=Load()))],
+                                    orelse=[]),
+                                AugAssign(
+                                    target=Name(id='s', ctx=Store()),
+                                    op=Mult(),
+                                    value=Name(id='s', ctx=Load())),
+                                AugAssign(
+                                    target=Name(id='exponent', ctx=Store()),
+                                    op=FloorDiv(),
+                                    value=Constant(value=2))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='res', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='__ipow__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load())),
+                            arg(
+                                arg='right',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__pow__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='right', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load())),
+                FunctionDef(
+                    name='calculate_frobenius_coefficients',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='U', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Calculate the coefficients needed by `frobenius()`.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='coefficients', ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='cls', ctx=Load()),
+                                                attr='MODULUS',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='x', ctx=Store())],
+                                    value=BinOp(
+                                        left=List(
+                                            elts=[
+                                                Constant(value=0)],
+                                            ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='cls', ctx=Load()),
+                                                    attr='MODULUS',
+                                                    ctx=Load())],
+                                            keywords=[]))),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='x', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Store())],
+                                    value=Constant(value=1)),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='coefficients', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=Call(
+                                                    func=Attribute(
+                                                        value=Name(id='cls', ctx=Load()),
+                                                        attr='__new__',
+                                                        ctx=Load()),
+                                                    args=[
+                                                        Name(id='cls', ctx=Load()),
+                                                        Name(id='x', ctx=Load())],
+                                                    keywords=[]),
+                                                op=Pow(),
+                                                right=Attribute(
+                                                    value=Name(id='cls', ctx=Load()),
+                                                    attr='PRIME',
+                                                    ctx=Load()))],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Name(id='tuple', ctx=Load()),
+                                args=[
+                                    Name(id='coefficients', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='U', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='frobenius',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='U', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Returns `self ** p`. This function is known as the Frobenius\n        endomorphism and has many special mathematical properties. In\n        particular it is extremely cheap to compute compared to other\n        exponentiations.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='ans', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='from_int',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[])),
+                        AnnAssign(
+                            target=Name(id='a', ctx=Store()),
+                            annotation=Name(id='int', ctx=Load()),
+                            simple=1),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='i', ctx=Store()),
+                                    Name(id='a', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Name(id='enumerate', ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                AugAssign(
+                                    target=Name(id='ans', ctx=Store()),
+                                    op=Add(),
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='cast', ctx=Load()),
+                                                args=[
+                                                    Name(id='U', ctx=Load()),
+                                                    Subscript(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='FROBENIUS_COEFFICIENTS',
+                                                            ctx=Load()),
+                                                        slice=Name(id='i', ctx=Load()),
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            attr='scalar_mul',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='a', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='ans', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='U', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

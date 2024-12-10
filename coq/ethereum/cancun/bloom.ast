@@ -1,0 +1,208 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Logs Bloom\n^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThis modules defines functions for calculating bloom filters of logs. For the\ngeneral theory of bloom filters see e.g. `Wikipedia\n<https://en.wikipedia.org/wiki/Bloom_filter>`_. Bloom filters are used to allow\nfor efficient searching of logs by address and/or topic, by rapidly\neliminating blocks and receipts from their search.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='blocks',
+            names=[
+                alias(name='Log')],
+            level=1),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Bloom')],
+            level=1),
+        FunctionDef(
+            name='add_to_bloom',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='bloom',
+                        annotation=Name(id='bytearray', ctx=Load())),
+                    arg(
+                        arg='bloom_entry',
+                        annotation=Name(id='bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Add a bloom entry to the bloom filter (`bloom`).\n\n    The number of hash functions used is 3. They are calculated by taking the\n    least significant 11 bits from the first 3 16-bit words of the\n    `keccak_256()` hash of `bloom_entry`.\n\n    Parameters\n    ----------\n    bloom :\n        The bloom filter.\n    bloom_entry :\n        An entry which is to be added to bloom filter.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='hash', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak256', ctx=Load()),
+                        args=[
+                            Name(id='bloom_entry', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Name(id='idx', ctx=Store()),
+                    iter=Tuple(
+                        elts=[
+                            Constant(value=0),
+                            Constant(value=2),
+                            Constant(value=4)],
+                        ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='bit_to_set', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Attribute(
+                                        value=Name(id='Uint', ctx=Load()),
+                                        attr='from_be_bytes',
+                                        ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='hash', ctx=Load()),
+                                            slice=Slice(
+                                                lower=Name(id='idx', ctx=Load()),
+                                                upper=BinOp(
+                                                    left=Name(id='idx', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Constant(value=2))),
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=BitAnd(),
+                                right=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=2047)],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='bit_index', ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value=2047),
+                                op=Sub(),
+                                right=Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[
+                                        Name(id='bit_to_set', ctx=Load())],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='byte_index', ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='bit_index', ctx=Load()),
+                                op=FloorDiv(),
+                                right=Constant(value=8))),
+                        Assign(
+                            targets=[
+                                Name(id='bit_value', ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value=1),
+                                op=LShift(),
+                                right=BinOp(
+                                    left=Constant(value=7),
+                                    op=Sub(),
+                                    right=BinOp(
+                                        left=Name(id='bit_index', ctx=Load()),
+                                        op=Mod(),
+                                        right=Constant(value=8))))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='bloom', ctx=Load()),
+                                    slice=Name(id='byte_index', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Subscript(
+                                    value=Name(id='bloom', ctx=Load()),
+                                    slice=Name(id='byte_index', ctx=Load()),
+                                    ctx=Load()),
+                                op=BitOr(),
+                                right=Name(id='bit_value', ctx=Load())))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='logs_bloom',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='logs',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Log', ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the logs bloom from a list of log entries.\n\n    The address and each topic of a log are added to the bloom filter.\n\n    Parameters\n    ----------\n    logs :\n        List of logs for which the logs bloom is to be obtained.\n\n    Returns\n    -------\n    logs_bloom : `Bloom`\n        The logs bloom obtained which is 256 bytes with some bits set as per\n        the caller address and the log topics.\n    ')),
+                AnnAssign(
+                    target=Name(id='bloom', ctx=Store()),
+                    annotation=Name(id='bytearray', ctx=Load()),
+                    value=Call(
+                        func=Name(id='bytearray', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=b'\x00'),
+                                op=Mult(),
+                                right=Constant(value=256))],
+                        keywords=[]),
+                    simple=1),
+                For(
+                    target=Name(id='log', ctx=Store()),
+                    iter=Name(id='logs', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='add_to_bloom', ctx=Load()),
+                                args=[
+                                    Name(id='bloom', ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='log', ctx=Load()),
+                                        attr='address',
+                                        ctx=Load())],
+                                keywords=[])),
+                        For(
+                            target=Name(id='topic', ctx=Store()),
+                            iter=Attribute(
+                                value=Name(id='log', ctx=Load()),
+                                attr='topics',
+                                ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='add_to_bloom', ctx=Load()),
+                                        args=[
+                                            Name(id='bloom', ctx=Load()),
+                                            Name(id='topic', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='Bloom', ctx=Load()),
+                        args=[
+                            Name(id='bloom', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bloom', ctx=Load()))],
+    type_ignores=[])

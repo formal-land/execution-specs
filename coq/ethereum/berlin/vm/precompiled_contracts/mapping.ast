@@ -1,0 +1,97 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nPrecompiled Contract Addresses\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nMapping of precompiled contracts their implementations.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Callable'),
+                alias(name='Dict')],
+            level=0),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=3),
+        ImportFrom(
+            names=[
+                alias(name='ALT_BN128_ADD_ADDRESS'),
+                alias(name='ALT_BN128_MUL_ADDRESS'),
+                alias(name='ALT_BN128_PAIRING_CHECK_ADDRESS'),
+                alias(name='BLAKE2F_ADDRESS'),
+                alias(name='ECRECOVER_ADDRESS'),
+                alias(name='IDENTITY_ADDRESS'),
+                alias(name='MODEXP_ADDRESS'),
+                alias(name='RIPEMD160_ADDRESS'),
+                alias(name='SHA256_ADDRESS')],
+            level=1),
+        ImportFrom(
+            module='alt_bn128',
+            names=[
+                alias(name='alt_bn128_add'),
+                alias(name='alt_bn128_mul'),
+                alias(name='alt_bn128_pairing_check')],
+            level=1),
+        ImportFrom(
+            module='blake2f',
+            names=[
+                alias(name='blake2f')],
+            level=1),
+        ImportFrom(
+            module='ecrecover',
+            names=[
+                alias(name='ecrecover')],
+            level=1),
+        ImportFrom(
+            module='identity',
+            names=[
+                alias(name='identity')],
+            level=1),
+        ImportFrom(
+            module='modexp',
+            names=[
+                alias(name='modexp')],
+            level=1),
+        ImportFrom(
+            module='ripemd160',
+            names=[
+                alias(name='ripemd160')],
+            level=1),
+        ImportFrom(
+            module='sha256',
+            names=[
+                alias(name='sha256')],
+            level=1),
+        AnnAssign(
+            target=Name(id='PRE_COMPILED_CONTRACTS', ctx=Store()),
+            annotation=Subscript(
+                value=Name(id='Dict', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Address', ctx=Load()),
+                        Name(id='Callable', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()),
+            value=Dict(
+                keys=[
+                    Name(id='ECRECOVER_ADDRESS', ctx=Load()),
+                    Name(id='SHA256_ADDRESS', ctx=Load()),
+                    Name(id='RIPEMD160_ADDRESS', ctx=Load()),
+                    Name(id='IDENTITY_ADDRESS', ctx=Load()),
+                    Name(id='MODEXP_ADDRESS', ctx=Load()),
+                    Name(id='ALT_BN128_ADD_ADDRESS', ctx=Load()),
+                    Name(id='ALT_BN128_MUL_ADDRESS', ctx=Load()),
+                    Name(id='ALT_BN128_PAIRING_CHECK_ADDRESS', ctx=Load()),
+                    Name(id='BLAKE2F_ADDRESS', ctx=Load())],
+                values=[
+                    Name(id='ecrecover', ctx=Load()),
+                    Name(id='sha256', ctx=Load()),
+                    Name(id='ripemd160', ctx=Load()),
+                    Name(id='identity', ctx=Load()),
+                    Name(id='modexp', ctx=Load()),
+                    Name(id='alt_bn128_add', ctx=Load()),
+                    Name(id='alt_bn128_mul', ctx=Load()),
+                    Name(id='alt_bn128_pairing_check', ctx=Load()),
+                    Name(id='blake2f', ctx=Load())]),
+            simple=1)],
+    type_ignores=[])

@@ -1,0 +1,371 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Control Flow Instructions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementations of the EVM control flow instructions.\n')),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_BASE'),
+                alias(name='GAS_HIGH'),
+                alias(name='GAS_JUMPDEST'),
+                alias(name='GAS_MID'),
+                alias(name='charge_gas')],
+            level=3),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=2),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='InvalidJumpDestError')],
+            level=2),
+        ImportFrom(
+            module='stack',
+            names=[
+                alias(name='pop'),
+                alias(name='push')],
+            level=2),
+        FunctionDef(
+            name='stop',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Stop further execution of EVM code.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n    ')),
+                Pass(),
+                Pass(),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='running',
+                            ctx=Store())],
+                    value=Constant(value=False)),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='jump',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Alter the program counter to the location specified by the top of the\n    stack.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='jump_dest', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_MID', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='jump_dest', ctx=Load()),
+                        ops=[
+                            NotIn()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='valid_jump_destinations',
+                                ctx=Load())]),
+                    body=[
+                        Raise(
+                            exc=Name(id='InvalidJumpDestError', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='pc',
+                            ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Name(id='jump_dest', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='jumpi',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Alter the program counter to the specified location if and only if a\n    condition is true. If the condition is not true, then the program counter\n    would increase only by 1.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='jump_dest', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='conditional_value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_HIGH', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='conditional_value', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='destination', ctx=Store())],
+                            value=BinOp(
+                                left=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='pc',
+                                    ctx=Load()),
+                                op=Add(),
+                                right=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=1)],
+                                    keywords=[])))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='jump_dest', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='valid_jump_destinations',
+                                        ctx=Load())]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='InvalidJumpDestError', ctx=Load()))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='destination', ctx=Store())],
+                                    value=Name(id='jump_dest', ctx=Load()))])]),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='pc',
+                            ctx=Store())],
+                    value=Name(id='destination', ctx=Load()))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='pc',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Push onto the stack the value of the program counter after reaching the\n    current instruction and without increasing it for the next instruction.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='pc',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='gas_left',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Push the amount of available gas (including the corresponding reduction\n    for the cost of this instruction) onto the stack.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='gas_left',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='jumpdest',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Mark a valid destination for jumps. This is a noop, present only\n    to be used by `JUMP` and `JUMPI` opcodes to verify that their jump is\n    valid.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_JUMPDEST', ctx=Load())],
+                        keywords=[])),
+                Pass(),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

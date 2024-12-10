@@ -1,0 +1,817 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Gas\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nEVM gas constants and calculators.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='List'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.trace',
+            names=[
+                alias(name='GasAndRefund'),
+                alias(name='evm_trace')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.numeric',
+            names=[
+                alias(name='ceil32')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=1),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='OutOfGasError')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='GAS_JUMPDEST', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_BASE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=2)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_VERY_LOW', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_STORAGE_SET', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=20000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_STORAGE_UPDATE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=5000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_STORAGE_CLEAR_REFUND', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=15000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_LOW', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_MID', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=8)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_HIGH', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_EXPONENTIATION', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_EXPONENTIATION_PER_BYTE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=50)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_MEMORY', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_KECCAK256', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=30)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_KECCAK256_WORD', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=6)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_COPY', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_BLOCK_HASH', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=20)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_LOG', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=375)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_LOG_DATA', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=8)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_LOG_TOPIC', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=375)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_CREATE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=32000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_CODE_DEPOSIT', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=200)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_ZERO', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=0)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_NEW_ACCOUNT', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=25000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_CALL_VALUE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=9000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_CALL_STIPEND', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=2300)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_SELF_DESTRUCT', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=5000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_SELF_DESTRUCT_NEW_ACCOUNT', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=25000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='REFUND_SELF_DESTRUCT', ctx=Store())],
+            value=Constant(value=24000)),
+        Assign(
+            targets=[
+                Name(id='GAS_ECRECOVER', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_SHA256', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=60)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_SHA256_WORD', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=12)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_RIPEMD160', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=600)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_RIPEMD160_WORD', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=120)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_IDENTITY', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=15)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_IDENTITY_WORD', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_RETURN_DATA_COPY', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_FAST_STEP', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_BLAKE2_PER_ROUND', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_COLD_SLOAD', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=2100)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_COLD_ACCOUNT_ACCESS', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=2600)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='GAS_WARM_ACCESS', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=100)],
+                keywords=[])),
+        ClassDef(
+            name='ExtendMemory',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Define the parameters for memory extension in opcodes\n\n    `cost`: `ethereum.base_types.Uint`\n        The gas required to perform the extension\n    `expand_by`: `ethereum.base_types.Uint`\n        The size by which the memory will be extended\n    ')),
+                AnnAssign(
+                    target=Name(id='cost', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='expand_by', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='MessageCallGas',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Define the gas cost and stipend for executing the call opcodes.\n\n    `cost`: `ethereum.base_types.Uint`\n        The non-refundable portion of gas reserved for executing the\n        call opcode.\n    `stipend`: `ethereum.base_types.Uint`\n        The portion of gas available to sub-calls that is refundable\n        if not consumed\n    ')),
+                AnnAssign(
+                    target=Name(id='cost', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='stipend', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='charge_gas',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load())),
+                    arg(
+                        arg='amount',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Subtracts `amount` from `evm.gas_left`.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM.\n    amount :\n        The amount of gas the current operation requires.\n\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='evm_trace', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Call(
+                                func=Name(id='GasAndRefund', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='amount', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='gas_left',
+                            ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='amount', ctx=Load())]),
+                    body=[
+                        Raise(
+                            exc=Name(id='OutOfGasError', ctx=Load()))],
+                    orelse=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='gas_left',
+                                ctx=Store()),
+                            op=Sub(),
+                            value=Name(id='amount', ctx=Load()))])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='calculate_memory_gas_cost',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='size_in_bytes',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculates the gas cost for allocating memory\n    to the smallest multiple of 32 bytes,\n    such that the allocated size is at least as big as the given size.\n\n    Parameters\n    ----------\n    size_in_bytes :\n        The size of the data in bytes.\n\n    Returns\n    -------\n    total_gas_cost : `ethereum.base_types.Uint`\n        The gas cost for storing data in memory.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='size_in_words', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Name(id='ceil32', ctx=Load()),
+                            args=[
+                                Name(id='size_in_bytes', ctx=Load())],
+                            keywords=[]),
+                        op=FloorDiv(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=32)],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='linear_cost', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='size_in_words', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='GAS_MEMORY', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='quadratic_cost', ctx=Store())],
+                    value=BinOp(
+                        left=BinOp(
+                            left=Name(id='size_in_words', ctx=Load()),
+                            op=Pow(),
+                            right=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=2)],
+                                keywords=[])),
+                        op=FloorDiv(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=512)],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='total_gas_cost', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='linear_cost', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='quadratic_cost', ctx=Load()))),
+                Try(
+                    body=[
+                        Return(
+                            value=Name(id='total_gas_cost', ctx=Load()))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Name(id='OutOfGasError', ctx=Load()))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='calculate_gas_extend_memory',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='memory',
+                        annotation=Name(id='bytearray', ctx=Load())),
+                    arg(
+                        arg='extensions',
+                        annotation=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Tuple', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='U256', ctx=Load()),
+                                        Name(id='U256', ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculates the gas amount to extend memory\n\n    Parameters\n    ----------\n    memory :\n        Memory contents of the EVM.\n    extensions:\n        List of extensions to be made to the memory.\n        Consists of a tuple of start position and size.\n\n    Returns\n    -------\n    extend_memory: `ExtendMemory`\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='size_to_extend', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='to_be_paid', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='current_size', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='memory', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='start_position', ctx=Store()),
+                            Name(id='size', ctx=Store())],
+                        ctx=Store()),
+                    iter=Name(id='extensions', ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='size', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Continue()],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='before_size', ctx=Store())],
+                            value=Call(
+                                func=Name(id='ceil32', ctx=Load()),
+                                args=[
+                                    Name(id='current_size', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='after_size', ctx=Store())],
+                            value=Call(
+                                func=Name(id='ceil32', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Name(id='start_position', ctx=Load())],
+                                            keywords=[]),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Name(id='size', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='after_size', ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Name(id='before_size', ctx=Load())]),
+                            body=[
+                                Continue()],
+                            orelse=[]),
+                        AugAssign(
+                            target=Name(id='size_to_extend', ctx=Store()),
+                            op=Add(),
+                            value=BinOp(
+                                left=Name(id='after_size', ctx=Load()),
+                                op=Sub(),
+                                right=Name(id='before_size', ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Name(id='already_paid', ctx=Store())],
+                            value=Call(
+                                func=Name(id='calculate_memory_gas_cost', ctx=Load()),
+                                args=[
+                                    Name(id='before_size', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='total_cost', ctx=Store())],
+                            value=Call(
+                                func=Name(id='calculate_memory_gas_cost', ctx=Load()),
+                                args=[
+                                    Name(id='after_size', ctx=Load())],
+                                keywords=[])),
+                        AugAssign(
+                            target=Name(id='to_be_paid', ctx=Store()),
+                            op=Add(),
+                            value=BinOp(
+                                left=Name(id='total_cost', ctx=Load()),
+                                op=Sub(),
+                                right=Name(id='already_paid', ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Name(id='current_size', ctx=Store())],
+                            value=Name(id='after_size', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='ExtendMemory', ctx=Load()),
+                        args=[
+                            Name(id='to_be_paid', ctx=Load()),
+                            Name(id='size_to_extend', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='ExtendMemory', ctx=Load())),
+        FunctionDef(
+            name='calculate_message_call_gas',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='gas',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='gas_left',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='memory_cost',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='extra_gas',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='call_stipend',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Name(id='GAS_CALL_STIPEND', ctx=Load())]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculates the MessageCallGas (cost and stipend) for\n    executing call Opcodes.\n\n    Parameters\n    ----------\n    value:\n        The amount of `ETH` that needs to be transferred.\n    gas :\n        The amount of gas provided to the message-call.\n    gas_left :\n        The amount of gas left in the current frame.\n    memory_cost :\n        The amount needed to extend the memory in the current frame.\n    extra_gas :\n        The amount of gas needed for transferring value + creating a new\n        account inside a message call.\n    call_stipend :\n        The amount of stipend provided to a message call to execute code while\n        transferring value(ETH).\n\n    Returns\n    -------\n    message_call_gas: `MessageCallGas`\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='call_stipend', ctx=Store())],
+                    value=IfExp(
+                        test=Compare(
+                            left=Name(id='value', ctx=Load()),
+                            ops=[
+                                Eq()],
+                            comparators=[
+                                Constant(value=0)]),
+                        body=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=0)],
+                            keywords=[]),
+                        orelse=Name(id='call_stipend', ctx=Load()))),
+                If(
+                    test=Compare(
+                        left=Name(id='gas_left', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            BinOp(
+                                left=Name(id='extra_gas', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='memory_cost', ctx=Load()))]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='MessageCallGas', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Name(id='gas', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='extra_gas', ctx=Load())),
+                                    BinOp(
+                                        left=Name(id='gas', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='call_stipend', ctx=Load()))],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='gas', ctx=Store())],
+                    value=Call(
+                        func=Name(id='min', ctx=Load()),
+                        args=[
+                            Name(id='gas', ctx=Load()),
+                            Call(
+                                func=Name(id='max_message_call_gas', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Name(id='gas_left', ctx=Load()),
+                                            op=Sub(),
+                                            right=Name(id='memory_cost', ctx=Load())),
+                                        op=Sub(),
+                                        right=Name(id='extra_gas', ctx=Load()))],
+                                keywords=[])],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='MessageCallGas', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='gas', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='extra_gas', ctx=Load())),
+                            BinOp(
+                                left=Name(id='gas', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='call_stipend', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='MessageCallGas', ctx=Load())),
+        FunctionDef(
+            name='max_message_call_gas',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='gas',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculates the maximum gas that is allowed for making a message call\n\n    Parameters\n    ----------\n    gas :\n        The amount of gas provided to the message-call.\n\n    Returns\n    -------\n    max_allowed_message_call_gas: `ethereum.base_types.Uint`\n        The maximum gas allowed for making the message-call.\n    ')),
+                Return(
+                    value=BinOp(
+                        left=Name(id='gas', ctx=Load()),
+                        op=Sub(),
+                        right=BinOp(
+                            left=Name(id='gas', ctx=Load()),
+                            op=FloorDiv(),
+                            right=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=64)],
+                                keywords=[]))))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load()))],
+    type_ignores=[])

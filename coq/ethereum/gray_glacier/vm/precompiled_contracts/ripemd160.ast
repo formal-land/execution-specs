@@ -1,0 +1,131 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) RIPEMD160 PRECOMPILED CONTRACT\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the `RIPEMD160` precompiled contract.\n')),
+        Import(
+            names=[
+                alias(name='hashlib')]),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.byte',
+            names=[
+                alias(name='left_pad_zero_bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.numeric',
+            names=[
+                alias(name='ceil32')],
+            level=0),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Evm')],
+            level=3),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_RIPEMD160'),
+                alias(name='GAS_RIPEMD160_WORD'),
+                alias(name='charge_gas')],
+            level=3),
+        FunctionDef(
+            name='ripemd160',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Writes the ripemd160 hash to output.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='data',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='word_count', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Name(id='ceil32', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Name(id='data', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[])],
+                            keywords=[]),
+                        op=FloorDiv(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=32)],
+                            keywords=[]))),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=Name(id='GAS_RIPEMD160', ctx=Load()),
+                                op=Add(),
+                                right=BinOp(
+                                    left=Name(id='GAS_RIPEMD160_WORD', ctx=Load()),
+                                    op=Mult(),
+                                    right=Name(id='word_count', ctx=Load())))],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='hash_bytes', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='hashlib', ctx=Load()),
+                                    attr='new',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='ripemd160'),
+                                    Name(id='data', ctx=Load())],
+                                keywords=[]),
+                            attr='digest',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='padded_hash', ctx=Store())],
+                    value=Call(
+                        func=Name(id='left_pad_zero_bytes', ctx=Load()),
+                        args=[
+                            Name(id='hash_bytes', ctx=Load()),
+                            Constant(value=32)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='output',
+                            ctx=Store())],
+                    value=Name(id='padded_hash', ctx=Load()))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

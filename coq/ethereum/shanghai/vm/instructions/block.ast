@@ -1,0 +1,495 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Block Instructions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementations of the EVM block instructions.\n')),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=2),
+        ImportFrom(
+            module='gas',
+            names=[
+                alias(name='GAS_BASE'),
+                alias(name='GAS_BLOCK_HASH'),
+                alias(name='charge_gas')],
+            level=2),
+        ImportFrom(
+            module='stack',
+            names=[
+                alias(name='pop'),
+                alias(name='push')],
+            level=2),
+        FunctionDef(
+            name='block_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Push the hash of one of the 256 most recent complete blocks onto the\n    stack. The block number to hash is present at the top of the stack.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackUnderflowError`\n        If `len(stack)` is less than `1`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `20`.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='block_number', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BLOCK_HASH', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='max_block_number', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='block_number', ctx=Load()),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=256)],
+                            keywords=[]))),
+                If(
+                    test=BoolOp(
+                        op=Or(),
+                        values=[
+                            Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='env',
+                                        ctx=Load()),
+                                    attr='number',
+                                    ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Name(id='block_number', ctx=Load())]),
+                            Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='env',
+                                        ctx=Load()),
+                                    attr='number',
+                                    ctx=Load()),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Name(id='max_block_number', ctx=Load())])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='hash', ctx=Store())],
+                            value=Constant(value=b'\x00'))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='hash', ctx=Store())],
+                            value=Subscript(
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='env',
+                                        ctx=Load()),
+                                    attr='block_hashes',
+                                    ctx=Load()),
+                                slice=UnaryOp(
+                                    op=USub(),
+                                    operand=BinOp(
+                                        left=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='evm', ctx=Load()),
+                                                attr='env',
+                                                ctx=Load()),
+                                            attr='number',
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Name(id='block_number', ctx=Load()))),
+                                ctx=Load()))]),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='U256', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='hash', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='coinbase',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Push the current block's beneficiary address (address of the block miner)\n    onto the stack.\n\n    Here the current block refers to the block in which the currently\n    executing transaction/call resides.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ")),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='U256', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='coinbase',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='timestamp',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Push the current block's timestamp onto the stack. Here the timestamp\n    being referred is actually the unix timestamp in seconds.\n\n    Here the current block refers to the block in which the currently\n    executing transaction/call resides.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ")),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='env',
+                                    ctx=Load()),
+                                attr='time',
+                                ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='number',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Push the current block's number onto the stack.\n\n    Here the current block refers to the block in which the currently\n    executing transaction/call resides.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ")),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='number',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='prev_randao',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Push the `prev_randao` value onto the stack.\n\n    The `prev_randao` value is the random output of the beacon chain's\n    randomness oracle for the previous block.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ")),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='U256', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='prev_randao',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='gas_limit',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Push the current block's gas limit onto the stack.\n\n    Here the current block refers to the block in which the currently\n    executing transaction/call resides.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ")),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='gas_limit',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='chain_id',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Push the chain id onto the stack.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    Raises\n    ------\n    :py:class:`~ethereum.shanghai.vm.exceptions.StackOverflowError`\n        If `len(stack)` is equal to `1024`.\n    :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`\n        If `evm.gas_left` is less than `2`.\n    ')),
+                Pass(),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_BASE', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='env',
+                                            ctx=Load()),
+                                        attr='chain_id',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

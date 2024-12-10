@@ -1,0 +1,358 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nTransactions are atomic units of work created externally to Ethereum and\nsubmitted to be executed. If Ethereum is viewed as a state machine,\ntransactions are the events that move between states.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Tuple'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes0'),
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='slotted_freezable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='rlp')],
+            level=2),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='TransactionTypeError')],
+            level=1),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='TX_BASE_COST', ctx=Store())],
+            value=Constant(value=21000)),
+        Assign(
+            targets=[
+                Name(id='TX_DATA_COST_PER_NON_ZERO', ctx=Store())],
+            value=Constant(value=16)),
+        Assign(
+            targets=[
+                Name(id='TX_DATA_COST_PER_ZERO', ctx=Store())],
+            value=Constant(value=4)),
+        Assign(
+            targets=[
+                Name(id='TX_CREATE_COST', ctx=Store())],
+            value=Constant(value=32000)),
+        Assign(
+            targets=[
+                Name(id='TX_ACCESS_LIST_ADDRESS_COST', ctx=Store())],
+            value=Constant(value=2400)),
+        Assign(
+            targets=[
+                Name(id='TX_ACCESS_LIST_STORAGE_KEY_COST', ctx=Store())],
+            value=Constant(value=1900)),
+        ClassDef(
+            name='LegacyTransaction',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Atomic operation performed on the block chain.\n    ')),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_price', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='to', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Union', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Bytes0', ctx=Load()),
+                                Name(id='Address', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='value', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='v', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='r', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='s', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='AccessListTransaction',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The transaction type added in EIP-2930 to support access lists.\n    ')),
+                AnnAssign(
+                    target=Name(id='chain_id', ctx=Store()),
+                    annotation=Name(id='U64', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_price', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='to', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Union', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Bytes0', ctx=Load()),
+                                Name(id='Address', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='value', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='access_list', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Subscript(
+                                    value=Name(id='Tuple', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='Address', ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='Tuple', ctx=Load()),
+                                                slice=Tuple(
+                                                    elts=[
+                                                        Name(id='Bytes32', ctx=Load()),
+                                                        Constant(value=Ellipsis)],
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='y_parity', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='r', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='s', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        Assign(
+            targets=[
+                Name(id='Transaction', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='LegacyTransaction', ctx=Load()),
+                        Name(id='AccessListTransaction', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='encode_transaction',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='tx',
+                        annotation=Name(id='Transaction', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Encode a transaction. Needed because non-legacy transactions aren't RLP.\n    ")),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='tx', ctx=Load()),
+                            Name(id='LegacyTransaction', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Return(
+                            value=Name(id='tx', ctx=Load()))],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='tx', ctx=Load()),
+                                    Name(id='AccessListTransaction', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=BinOp(
+                                        left=Constant(value=b'\x01'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Name(id='rlp', ctx=Load()),
+                                                attr='encode',
+                                                ctx=Load()),
+                                            args=[
+                                                Name(id='tx', ctx=Load())],
+                                            keywords=[])))],
+                            orelse=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            JoinedStr(
+                                                values=[
+                                                    Constant(value='Unable to encode transaction of type '),
+                                                    FormattedValue(
+                                                        value=Call(
+                                                            func=Name(id='type', ctx=Load()),
+                                                            args=[
+                                                                Name(id='tx', ctx=Load())],
+                                                            keywords=[]),
+                                                        conversion=-1)])],
+                                        keywords=[]))])])],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='LegacyTransaction', ctx=Load()),
+                        Name(id='Bytes', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='decode_transaction',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='tx',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='LegacyTransaction', ctx=Load()),
+                                    Name(id='Bytes', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Decode a transaction. Needed because non-legacy transactions aren't RLP.\n    ")),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='tx', ctx=Load()),
+                            Name(id='Bytes', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Subscript(
+                                    value=Name(id='tx', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=1)]),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='TransactionTypeError', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='tx', ctx=Load()),
+                                                slice=Constant(value=0),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='decode_to',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='AccessListTransaction', ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='tx', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=1)),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        Return(
+                            value=Name(id='tx', ctx=Load()))])],
+            decorator_list=[],
+            returns=Name(id='Transaction', ctx=Load()))],
+    type_ignores=[])

@@ -1,0 +1,1355 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthash is a proof-of-work algorithm designed to be [ASIC] resistant through\n[memory hardness][mem-hard].\n\nTo achieve memory hardness, computing Ethash requires access to subsets of a\nlarge structure. The particular subsets chosen are based on the nonce and block\nheader, while the set itself is changed every [`epoch`].\n\nAt a high level, the Ethash algorithm is as follows:\n\n1. Create a **seed** value, generated with [`generate_seed`] and based on the\n   preceding block numbers.\n1. From the seed, compute a pseudorandom **cache** with [`generate_cache`].\n1. From the cache, generate a **dataset** with [`generate_dataset`]. The\n   dataset grows over time based on [`DATASET_EPOCH_GROWTH_SIZE`].\n1. Miners hash slices of the dataset together, which is where the memory\n   hardness is introduced. Verification of the proof-of-work only requires the\n   cache to be able to recompute a much smaller subset of the full dataset.\n\n[`DATASET_EPOCH_GROWTH_SIZE`]: ref:ethereum.ethash.DATASET_EPOCH_GROWTH_SIZE\n[`generate_dataset`]: ref:ethereum.ethash.generate_dataset\n[`generate_cache`]: ref:ethereum.ethash.generate_cache\n[`generate_seed`]: ref:ethereum.ethash.generate_seed\n[`epoch`]: ref:ethereum.ethash.epoch\n[ASIC]: https://en.wikipedia.org/wiki/Application-specific_integrated_circuit\n[mem-hard]: https://en.wikipedia.org/wiki/Memory-hard_function\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Callable'),
+                alias(name='Tuple'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes8')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U32'),
+                alias(name='Uint'),
+                alias(name='ulen')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32'),
+                alias(name='Hash64'),
+                alias(name='keccak256'),
+                alias(name='keccak512')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.numeric',
+            names=[
+                alias(name='is_prime'),
+                alias(name='le_bytes_to_uint32_sequence'),
+                alias(name='le_uint32_sequence_to_bytes'),
+                alias(name='le_uint32_sequence_to_uint')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='EPOCH_SIZE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=30000)],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nNumber of blocks before a dataset needs to be regenerated (known as an\n"epoch".) See [`epoch`].\n\n[`epoch`]: ref:ethereum.ethash.epoch\n')),
+        Assign(
+            targets=[
+                Name(id='INITIAL_CACHE_SIZE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=2),
+                        op=Pow(),
+                        right=Constant(value=24))],
+                keywords=[])),
+        Expr(
+            value=Constant(value="\nSize of the cache (in bytes) during the first epoch. Each subsequent epoch's\ncache roughly grows by [`CACHE_EPOCH_GROWTH_SIZE`] bytes. See [`cache_size`].\n\n[`CACHE_EPOCH_GROWTH_SIZE`]: ref:ethereum.ethash.CACHE_EPOCH_GROWTH_SIZE\n[`cache_size`]: ref:ethereum.ethash.cache_size\n")),
+        Assign(
+            targets=[
+                Name(id='CACHE_EPOCH_GROWTH_SIZE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=2),
+                        op=Pow(),
+                        right=Constant(value=17))],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nAfter the first epoch, the cache size grows by roughly this amount. See\n[`cache_size`].\n\n[`cache_size`]: ref:ethereum.ethash.cache_size\n')),
+        Assign(
+            targets=[
+                Name(id='INITIAL_DATASET_SIZE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=2),
+                        op=Pow(),
+                        right=Constant(value=30))],
+                keywords=[])),
+        Expr(
+            value=Constant(value="\nSize of the dataset (in bytes) during the first epoch. Each subsequent epoch's\ndataset roughly grows by [`DATASET_EPOCH_GROWTH_SIZE`] bytes. See\n[`dataset_size`].\n\n[`DATASET_EPOCH_GROWTH_SIZE`]: ref:ethereum.ethash.DATASET_EPOCH_GROWTH_SIZE\n[`dataset_size`]: ref:ethereum.ethash.dataset_size\n")),
+        Assign(
+            targets=[
+                Name(id='DATASET_EPOCH_GROWTH_SIZE', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=2),
+                        op=Pow(),
+                        right=Constant(value=23))],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nAfter the first epoch, the dataset size grows by roughly this amount. See\n[`dataset_size`].\n\n[`dataset_size`]: ref:ethereum.ethash.dataset_size\n')),
+        Assign(
+            targets=[
+                Name(id='HASH_BYTES', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=64)],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nLength of a hash, in bytes.\n')),
+        Assign(
+            targets=[
+                Name(id='MIX_BYTES', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=128)],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nWidth of mix, in bytes. See [`generate_dataset_item`].\n\n[`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item\n')),
+        Assign(
+            targets=[
+                Name(id='CACHE_ROUNDS', ctx=Store())],
+            value=Constant(value=3)),
+        Expr(
+            value=Constant(value='\nNumber of times to repeat the [`keccak512`] step while generating the hash. See\n[`generate_cache`].\n\n[`keccak512`]: ref:ethereum.crypto.hash.keccak512\n[`generate_cache`]: ref:ethereum.ethash.generate_cache\n')),
+        Assign(
+            targets=[
+                Name(id='DATASET_PARENTS', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=256)],
+                keywords=[])),
+        Expr(
+            value=Constant(value='\nNumber of parents of each dataset element. See [`generate_dataset_item`].\n\n[`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item\n')),
+        Assign(
+            targets=[
+                Name(id='HASHIMOTO_ACCESSES', ctx=Store())],
+            value=Constant(value=64)),
+        Expr(
+            value=Constant(value='\nNumber of accesses in the [`hashimoto`] loop.\n\n[`hashimoto`]: ref:ethereum.ethash.hashimoto\n')),
+        FunctionDef(
+            name='epoch',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the epoch number to which the block identified by `block_number`\n    belongs. The first epoch is numbered zero.\n\n    An Ethash epoch is a fixed number of blocks ([`EPOCH_SIZE`]) long, during\n    which the dataset remains constant. At the end of each epoch, the dataset\n    is generated anew. See [`generate_dataset`].\n\n    [`EPOCH_SIZE`]: ref:ethereum.ethash.EPOCH_SIZE\n    [`generate_dataset`]: ref:ethereum.ethash.generate_dataset\n    ')),
+                Return(
+                    value=BinOp(
+                        left=Name(id='block_number', ctx=Load()),
+                        op=FloorDiv(),
+                        right=Name(id='EPOCH_SIZE', ctx=Load())))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='cache_size',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the cache size (in bytes) of the epoch to which `block_number`\n    belongs.\n\n    See [`INITIAL_CACHE_SIZE`] and [`CACHE_EPOCH_GROWTH_SIZE`] for the initial\n    size and linear growth rate, respectively. The cache is generated in\n    [`generate_cache`].\n\n    The actual cache size is smaller than simply multiplying\n    `CACHE_EPOCH_GROWTH_SIZE` by the epoch number to minimize the risk of\n    unintended cyclic behavior. It is defined as the highest prime number below\n    what linear growth would calculate.\n\n    [`INITIAL_CACHE_SIZE`]: ref:ethereum.ethash.INITIAL_CACHE_SIZE\n    [`CACHE_EPOCH_GROWTH_SIZE`]: ref:ethereum.ethash.CACHE_EPOCH_GROWTH_SIZE\n    [`generate_cache`]: ref:ethereum.ethash.generate_cache\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='size', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='INITIAL_CACHE_SIZE', ctx=Load()),
+                        op=Add(),
+                        right=BinOp(
+                            left=Name(id='CACHE_EPOCH_GROWTH_SIZE', ctx=Load()),
+                            op=Mult(),
+                            right=Call(
+                                func=Name(id='epoch', ctx=Load()),
+                                args=[
+                                    Name(id='block_number', ctx=Load())],
+                                keywords=[])))),
+                AugAssign(
+                    target=Name(id='size', ctx=Store()),
+                    op=Sub(),
+                    value=Name(id='HASH_BYTES', ctx=Load())),
+                While(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='is_prime', ctx=Load()),
+                            args=[
+                                BinOp(
+                                    left=Name(id='size', ctx=Load()),
+                                    op=FloorDiv(),
+                                    right=Name(id='HASH_BYTES', ctx=Load()))],
+                            keywords=[])),
+                    body=[
+                        AugAssign(
+                            target=Name(id='size', ctx=Store()),
+                            op=Sub(),
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=2)],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=Name(id='HASH_BYTES', ctx=Load())))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='size', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='dataset_size',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the dataset size (in bytes) of the epoch to which `block_number`\n    belongs.\n\n    See [`INITIAL_DATASET_SIZE`] and [`DATASET_EPOCH_GROWTH_SIZE`][ds] for the\n    initial size and linear growth rate, respectively. The complete dataset is\n    generated in [`generate_dataset`], while the slices used in verification\n    are generated in [`generate_dataset_item`].\n\n    The actual dataset size is smaller than simply multiplying\n    `DATASET_EPOCH_GROWTH_SIZE` by the epoch number to minimize the risk of\n    unintended cyclic behavior. It is defined as the highest prime number below\n    what linear growth would calculate.\n\n    [`INITIAL_DATASET_SIZE`]: ref:ethereum.ethash.INITIAL_DATASET_SIZE\n    [ds]: ref:ethereum.ethash.DATASET_EPOCH_GROWTH_SIZE\n    [`generate_dataset`]: ref:ethereum.ethash.generate_dataset\n    [`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='size', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='INITIAL_DATASET_SIZE', ctx=Load()),
+                        op=Add(),
+                        right=BinOp(
+                            left=Name(id='DATASET_EPOCH_GROWTH_SIZE', ctx=Load()),
+                            op=Mult(),
+                            right=Call(
+                                func=Name(id='epoch', ctx=Load()),
+                                args=[
+                                    Name(id='block_number', ctx=Load())],
+                                keywords=[])))),
+                AugAssign(
+                    target=Name(id='size', ctx=Store()),
+                    op=Sub(),
+                    value=Name(id='MIX_BYTES', ctx=Load())),
+                While(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='is_prime', ctx=Load()),
+                            args=[
+                                BinOp(
+                                    left=Name(id='size', ctx=Load()),
+                                    op=FloorDiv(),
+                                    right=Name(id='MIX_BYTES', ctx=Load()))],
+                            keywords=[])),
+                    body=[
+                        AugAssign(
+                            target=Name(id='size', ctx=Store()),
+                            op=Sub(),
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=2)],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=Name(id='MIX_BYTES', ctx=Load())))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='size', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='generate_seed',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the cache generation seed for the block identified by\n    `block_number`. See [`generate_cache`].\n\n    [`generate_cache`]: ref:ethereum.ethash.generate_cache\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='epoch_number', ctx=Store())],
+                    value=Call(
+                        func=Name(id='epoch', ctx=Load()),
+                        args=[
+                            Name(id='block_number', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='seed', ctx=Store())],
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Constant(value=32))),
+                While(
+                    test=Compare(
+                        left=Name(id='epoch_number', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='seed', ctx=Store())],
+                            value=Call(
+                                func=Name(id='keccak256', ctx=Load()),
+                                args=[
+                                    Name(id='seed', ctx=Load())],
+                                keywords=[])),
+                        AugAssign(
+                            target=Name(id='epoch_number', ctx=Store()),
+                            op=Sub(),
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='Hash32', ctx=Load()),
+                        args=[
+                            Name(id='seed', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash32', ctx=Load())),
+        FunctionDef(
+            name='generate_cache',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Generate the cache for the block identified by `block_number`. See\n    [`generate_dataset`] for how the cache is used.\n\n    The cache is generated in two steps: filling the array with a chain of\n    [`keccak512`] hashes, then running two rounds of Sergio Demian Lerner's\n    [RandMemoHash] on those bytes.\n\n    [`keccak512`]: ref:ethereum.crypto.hash.keccak512\n    [`generate_dataset`]: ref:ethereum.ethash.generate_dataset\n    [RandMemoHash]: http://www.hashcash.org/papers/memohash.pdf\n    ")),
+                Assign(
+                    targets=[
+                        Name(id='seed', ctx=Store())],
+                    value=Call(
+                        func=Name(id='generate_seed', ctx=Load()),
+                        args=[
+                            Name(id='block_number', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='cache_size_bytes', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cache_size', ctx=Load()),
+                        args=[
+                            Name(id='block_number', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='cache_size_words', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='cache_size_bytes', ctx=Load()),
+                        op=FloorDiv(),
+                        right=Name(id='HASH_BYTES', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='cache', ctx=Store())],
+                    value=List(
+                        elts=[
+                            Call(
+                                func=Name(id='keccak512', ctx=Load()),
+                                args=[
+                                    Name(id='seed', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())),
+                For(
+                    target=Name(id='index', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=1),
+                            Name(id='cache_size_words', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='cache_item', ctx=Store())],
+                            value=Call(
+                                func=Name(id='keccak512', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='cache', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='index', ctx=Load()),
+                                            op=Sub(),
+                                            right=Constant(value=1)),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cache', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cache_item', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                For(
+                    target=Name(id='_', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='CACHE_ROUNDS', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        For(
+                            target=Name(id='index', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='cache_size_words', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='first_cache_item', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='cache', ctx=Load()),
+                                        slice=BinOp(
+                                            left=BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='index', ctx=Load()),
+                                                    op=Sub(),
+                                                    right=Constant(value=1)),
+                                                op=Add(),
+                                                right=Call(
+                                                    func=Name(id='int', ctx=Load()),
+                                                    args=[
+                                                        Name(id='cache_size_words', ctx=Load())],
+                                                    keywords=[])),
+                                            op=Mod(),
+                                            right=Call(
+                                                func=Name(id='int', ctx=Load()),
+                                                args=[
+                                                    Name(id='cache_size_words', ctx=Load())],
+                                                keywords=[])),
+                                        ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Name(id='second_cache_item', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='cache', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Call(
+                                                func=Attribute(
+                                                    value=Name(id='U32', ctx=Load()),
+                                                    attr='from_le_bytes',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Subscript(
+                                                            value=Name(id='cache', ctx=Load()),
+                                                            slice=Name(id='index', ctx=Load()),
+                                                            ctx=Load()),
+                                                        slice=Slice(
+                                                            lower=Constant(value=0),
+                                                            upper=Constant(value=4)),
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            op=Mod(),
+                                            right=Call(
+                                                func=Name(id='U32', ctx=Load()),
+                                                args=[
+                                                    Name(id='cache_size_words', ctx=Load())],
+                                                keywords=[])),
+                                        ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Name(id='result', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='bytes', ctx=Load()),
+                                        args=[
+                                            ListComp(
+                                                elt=BinOp(
+                                                    left=Name(id='a', ctx=Load()),
+                                                    op=BitXor(),
+                                                    right=Name(id='b', ctx=Load())),
+                                                generators=[
+                                                    comprehension(
+                                                        target=Tuple(
+                                                            elts=[
+                                                                Name(id='a', ctx=Store()),
+                                                                Name(id='b', ctx=Store())],
+                                                            ctx=Store()),
+                                                        iter=Call(
+                                                            func=Name(id='zip', ctx=Load()),
+                                                            args=[
+                                                                Name(id='first_cache_item', ctx=Load()),
+                                                                Name(id='second_cache_item', ctx=Load())],
+                                                            keywords=[]),
+                                                        ifs=[],
+                                                        is_async=0)])],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='cache', ctx=Load()),
+                                            slice=Name(id='index', ctx=Load()),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='keccak512', ctx=Load()),
+                                        args=[
+                                            Name(id='result', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[
+                            GeneratorExp(
+                                elt=Call(
+                                    func=Name(id='le_bytes_to_uint32_sequence', ctx=Load()),
+                                    args=[
+                                        Name(id='cache_item', ctx=Load())],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='cache_item', ctx=Store()),
+                                        iter=Name(id='cache', ctx=Load()),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='U32', ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load()),
+                        Constant(value=Ellipsis)],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='fnv',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='a',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Uint', ctx=Load()),
+                                    Name(id='U32', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='b',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Uint', ctx=Load()),
+                                    Name(id='U32', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    A non-associative substitute for XOR, inspired by the [FNV] hash by Fowler,\n    Noll, and Vo. See [`fnv_hash`], [`generate_dataset_item`], and\n    [`hashimoto`].\n\n    Note that here we multiply the prime with the full 32-bit input, in\n    contrast with the [FNV-1] spec which multiplies the prime with one byte\n    (octet) in turn.\n\n    [`hashimoto`]: ref:ethereum.ethash.hashimoto\n    [`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item\n    [`fnv_hash`]: ref:ethereum.ethash.fnv_hash\n    [FNV]: https://w.wiki/XKZ\n    [FNV-1]: http://www.isthe.com/chongo/tech/comp/fnv/#FNV-1\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=BinOp(
+                        left=BinOp(
+                            left=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Name(id='a', ctx=Load())],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=16777619)],
+                                    keywords=[])),
+                            op=BitXor(),
+                            right=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Name(id='b', ctx=Load())],
+                                keywords=[])),
+                        op=BitAnd(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='U32', ctx=Load()),
+                                    attr='MAX_VALUE',
+                                    ctx=Load())],
+                            keywords=[]))),
+                Return(
+                    value=Call(
+                        func=Name(id='U32', ctx=Load()),
+                        args=[
+                            Name(id='result', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U32', ctx=Load())),
+        FunctionDef(
+            name='fnv_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='mix_integers',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='U32', ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='data',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='U32', ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Combines `data` into `mix_integers` using [`fnv`]. See [`hashimoto`] and\n    [`generate_dataset_item`].\n\n    [`hashimoto`]: ref:ethereum.ethash.hashimoto\n    [`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item\n    [`fnv`]: ref:ethereum.ethash.fnv\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[
+                            GeneratorExp(
+                                elt=Call(
+                                    func=Name(id='fnv', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='mix_integers', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load())],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='i', ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='range', ctx=Load()),
+                                            args=[
+                                                Call(
+                                                    func=Name(id='len', ctx=Load()),
+                                                    args=[
+                                                        Name(id='mix_integers', ctx=Load())],
+                                                    keywords=[])],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='U32', ctx=Load()),
+                        Constant(value=Ellipsis)],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='generate_dataset_item',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='cache',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='U32', ctx=Load()),
+                                                Constant(value=Ellipsis)],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='index',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Generate a particular dataset item 0-indexed by `index` by hashing\n    pseudorandomly-selected entries from `cache` together. See [`fnv`] and\n    [`fnv_hash`] for the digest function, [`generate_cache`] for generating\n    `cache`, and [`generate_dataset`] for the full dataset generation\n    algorithm.\n\n    [`fnv`]: ref:ethereum.ethash.fnv\n    [`fnv_hash`]: ref:ethereum.ethash.fnv_hash\n    [`generate_dataset`]: ref:ethereum.ethash.generate_dataset\n    [`generate_cache`]: ref:ethereum.ethash.generate_cache\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='mix', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak512', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=BinOp(
+                                        left=Call(
+                                            func=Name(id='le_uint32_sequence_to_uint', ctx=Load()),
+                                            args=[
+                                                Subscript(
+                                                    value=Name(id='cache', ctx=Load()),
+                                                    slice=BinOp(
+                                                        left=Name(id='index', ctx=Load()),
+                                                        op=Mod(),
+                                                        right=Call(
+                                                            func=Name(id='ulen', ctx=Load()),
+                                                            args=[
+                                                                Name(id='cache', ctx=Load())],
+                                                            keywords=[])),
+                                                    ctx=Load())],
+                                            keywords=[]),
+                                        op=BitXor(),
+                                        right=Name(id='index', ctx=Load())),
+                                    attr='to_le_bytes64',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='mix_integers', ctx=Store())],
+                    value=Call(
+                        func=Name(id='le_bytes_to_uint32_sequence', ctx=Load()),
+                        args=[
+                            Name(id='mix', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Name(id='j', ctx=Store()),
+                    iter=GeneratorExp(
+                        elt=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Name(id='k', ctx=Load())],
+                            keywords=[]),
+                        generators=[
+                            comprehension(
+                                target=Name(id='k', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Name(id='DATASET_PARENTS', ctx=Load())],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    body=[
+                        AnnAssign(
+                            target=Name(id='mix_word', ctx=Store()),
+                            annotation=Name(id='U32', ctx=Load()),
+                            value=Subscript(
+                                value=Name(id='mix_integers', ctx=Load()),
+                                slice=BinOp(
+                                    left=Name(id='j', ctx=Load()),
+                                    op=Mod(),
+                                    right=Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=16)],
+                                        keywords=[])),
+                                ctx=Load()),
+                            simple=1),
+                        Assign(
+                            targets=[
+                                Name(id='cache_index', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='fnv', ctx=Load()),
+                                    args=[
+                                        BinOp(
+                                            left=Name(id='index', ctx=Load()),
+                                            op=BitXor(),
+                                            right=Name(id='j', ctx=Load())),
+                                        Name(id='mix_word', ctx=Load())],
+                                    keywords=[]),
+                                op=Mod(),
+                                right=Call(
+                                    func=Name(id='U32', ctx=Load()),
+                                    args=[
+                                        Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Name(id='cache', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='parent', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='cache', ctx=Load()),
+                                slice=Name(id='cache_index', ctx=Load()),
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='mix_integers', ctx=Store())],
+                            value=Call(
+                                func=Name(id='fnv_hash', ctx=Load()),
+                                args=[
+                                    Name(id='mix_integers', ctx=Load()),
+                                    Name(id='parent', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='mix', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Hash64', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='le_uint32_sequence_to_bytes', ctx=Load()),
+                                args=[
+                                    Name(id='mix_integers', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='keccak512', ctx=Load()),
+                        args=[
+                            Name(id='mix', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash64', ctx=Load())),
+        FunctionDef(
+            name='generate_dataset',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='block_number',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Generate the full dataset for the block identified by `block_number`.\n\n    This function is present only for demonstration purposes. It is not used\n    while validating blocks.\n    ')),
+                AnnAssign(
+                    target=Name(id='dataset_size_bytes', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='dataset_size', ctx=Load()),
+                        args=[
+                            Name(id='block_number', ctx=Load())],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='cache', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Subscript(
+                                    value=Name(id='Tuple', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='U32', ctx=Load()),
+                                            Constant(value=Ellipsis)],
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Call(
+                        func=Name(id='generate_cache', ctx=Load()),
+                        args=[
+                            Name(id='block_number', ctx=Load())],
+                        keywords=[]),
+                    simple=1),
+                Return(
+                    value=Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[
+                            GeneratorExp(
+                                elt=Call(
+                                    func=Name(id='generate_dataset_item', ctx=Load()),
+                                    args=[
+                                        Name(id='cache', ctx=Load()),
+                                        Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Name(id='index', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='index', ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='range', ctx=Load()),
+                                            args=[
+                                                BinOp(
+                                                    left=Name(id='dataset_size_bytes', ctx=Load()),
+                                                    op=FloorDiv(),
+                                                    right=Name(id='HASH_BYTES', ctx=Load()))],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Hash64', ctx=Load()),
+                        Constant(value=Ellipsis)],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='hashimoto',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='header_hash',
+                        annotation=Name(id='Hash32', ctx=Load())),
+                    arg(
+                        arg='nonce',
+                        annotation=Name(id='Bytes8', ctx=Load())),
+                    arg(
+                        arg='dataset_size',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='fetch_dataset_item',
+                        annotation=Subscript(
+                            value=Name(id='Callable', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    List(
+                                        elts=[
+                                            Name(id='Uint', ctx=Load())],
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='U32', ctx=Load()),
+                                                Constant(value=Ellipsis)],
+                                            ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain the mix digest and the final value for a header, by aggregating\n    data from the full dataset.\n\n    #### Parameters\n\n    - `header_hash` is a valid [RLP hash] of a block header.\n    - `nonce` is the propagated nonce for the given block.\n    - `dataset_size` is the size of the dataset. See [`dataset_size`].\n    - `fetch_dataset_item` is a function that retrieves a specific dataset item\n      based on its index.\n\n    #### Returns\n\n    - The mix digest generated from the header hash and propagated nonce.\n    - The final result obtained which will be checked for leading zeros (in\n      byte representation) in correspondence with the block difficulty.\n\n    [RLP hash]: ref:ethereum.rlp.rlp_hash\n    [`dataset_size`]: ref:ethereum.ethash.dataset_size\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='nonce_le', ctx=Store())],
+                    value=Call(
+                        func=Name(id='bytes', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='reversed', ctx=Load()),
+                                args=[
+                                    Name(id='nonce', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='seed_hash', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak512', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='header_hash', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='nonce_le', ctx=Load()))],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='seed_head', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='U32', ctx=Load()),
+                            attr='from_le_bytes',
+                            ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='seed_hash', ctx=Load()),
+                                slice=Slice(
+                                    upper=Constant(value=4)),
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='rows', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='dataset_size', ctx=Load()),
+                        op=FloorDiv(),
+                        right=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=128)],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='mix', ctx=Store())],
+                    value=BinOp(
+                        left=Call(
+                            func=Name(id='le_bytes_to_uint32_sequence', ctx=Load()),
+                            args=[
+                                Name(id='seed_hash', ctx=Load())],
+                            keywords=[]),
+                        op=Mult(),
+                        right=BinOp(
+                            left=Name(id='MIX_BYTES', ctx=Load()),
+                            op=FloorDiv(),
+                            right=Name(id='HASH_BYTES', ctx=Load())))),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='HASHIMOTO_ACCESSES', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        AnnAssign(
+                            target=Name(id='new_data', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Tuple', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='U32', ctx=Load()),
+                                        Constant(value=Ellipsis)],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            value=Tuple(elts=[], ctx=Load()),
+                            simple=1),
+                        Assign(
+                            targets=[
+                                Name(id='parent', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='fnv', ctx=Load()),
+                                    args=[
+                                        BinOp(
+                                            left=Call(
+                                                func=Name(id='U32', ctx=Load()),
+                                                args=[
+                                                    Name(id='i', ctx=Load())],
+                                                keywords=[]),
+                                            op=BitXor(),
+                                            right=Name(id='seed_head', ctx=Load())),
+                                        Subscript(
+                                            value=Name(id='mix', ctx=Load()),
+                                            slice=BinOp(
+                                                left=Name(id='i', ctx=Load()),
+                                                op=Mod(),
+                                                right=Call(
+                                                    func=Name(id='len', ctx=Load()),
+                                                    args=[
+                                                        Name(id='mix', ctx=Load())],
+                                                    keywords=[])),
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Mod(),
+                                right=Call(
+                                    func=Name(id='U32', ctx=Load()),
+                                    args=[
+                                        Name(id='rows', ctx=Load())],
+                                    keywords=[]))),
+                        For(
+                            target=Name(id='j', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Name(id='MIX_BYTES', ctx=Load()),
+                                        op=FloorDiv(),
+                                        right=Name(id='HASH_BYTES', ctx=Load()))],
+                                keywords=[]),
+                            body=[
+                                AugAssign(
+                                    target=Name(id='new_data', ctx=Store()),
+                                    op=Add(),
+                                    value=Call(
+                                        func=Name(id='fetch_dataset_item', ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=BinOp(
+                                                    left=Call(
+                                                        func=Name(id='Uint', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=2)],
+                                                        keywords=[]),
+                                                    op=Mult(),
+                                                    right=Call(
+                                                        func=Name(id='Uint', ctx=Load()),
+                                                        args=[
+                                                            Name(id='parent', ctx=Load())],
+                                                        keywords=[])),
+                                                op=Add(),
+                                                right=Call(
+                                                    func=Name(id='Uint', ctx=Load()),
+                                                    args=[
+                                                        Name(id='j', ctx=Load())],
+                                                    keywords=[]))],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='mix', ctx=Store())],
+                            value=Call(
+                                func=Name(id='fnv_hash', ctx=Load()),
+                                args=[
+                                    Name(id='mix', ctx=Load()),
+                                    Name(id='new_data', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='compressed_mix', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='mix', ctx=Load())],
+                                keywords=[]),
+                            Constant(value=4)],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='compressed_mix', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='fnv', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='fnv', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='fnv', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='mix', ctx=Load()),
+                                                                slice=Name(id='i', ctx=Load()),
+                                                                ctx=Load()),
+                                                            Subscript(
+                                                                value=Name(id='mix', ctx=Load()),
+                                                                slice=BinOp(
+                                                                    left=Name(id='i', ctx=Load()),
+                                                                    op=Add(),
+                                                                    right=Constant(value=1)),
+                                                                ctx=Load())],
+                                                        keywords=[]),
+                                                    Subscript(
+                                                        value=Name(id='mix', ctx=Load()),
+                                                        slice=BinOp(
+                                                            left=Name(id='i', ctx=Load()),
+                                                            op=Add(),
+                                                            right=Constant(value=2)),
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            Subscript(
+                                                value=Name(id='mix', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Constant(value=3)),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='mix_digest', ctx=Store())],
+                    value=Call(
+                        func=Name(id='le_uint32_sequence_to_bytes', ctx=Load()),
+                        args=[
+                            Name(id='compressed_mix', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak256', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='seed_hash', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='mix_digest', ctx=Load()))],
+                        keywords=[])),
+                Return(
+                    value=Tuple(
+                        elts=[
+                            Name(id='mix_digest', ctx=Load()),
+                            Name(id='result', ctx=Load())],
+                        ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='bytes', ctx=Load()),
+                        Name(id='Hash32', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='hashimoto_light',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='header_hash',
+                        annotation=Name(id='Hash32', ctx=Load())),
+                    arg(
+                        arg='nonce',
+                        annotation=Name(id='Bytes8', ctx=Load())),
+                    arg(
+                        arg='cache',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='U32', ctx=Load()),
+                                                Constant(value=Ellipsis)],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='dataset_size',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Run the [`hashimoto`] algorithm by generating dataset item using the cache\n    instead of loading the full dataset into main memory.\n\n    #### Parameters\n\n    - `header_hash` is a valid [RLP hash] of a block header.\n    - `nonce` is the propagated nonce for the given block.\n    - `cache` is the cache generated by [`generate_cache`].\n    - `dataset_size` is the size of the dataset. See [`dataset_size`].\n\n    #### Returns\n\n    - The mix digest generated from the header hash and propagated nonce.\n    - The final result obtained which will be checked for leading zeros (in\n      byte representation) in correspondence with the block difficulty.\n\n    [RLP hash]: ref:ethereum.rlp.rlp_hash\n    [`dataset_size`]: ref:ethereum.ethash.dataset_size\n    [`generate_cache`]: ref:ethereum.ethash.generate_cache\n    [`hashimoto`]: ref:ethereum.ethash.hashimoto\n    ')),
+                FunctionDef(
+                    name='fetch_dataset_item',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='index',
+                                annotation=Name(id='Uint', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        AnnAssign(
+                            target=Name(id='item', ctx=Store()),
+                            annotation=Name(id='Hash64', ctx=Load()),
+                            value=Call(
+                                func=Name(id='generate_dataset_item', ctx=Load()),
+                                args=[
+                                    Name(id='cache', ctx=Load()),
+                                    Name(id='index', ctx=Load())],
+                                keywords=[]),
+                            simple=1),
+                        Return(
+                            value=Call(
+                                func=Name(id='le_bytes_to_uint32_sequence', ctx=Load()),
+                                args=[
+                                    Name(id='item', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='U32', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load())),
+                Return(
+                    value=Call(
+                        func=Name(id='hashimoto', ctx=Load()),
+                        args=[
+                            Name(id='header_hash', ctx=Load()),
+                            Name(id='nonce', ctx=Load()),
+                            Name(id='dataset_size', ctx=Load()),
+                            Name(id='fetch_dataset_item', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='bytes', ctx=Load()),
+                        Name(id='Hash32', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])
