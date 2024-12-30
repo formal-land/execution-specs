@@ -1,0 +1,870 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nLints\n^^^^^\n\nChecks specific to the Ethereum specification source code.\n')),
+        Import(
+            names=[
+                alias(name='ast')]),
+        Import(
+            names=[
+                alias(name='importlib')]),
+        Import(
+            names=[
+                alias(name='inspect')]),
+        Import(
+            names=[
+                alias(name='pkgutil')]),
+        ImportFrom(
+            module='abc',
+            names=[
+                alias(name='ABCMeta'),
+                alias(name='abstractmethod')],
+            level=0),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='itertools',
+            names=[
+                alias(name='zip_longest')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Generator'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Sequence'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='forks',
+            names=[
+                alias(name='Hardfork')],
+            level=2),
+        FunctionDef(
+            name='compare_ast',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='old',
+                        annotation=Attribute(
+                            value=Name(id='ast', ctx=Load()),
+                            attr='AST',
+                            ctx=Load())),
+                    arg(
+                        arg='new',
+                        annotation=Attribute(
+                            value=Name(id='ast', ctx=Load()),
+                            attr='AST',
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Check if two nodes are the equal.\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='type', ctx=Load()),
+                            args=[
+                                Name(id='old', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            IsNot()],
+                        comparators=[
+                            Call(
+                                func=Name(id='type', ctx=Load()),
+                                args=[
+                                    Name(id='new', ctx=Load())],
+                                keywords=[])]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    orelse=[]),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='old', ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='ast', ctx=Load()),
+                                        attr='Expr',
+                                        ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='old', ctx=Load()),
+                                        attr='value',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='ast', ctx=Load()),
+                                        attr='Constant',
+                                        ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='old', ctx=Load()),
+                                            attr='value',
+                                            ctx=Load()),
+                                        attr='value',
+                                        ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[])]),
+                    body=[
+                        Return(
+                            value=Constant(value=True))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='old', ctx=Load()),
+                            Attribute(
+                                value=Name(id='ast', ctx=Load()),
+                                attr='AST',
+                                ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='k', ctx=Store()),
+                                    Name(id='v', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='vars', ctx=Load()),
+                                        args=[
+                                            Name(id='old', ctx=Load())],
+                                        keywords=[]),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='k', ctx=Load()),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Set(
+                                                elts=[
+                                                    Constant(value='lineno'),
+                                                    Constant(value='end_lineno'),
+                                                    Constant(value='col_offset'),
+                                                    Constant(value='end_col_offset'),
+                                                    Constant(value='ctx')])]),
+                                    body=[
+                                        Continue()],
+                                    orelse=[]),
+                                If(
+                                    test=UnaryOp(
+                                        op=Not(),
+                                        operand=Call(
+                                            func=Name(id='compare_ast', ctx=Load()),
+                                            args=[
+                                                Name(id='v', ctx=Load()),
+                                                Call(
+                                                    func=Name(id='getattr', ctx=Load()),
+                                                    args=[
+                                                        Name(id='new', ctx=Load()),
+                                                        Name(id='k', ctx=Load())],
+                                                    keywords=[])],
+                                            keywords=[])),
+                                    body=[
+                                        Return(
+                                            value=Constant(value=False))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Return(
+                            value=Constant(value=True))],
+                    orelse=[
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='old', ctx=Load()),
+                                            Name(id='list', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='new', ctx=Load()),
+                                            Name(id='list', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='all', ctx=Load()),
+                                        args=[
+                                            GeneratorExp(
+                                                elt=Call(
+                                                    func=Name(id='compare_ast', ctx=Load()),
+                                                    args=[
+                                                        Name(id='old_item', ctx=Load()),
+                                                        Name(id='new_item', ctx=Load())],
+                                                    keywords=[]),
+                                                generators=[
+                                                    comprehension(
+                                                        target=Tuple(
+                                                            elts=[
+                                                                Name(id='old_item', ctx=Store()),
+                                                                Name(id='new_item', ctx=Store())],
+                                                            ctx=Store()),
+                                                        iter=Call(
+                                                            func=Name(id='zip_longest', ctx=Load()),
+                                                            args=[
+                                                                Name(id='old', ctx=Load()),
+                                                                Name(id='new', ctx=Load())],
+                                                            keywords=[]),
+                                                        ifs=[],
+                                                        is_async=0)])],
+                                        keywords=[]))],
+                            orelse=[
+                                Return(
+                                    value=Compare(
+                                        left=Name(id='old', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='new', ctx=Load())]))])])],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='walk_sources',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='fork',
+                        annotation=Name(id='Hardfork', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Import the modules specifying a hardfork, and retrieve their source code.\n    ')),
+                For(
+                    target=Name(id='mod_info', ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Name(id='fork', ctx=Load()),
+                            attr='walk_packages',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='mod', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='importlib', ctx=Load()),
+                                    attr='import_module',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='mod_info', ctx=Load()),
+                                        attr='name',
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='source', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='inspect', ctx=Load()),
+                                    attr='getsource',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='mod', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='name', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='mod', ctx=Load()),
+                                attr='__name__',
+                                ctx=Load())),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Name(id='name', ctx=Load()),
+                                    attr='startswith',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='fork', ctx=Load()),
+                                        attr='name',
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='name', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='name', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='fork', ctx=Load()),
+                                                        attr='name',
+                                                        ctx=Load())],
+                                                keywords=[])),
+                                        ctx=Load()))],
+                            orelse=[]),
+                        Expr(
+                            value=Yield(
+                                value=Tuple(
+                                    elts=[
+                                        Name(id='name', ctx=Load()),
+                                        Name(id='source', ctx=Load())],
+                                    ctx=Load())))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Generator', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='str', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        Constant(value=None),
+                        Constant(value=None)],
+                    ctx=Load()),
+                ctx=Load())),
+        ClassDef(
+            name='Diagnostic',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A diagnostic message generated while checking the specifications.\n    ')),
+                AnnAssign(
+                    target=Name(id='message', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Lint',
+            bases=[],
+            keywords=[
+                keyword(
+                    arg='metaclass',
+                    value=Name(id='ABCMeta', ctx=Load()))],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A single check which may be performed against the specifications.\n    ')),
+                FunctionDef(
+                    name='lint',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='forks',
+                                annotation=Subscript(
+                                    value=Name(id='List', ctx=Load()),
+                                    slice=Name(id='Hardfork', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='position',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Runs the check against the given forks, at the given position.\n\n        Parameters\n        ----------\n        forks :\n            All known hardforks.\n        position :\n            The particular hardfork to lint.\n        '))],
+                    decorator_list=[
+                        Name(id='abstractmethod', ctx=Load())],
+                    returns=Subscript(
+                        value=Name(id='Sequence', ctx=Load()),
+                        slice=Name(id='Diagnostic', ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='_parse',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='source',
+                                annotation=Name(id='str', ctx=Load())),
+                            arg(
+                                arg='visitor',
+                                annotation=Attribute(
+                                    value=Name(id='ast', ctx=Load()),
+                                    attr='NodeVisitor',
+                                    ctx=Load())),
+                            arg(
+                                arg='attr',
+                                annotation=Name(id='str', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Walks the source string and extracts a sequence of identifiers.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='parsed', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='ast', ctx=Load()),
+                                    attr='parse',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='source', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='visitor', ctx=Load()),
+                                    attr='visit',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='parsed', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Name(id='getattr', ctx=Load()),
+                                args=[
+                                    Name(id='visitor', ctx=Load()),
+                                    Name(id='attr', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='Sequence', ctx=Load()),
+                        slice=Name(id='str', ctx=Load()),
+                        ctx=Load()))],
+            decorator_list=[]),
+        ClassDef(
+            name='Linter',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Checks the specification for style guideline violations.\n    ')),
+                AnnAssign(
+                    target=Name(id='lints', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Sequence', ctx=Load()),
+                        slice=Name(id='Lint', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='discover_lints',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Discover subclasses of Lint.\n        ')),
+                        ImportFrom(
+                            names=[
+                                alias(name='lints')],
+                            level=1),
+                        Assign(
+                            targets=[
+                                Name(id='path', ctx=Store())],
+                            value=Call(
+                                func=Name(id='getattr', ctx=Load()),
+                                args=[
+                                    Name(id='lints', ctx=Load()),
+                                    Constant(value='__path__'),
+                                    Constant(value=None)],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='path', ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Return(
+                                    value=List(elts=[], ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='modules', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='pkgutil', ctx=Load()),
+                                    attr='iter_modules',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='path', ctx=Load()),
+                                    BinOp(
+                                        left=Attribute(
+                                            value=Name(id='lints', ctx=Load()),
+                                            attr='__name__',
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=Constant(value='.'))],
+                                keywords=[])),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='_', ctx=Store()),
+                                    Name(id='name', ctx=Store()),
+                                    Name(id='_', ctx=Store())],
+                                ctx=Store()),
+                            iter=Name(id='modules', ctx=Load()),
+                            body=[
+                                Try(
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='importlib', ctx=Load()),
+                                                    attr='import_module',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='name', ctx=Load())],
+                                                keywords=[]))],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='Exception', ctx=Load()),
+                                            body=[
+                                                Continue()])],
+                                    orelse=[],
+                                    finalbody=[])],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='found', ctx=Store())],
+                            value=Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        For(
+                            target=Name(id='subclass', ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Name(id='Lint', ctx=Load()),
+                                    attr='__subclasses__',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Attribute(
+                                            value=Name(id='inspect', ctx=Load()),
+                                            attr='isabstract',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='subclass', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Continue()],
+                                    orelse=[]),
+                                Try(
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='found', ctx=Load()),
+                                                    attr='add',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='subclass', ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='Exception', ctx=Load()),
+                                            body=[
+                                                Pass()])],
+                                    orelse=[],
+                                    finalbody=[])],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Name(id='list', ctx=Load()),
+                                args=[
+                                    Name(id='found', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='staticmethod', ctx=Load())],
+                    returns=Subscript(
+                        value=Name(id='Sequence', ctx=Load()),
+                        slice=Name(id='Lint', ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='lints',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Subscript(
+                                        value=Name(id='Sequence', ctx=Load()),
+                                        slice=Name(id='Lint', ctx=Load()),
+                                        ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='lints', ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='lints', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='Linter', ctx=Load()),
+                                            attr='discover_lints',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))],
+                            orelse=[]),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Name(id='lints', ctx=Load())),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='no lints specified')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='lints',
+                                    ctx=Store())],
+                            value=Name(id='lints', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='run',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Runs all enabled lints.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='count', ctx=Store())],
+                            value=Constant(value=0)),
+                        Assign(
+                            targets=[
+                                Name(id='hardforks', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='Hardfork', ctx=Load()),
+                                    attr='discover',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        For(
+                            target=Name(id='lint', ctx=Store()),
+                            iter=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='lints',
+                                ctx=Load()),
+                            body=[
+                                AnnAssign(
+                                    target=Name(id='diagnostics', ctx=Store()),
+                                    annotation=Subscript(
+                                        value=Name(id='List', ctx=Load()),
+                                        slice=Name(id='Diagnostic', ctx=Load()),
+                                        ctx=Load()),
+                                    value=List(elts=[], ctx=Load()),
+                                    simple=1),
+                                For(
+                                    target=Name(id='hardfork', ctx=Store()),
+                                    iter=Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            Constant(value=0),
+                                            Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Name(id='hardforks', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]),
+                                    body=[
+                                        AugAssign(
+                                            target=Name(id='diagnostics', ctx=Store()),
+                                            op=Add(),
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='lint', ctx=Load()),
+                                                    attr='lint',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='hardforks', ctx=Load()),
+                                                    Name(id='hardfork', ctx=Load())],
+                                                keywords=[])),
+                                        If(
+                                            test=Name(id='diagnostics', ctx=Load()),
+                                            body=[
+                                                AugAssign(
+                                                    target=Name(id='count', ctx=Store()),
+                                                    op=Add(),
+                                                    value=Call(
+                                                        func=Name(id='len', ctx=Load()),
+                                                        args=[
+                                                            Name(id='diagnostics', ctx=Load())],
+                                                        keywords=[])),
+                                                Expr(
+                                                    value=Call(
+                                                        func=Name(id='print', ctx=Load()),
+                                                        args=[
+                                                            JoinedStr(
+                                                                values=[
+                                                                    FormattedValue(
+                                                                        value=Attribute(
+                                                                            value=Subscript(
+                                                                                value=Name(id='hardforks', ctx=Load()),
+                                                                                slice=Name(id='hardfork', ctx=Load()),
+                                                                                ctx=Load()),
+                                                                            attr='name',
+                                                                            ctx=Load()),
+                                                                        conversion=-1),
+                                                                    Constant(value=' - '),
+                                                                    FormattedValue(
+                                                                        value=Attribute(
+                                                                            value=Attribute(
+                                                                                value=Name(id='lint', ctx=Load()),
+                                                                                attr='__class__',
+                                                                                ctx=Load()),
+                                                                            attr='__name__',
+                                                                            ctx=Load()),
+                                                                        conversion=-1),
+                                                                    Constant(value=':')])],
+                                                        keywords=[])),
+                                                For(
+                                                    target=Name(id='diagnostic', ctx=Store()),
+                                                    iter=Name(id='diagnostics', ctx=Load()),
+                                                    body=[
+                                                        Expr(
+                                                            value=Call(
+                                                                func=Name(id='print', ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='\t'),
+                                                                    Attribute(
+                                                                        value=Name(id='diagnostic', ctx=Load()),
+                                                                        attr='message',
+                                                                        ctx=Load())],
+                                                                keywords=[]))],
+                                                    orelse=[]),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='diagnostics', ctx=Store())],
+                                                    value=List(elts=[], ctx=Load()))],
+                                            orelse=[])],
+                                    orelse=[])],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='count', ctx=Load()),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Total diagnostics:'),
+                                            Name(id='count', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=IfExp(
+                                test=Compare(
+                                    left=Name(id='count', ctx=Load()),
+                                    ops=[
+                                        Gt()],
+                                    comparators=[
+                                        Constant(value=0)]),
+                                body=Constant(value=1),
+                                orelse=Constant(value=0)))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load()))],
+            decorator_list=[]),
+        FunctionDef(
+            name='main',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    `ethereum-spec-lint` checks for style and formatting issues specific to the\n    Ethereum specification.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='linter', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Linter', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='linter', ctx=Load()),
+                            attr='run',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='int', ctx=Load()))],
+    type_ignores=[])

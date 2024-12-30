@@ -1,0 +1,1006 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nDefine the types used by the b11r tool.\n')),
+        Import(
+            names=[
+                alias(name='json')]),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes8'),
+                alias(name='Bytes20'),
+                alias(name='Bytes32'),
+                alias(name='Bytes256')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='rlp')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32'),
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes'),
+                alias(name='hex_to_bytes8')],
+            level=0),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='parse_hex_or_int')],
+            level=2),
+        Assign(
+            targets=[
+                Name(id='DEFAULT_TRIE_ROOT', ctx=Store())],
+            value=Constant(value='0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421')),
+        Assign(
+            targets=[
+                Name(id='DEFAULT_COINBASE', ctx=Store())],
+            value=Constant(value='0x0000000000000000000000000000000000000000')),
+        ClassDef(
+            name='Body',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A class representing a block body.\n    ')),
+                AnnAssign(
+                    target=Name(id='transactions', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='ommers', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='withdrawals', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Tuple', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='U64', ctx=Load()),
+                                        Name(id='U64', ctx=Load()),
+                                        Name(id='Bytes20', ctx=Load()),
+                                        Name(id='Uint', ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='options',
+                                annotation=Name(id='Any', ctx=Load())),
+                            arg(
+                                arg='stdin',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_txs',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='txs_data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='stdin', ctx=Load()),
+                                        slice=Constant(value='txs'),
+                                        ctx=Load()))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='options', ctx=Load()),
+                                                        attr='input_txs',
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='txs_data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        If(
+                            test=Compare(
+                                left=Name(id='txs_data', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='')]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='transactions',
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load()))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='transactions',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='rlp', ctx=Load()),
+                                            attr='decode',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Name(id='txs_data', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))]),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_ommers',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Try(
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='ommers_data', ctx=Store())],
+                                            value=Subscript(
+                                                value=Name(id='stdin', ctx=Load()),
+                                                slice=Constant(value='ommers'),
+                                                ctx=Load()))],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='KeyError', ctx=Load()),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='ommers_data', ctx=Store())],
+                                                    value=Subscript(
+                                                        value=Name(id='stdin', ctx=Load()),
+                                                        slice=Constant(value='uncles'),
+                                                        ctx=Load()))])],
+                                    orelse=[],
+                                    finalbody=[])],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='options', ctx=Load()),
+                                                        attr='input_ommers',
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='ommers_data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='ommers',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        For(
+                            target=Name(id='ommer', ctx=Store()),
+                            iter=Name(id='ommers_data', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='decoded_ommer', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='rlp', ctx=Load()),
+                                            attr='decode',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Name(id='ommer', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                Assert(
+                                    test=UnaryOp(
+                                        op=Not(),
+                                        operand=Call(
+                                            func=Name(id='isinstance', ctx=Load()),
+                                            args=[
+                                                Name(id='decoded_ommer', ctx=Load()),
+                                                Name(id='bytes', ctx=Load())],
+                                            keywords=[]))),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='ommers',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='decoded_ommer', ctx=Load()),
+                                                slice=Constant(value=0),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_withdrawals',
+                                    ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='withdrawals',
+                                            ctx=Store())],
+                                    value=Constant(value=None)),
+                                Return()],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_withdrawals',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='withdrawals_data', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stdin', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='withdrawals'),
+                                            List(elts=[], ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='options', ctx=Load()),
+                                                        attr='input_withdrawals',
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='withdrawals_data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='withdrawals',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        For(
+                            target=Name(id='wd', ctx=Store()),
+                            iter=Name(id='withdrawals_data', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='withdrawals',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Call(
+                                                        func=Name(id='parse_hex_or_int', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='wd', ctx=Load()),
+                                                                slice=Constant(value='index'),
+                                                                ctx=Load()),
+                                                            Name(id='U64', ctx=Load())],
+                                                        keywords=[]),
+                                                    Call(
+                                                        func=Name(id='parse_hex_or_int', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='wd', ctx=Load()),
+                                                                slice=Constant(value='validatorIndex'),
+                                                                ctx=Load()),
+                                                            Name(id='U64', ctx=Load())],
+                                                        keywords=[]),
+                                                    Call(
+                                                        func=Name(id='Bytes20', ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                                args=[
+                                                                    Subscript(
+                                                                        value=Name(id='wd', ctx=Load()),
+                                                                        slice=Constant(value='address'),
+                                                                        ctx=Load())],
+                                                                keywords=[])],
+                                                        keywords=[]),
+                                                    Call(
+                                                        func=Name(id='parse_hex_or_int', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='wd', ctx=Load()),
+                                                                slice=Constant(value='amount'),
+                                                                ctx=Load()),
+                                                            Name(id='Uint', ctx=Load())],
+                                                        keywords=[])],
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='Header',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    A class representing a block header.\n    ')),
+                AnnAssign(
+                    target=Name(id='parent_hash', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='ommers_hash', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='coinbase', ctx=Store()),
+                    annotation=Name(id='Bytes20', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state_root', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='transactions_root', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='receipt_root', ctx=Store()),
+                    annotation=Name(id='Hash32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='bloom', ctx=Store()),
+                    annotation=Name(id='Bytes256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='difficulty', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='number', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_limit', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_used', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='timestamp', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='extra_data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='mix_digest', ctx=Store()),
+                    annotation=Name(id='Bytes32', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='Bytes8', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='base_fee_per_gas', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Uint', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='withdrawals_root', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Hash32', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='options',
+                                annotation=Name(id='Any', ctx=Load())),
+                            arg(
+                                arg='body',
+                                annotation=Name(id='Body', ctx=Load())),
+                            arg(
+                                arg='stdin',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_header',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='stdin', ctx=Load()),
+                                        slice=Constant(value='header'),
+                                        ctx=Load()))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='options', ctx=Load()),
+                                                        attr='input_header',
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='parent_hash',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Constant(value='parentHash'),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        Try(
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='ommers_hash',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Hash32', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='data', ctx=Load()),
+                                                        slice=Constant(value='ommersHash'),
+                                                        ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='KeyError', ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='ommers_hash',
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='keccak256', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='rlp', ctx=Load()),
+                                                            attr='encode',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Attribute(
+                                                                value=Name(id='body', ctx=Load()),
+                                                                attr='ommers',
+                                                                ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]))])],
+                            orelse=[],
+                            finalbody=[]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='coinbase',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Bytes20', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='data', ctx=Load()),
+                                                    attr='get',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value='miner'),
+                                                    Name(id='DEFAULT_COINBASE', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='state_root',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Constant(value='stateRoot'),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='transactions_root',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='data', ctx=Load()),
+                                                    attr='get',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value='transactionsRoot'),
+                                                    Name(id='DEFAULT_TRIE_ROOT', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='receipt_root',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Hash32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='data', ctx=Load()),
+                                                    attr='get',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value='receiptsRoot'),
+                                                    Name(id='DEFAULT_TRIE_ROOT', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='bloom',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Bytes256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Constant(value='logsBloom'),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='difficulty',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='data', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='difficulty'),
+                                            Constant(value=0)],
+                                        keywords=[]),
+                                    Name(id='Uint', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='number',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Constant(value='number'),
+                                        ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='gas_limit',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Constant(value='gasLimit'),
+                                        ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='gas_used',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Constant(value='gasUsed'),
+                                        ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='timestamp',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Constant(value='timestamp'),
+                                        ctx=Load()),
+                                    Name(id='U256', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='extra_data',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='data', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='extraData'),
+                                            Constant(value='0x')],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='mix_digest',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Bytes32', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Constant(value='mixHash'),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='nonce',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_bytes8', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='data', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='nonce'),
+                                            Constant(value='0x0000000000000000')],
+                                        keywords=[])],
+                                keywords=[])),
+                        Try(
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='base_fee_per_gas',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='parse_hex_or_int', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Constant(value='baseFeePerGas'),
+                                                ctx=Load()),
+                                            Name(id='Uint', ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='KeyError', ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='base_fee_per_gas',
+                                                    ctx=Store())],
+                                            value=Constant(value=None))])],
+                            orelse=[],
+                            finalbody=[]),
+                        Try(
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='withdrawals_root',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Hash32', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='data', ctx=Load()),
+                                                        slice=Constant(value='withdrawalsRoot'),
+                                                        ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='base_fee_per_gas',
+                                            ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='base_fee_per_gas',
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='KeyError', ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='withdrawals_root',
+                                                    ctx=Store())],
+                                            value=Constant(value=None))])],
+                            orelse=[],
+                            finalbody=[])],
+                    decorator_list=[])],
+            decorator_list=[])],
+    type_ignores=[])

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Control Flow Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Implementations of the EVM control flow instructions.
 *)
 
 Require ethereum_types.numeric.
-Require berlin.vm.gas.
-Require berlin.vm.exceptions.
-Require berlin.vm.stack.
+Require ethereum.berlin.vm.gas.
+Require ethereum.berlin.vm.__init__.
+Require ethereum.berlin.vm.exceptions.
+Require ethereum.berlin.vm.stack.
 
-Definition stop : M unit :=
+Definition stop (evm : Evm) : M unit :=
   (*
       Stop further execution of EVM code.
 
@@ -29,10 +31,14 @@ Definition stop : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO assignment *)
-  (* TODO statement *)
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition jump : M unit :=
+Definition jump (evm : Evm) : M unit :=
   (*
       Alter the program counter to the location specified by the top of the
       stack.
@@ -43,20 +49,22 @@ Definition jump : M unit :=
           The current EVM frame.
 
       *)
-  let* jump_dest := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* vm.gas.charge_gas (|
+  do* M.assign "jump_dest" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_MID
-  |) in
+  |) ]] in
   (* TODO statement *)
   (* TODO assignment *)
+  M.pure tt.
 
-
-Definition jumpi : M unit :=
+Definition jumpi (evm : Evm) : M unit :=
   (*
       Alter the program counter to the specified location if and only if a
       condition is true. If the condition is not true, then the program counter
@@ -68,23 +76,27 @@ Definition jumpi : M unit :=
           The current EVM frame.
 
       *)
-  let* jump_dest := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* conditional_value := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* vm.gas.charge_gas (|
+  do* M.assign "jump_dest" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "conditional_value" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_HIGH
-  |) in
+  |) ]] in
   (* TODO statement *)
   (* TODO assignment *)
+  M.pure tt.
 
-
-Definition pc : M unit :=
+Definition pc (evm : Evm) : M unit :=
   (*
       Push onto the stack the value of the program counter after reaching the
       current instruction and without increasing it for the next instruction.
@@ -96,20 +108,24 @@ Definition pc : M unit :=
 
       *)
   (* TODO statement *)
-  do* vm.gas.charge_gas (|
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["pc"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| evm, "pc" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition gas_left : M unit :=
+Definition gas_left (evm : Evm) : M unit :=
   (*
       Push the amount of available gas (including the corresponding reduction
       for the cost of this instruction) onto the stack.
@@ -121,20 +137,24 @@ Definition gas_left : M unit :=
 
       *)
   (* TODO statement *)
-  do* vm.gas.charge_gas (|
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["gas_left"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| evm, "gas_left" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition jumpdest : M unit :=
+Definition jumpdest (evm : Evm) : M unit :=
   (*
       Mark a valid destination for jumps. This is a noop, present only
       to be used by `JUMP` and `JUMPI` opcodes to verify that their jump is
@@ -147,10 +167,14 @@ Definition jumpdest : M unit :=
 
       *)
   (* TODO statement *)
-  do* vm.gas.charge_gas (|
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_JUMPDEST
-  |) in
+  |) ]] in
   (* TODO statement *)
-  (* TODO statement *)
-
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require berlin.fork_types.
-Require berlin.vm.precompiled_contracts.alt_bn128.
-Require berlin.vm.precompiled_contracts.blake2f.
-Require berlin.vm.precompiled_contracts.ecrecover.
-Require berlin.vm.precompiled_contracts.identity.
-Require berlin.vm.precompiled_contracts.modexp.
-Require berlin.vm.precompiled_contracts.ripemd160.
-Require berlin.vm.precompiled_contracts.sha256.
+Require ethereum.berlin.fork_types.
+Require ethereum.berlin.vm.precompiled_contracts.__init__.
+Require ethereum.berlin.vm.precompiled_contracts.alt_bn128.
+Require ethereum.berlin.vm.precompiled_contracts.blake2f.
+Require ethereum.berlin.vm.precompiled_contracts.ecrecover.
+Require ethereum.berlin.vm.precompiled_contracts.identity.
+Require ethereum.berlin.vm.precompiled_contracts.modexp.
+Require ethereum.berlin.vm.precompiled_contracts.ripemd160.
+Require ethereum.berlin.vm.precompiled_contracts.sha256.

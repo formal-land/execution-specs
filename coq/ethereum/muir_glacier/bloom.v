@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Logs Bloom
 ^^^^^^^^^^^^^^^^^^^
@@ -19,10 +20,10 @@ eliminating blocks and receipts from their search.
 Require typing.
 Require ethereum_types.numeric.
 Require ethereum.crypto.hash.
-Require muir_glacier.blocks.
-Require muir_glacier.fork_types.
+Require ethereum.muir_glacier.blocks.
+Require ethereum.muir_glacier.fork_types.
 
-Definition add_to_bloom : M unit :=
+Definition add_to_bloom (bloom : bytearray) (bloom_entry : bytes) : M unit :=
   (*
       Add a bloom entry to the bloom filter (`bloom`).
 
@@ -37,13 +38,15 @@ Definition add_to_bloom : M unit :=
       bloom_entry :
           An entry which is to be added to bloom filter.
       *)
-  let* hash := ethereum.crypto.hash.keccak256 (|
-    bloom_entry
-  |) in
+  do* M.assign "hash" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      bloom_entry
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition logs_bloom : M unit :=
+Definition logs_bloom (logs : (* TODO type *)) : M Bloom :=
   (*
       Obtain the logs bloom from a list of log entries.
 
@@ -63,4 +66,4 @@ Definition logs_bloom : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

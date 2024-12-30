@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,4 +14,4 @@ Addresses of precompiled contracts and mappings to their
 implementations.
 *)
 
-Require cancun.utils.hexadecimal.
+Require ethereum.cancun.utils.hexadecimal.

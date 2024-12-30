@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For The Message Data-structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,12 +17,12 @@ specification.
 Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require tangerine_whistle.fork_types.
-Require tangerine_whistle.state.
-Require tangerine_whistle.vm.
-Require tangerine_whistle.utils.address.
+Require ethereum.tangerine_whistle.fork_types.
+Require ethereum.tangerine_whistle.state.
+Require ethereum.tangerine_whistle.vm.
+Require ethereum.tangerine_whistle.utils.address.
 
-Definition prepare_message : M unit :=
+Definition prepare_message (caller : Address) (target : (* TODO type *)) (value : U256) (data : Bytes) (gas : Uint) (env : Environment) (code_address : (* TODO type *)) (should_transfer_value : bool) : M Message :=
   (*
       Execute a transaction against the provided environment.
 
@@ -53,4 +54,4 @@ Definition prepare_message : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

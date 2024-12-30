@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require paris.fork_types.
-Require paris.vm.precompiled_contracts.alt_bn128.
-Require paris.vm.precompiled_contracts.blake2f.
-Require paris.vm.precompiled_contracts.ecrecover.
-Require paris.vm.precompiled_contracts.identity.
-Require paris.vm.precompiled_contracts.modexp.
-Require paris.vm.precompiled_contracts.ripemd160.
-Require paris.vm.precompiled_contracts.sha256.
+Require ethereum.paris.fork_types.
+Require ethereum.paris.vm.precompiled_contracts.__init__.
+Require ethereum.paris.vm.precompiled_contracts.alt_bn128.
+Require ethereum.paris.vm.precompiled_contracts.blake2f.
+Require ethereum.paris.vm.precompiled_contracts.ecrecover.
+Require ethereum.paris.vm.precompiled_contracts.identity.
+Require ethereum.paris.vm.precompiled_contracts.modexp.
+Require ethereum.paris.vm.precompiled_contracts.ripemd160.
+Require ethereum.paris.vm.precompiled_contracts.sha256.

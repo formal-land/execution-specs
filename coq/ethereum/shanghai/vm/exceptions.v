@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Exceptions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

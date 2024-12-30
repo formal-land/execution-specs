@@ -1,0 +1,934 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nUtilities for the EVM tools\n')),
+        Import(
+            names=[
+                alias(name='json')]),
+        Import(
+            names=[
+                alias(name='logging')]),
+        Import(
+            names=[
+                alias(name='sys')]),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Callable'),
+                alias(name='Dict'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Tuple'),
+                alias(name='TypeVar')],
+            level=0),
+        Import(
+            names=[
+                alias(name='coincurve')]),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=0),
+        ImportFrom(
+            module='ethereum_spec_tools.forks',
+            names=[
+                alias(name='Hardfork')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='W', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='W'),
+                    Name(id='Uint', ctx=Load()),
+                    Name(id='U64', ctx=Load()),
+                    Name(id='U256', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='EXCEPTION_MAPS', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value='FrontierToHomesteadAt5'),
+                    Constant(value='HomesteadToDaoAt5'),
+                    Constant(value='HomesteadToEIP150At5'),
+                    Constant(value='EIP158ToByzantiumAt5'),
+                    Constant(value='ByzantiumToConstantinopleAt5'),
+                    Constant(value='ConstantinopleToIstanbulAt5'),
+                    Constant(value='BerlinToLondonAt5'),
+                    Constant(value='EIP150'),
+                    Constant(value='EIP158'),
+                    Constant(value='Merge'),
+                    Constant(value='ConstantinopleFix')],
+                values=[
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='frontier'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='homestead'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='homestead'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='dao_fork'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='homestead'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='tangerine_whistle'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='spurious_dragon'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='byzantium'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='byzantium'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='constantinople'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='constantinople'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='istanbul'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='berlin'),
+                                            Constant(value=0)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='london'),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='tangerine_whistle'),
+                                            Constant(value=0)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='spurious_dragon'),
+                                            Constant(value=0)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='paris'),
+                                            Constant(value=0)],
+                                        ctx=Load())],
+                                ctx=Load())]),
+                    Dict(
+                        keys=[
+                            Constant(value='fork_blocks')],
+                        values=[
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='constantinople'),
+                                            Constant(value=0)],
+                                        ctx=Load())],
+                                ctx=Load())])])),
+        Assign(
+            targets=[
+                Name(id='UNSUPPORTED_FORKS', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value='constantinople')],
+                ctx=Load())),
+        FunctionDef(
+            name='parse_hex_or_int',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='str', ctx=Load())),
+                    arg(
+                        arg='to_type',
+                        annotation=Subscript(
+                            value=Name(id='Callable', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    List(
+                                        elts=[
+                                            Name(id='int', ctx=Load())],
+                                        ctx=Load()),
+                                    Name(id='W', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='Read a Uint type from a hex string or int')),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='value', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='value', ctx=Load()),
+                                    attr='startswith',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='0x')],
+                                keywords=[])]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='to_type', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='value', ctx=Load()),
+                                                slice=Slice(
+                                                    lower=Constant(value=2)),
+                                                ctx=Load()),
+                                            Constant(value=16)],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[
+                        Return(
+                            value=Call(
+                                func=Name(id='to_type', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Name(id='W', ctx=Load())),
+        ClassDef(
+            name='FatalException',
+            bases=[
+                Name(id='Exception', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Exception that causes the tool to stop')),
+                Pass()],
+            decorator_list=[]),
+        FunctionDef(
+            name='ensure_success',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='f',
+                        annotation=Name(id='Callable', ctx=Load()))],
+                vararg=arg(
+                    arg='args',
+                    annotation=Name(id='Any', ctx=Load())),
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Ensure that the function call succeeds.\n    Raise a FatalException if it fails.\n    ')),
+                Try(
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='f', ctx=Load()),
+                                args=[
+                                    Starred(
+                                        value=Name(id='args', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='Exception', ctx=Load()),
+                            name='e',
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='FatalException', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Name(id='Any', ctx=Load())),
+        FunctionDef(
+            name='get_module_name',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='forks',
+                        annotation=Name(id='Any', ctx=Load())),
+                    arg(
+                        arg='options',
+                        annotation=Name(id='Any', ctx=Load())),
+                    arg(
+                        arg='stdin',
+                        annotation=Name(id='Any', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get the module name and the fork block for the given state fork.\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='state_fork',
+                                    ctx=Load()),
+                                attr='casefold',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='UNSUPPORTED_FORKS', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='sys', ctx=Load()),
+                                    attr='exit',
+                                    ctx=Load()),
+                                args=[
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='Unsupported state fork: '),
+                                            FormattedValue(
+                                                value=Attribute(
+                                                    value=Name(id='options', ctx=Load()),
+                                                    attr='state_fork',
+                                                    ctx=Load()),
+                                                conversion=-1)])],
+                                keywords=[]))],
+                    orelse=[]),
+                AnnAssign(
+                    target=Name(id='exception_config', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Dict', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='str', ctx=Load()),
+                                    Name(id='Any', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                Try(
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='exception_config', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='EXCEPTION_MAPS', ctx=Load()),
+                                slice=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='state_fork',
+                                    ctx=Load()),
+                                ctx=Load()))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='KeyError', ctx=Load()),
+                            body=[
+                                Pass()])],
+                    orelse=[],
+                    finalbody=[]),
+                If(
+                    test=Name(id='exception_config', ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='input_env',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='stdin', ctx=Load()),
+                                        slice=Constant(value='env'),
+                                        ctx=Load()))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='options', ctx=Load()),
+                                                        attr='input_env',
+                                                        ctx=Load()),
+                                                    Constant(value='r')],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        Assign(
+                            targets=[
+                                Name(id='block_number', ctx=Store())],
+                            value=Call(
+                                func=Name(id='parse_hex_or_int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Constant(value='currentNumber'),
+                                        ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                keywords=[])),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='fork', ctx=Store()),
+                                    Name(id='fork_block', ctx=Store())],
+                                ctx=Store()),
+                            iter=Subscript(
+                                value=Name(id='exception_config', ctx=Load()),
+                                slice=Constant(value='fork_blocks'),
+                                ctx=Load()),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='block_number', ctx=Load()),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Name(id='fork_block', ctx=Load())],
+                                                keywords=[])]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='current_fork_module', ctx=Store())],
+                                            value=Name(id='fork', ctx=Load())),
+                                        Assign(
+                                            targets=[
+                                                Name(id='current_fork_block', ctx=Store())],
+                                            value=Name(id='fork_block', ctx=Load()))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Name(id='current_fork_module', ctx=Load()),
+                                    Name(id='current_fork_block', ctx=Load())],
+                                ctx=Load()))],
+                    orelse=[]),
+                For(
+                    target=Name(id='fork', ctx=Store()),
+                    iter=Name(id='forks', ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='fork_module', ctx=Store())],
+                            value=Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='fork', ctx=Load()),
+                                            attr='name',
+                                            ctx=Load()),
+                                        attr='split',
+                                        ctx=Load()),
+                                    args=[
+                                        Constant(value='.')],
+                                    keywords=[]),
+                                slice=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1)),
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='key', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Constant(value=''),
+                                    attr='join',
+                                    ctx=Load()),
+                                args=[
+                                    GeneratorExp(
+                                        elt=Call(
+                                            func=Attribute(
+                                                value=Name(id='x', ctx=Load()),
+                                                attr='title',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        generators=[
+                                            comprehension(
+                                                target=Name(id='x', ctx=Store()),
+                                                iter=Call(
+                                                    func=Attribute(
+                                                        value=Name(id='fork_module', ctx=Load()),
+                                                        attr='split',
+                                                        ctx=Load()),
+                                                    args=[
+                                                        Constant(value='_')],
+                                                    keywords=[]),
+                                                ifs=[],
+                                                is_async=0)])],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='key', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='options', ctx=Load()),
+                                        attr='state_fork',
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Tuple(
+                                        elts=[
+                                            Name(id='fork_module', ctx=Load()),
+                                            Constant(value=0)],
+                                        ctx=Load()))],
+                            orelse=[])],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='sys', ctx=Load()),
+                            attr='exit',
+                            ctx=Load()),
+                        args=[
+                            JoinedStr(
+                                values=[
+                                    Constant(value='Unsupported state fork: '),
+                                    FormattedValue(
+                                        value=Attribute(
+                                            value=Name(id='options', ctx=Load()),
+                                            attr='state_fork',
+                                            ctx=Load()),
+                                        conversion=-1)])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='str', ctx=Load()),
+                        Name(id='int', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='get_supported_forks',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get the supported forks.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='supported_forks', ctx=Store())],
+                    value=ListComp(
+                        elt=Call(
+                            func=Attribute(
+                                value=Attribute(
+                                    value=Name(id='fork', ctx=Load()),
+                                    attr='title_case_name',
+                                    ctx=Load()),
+                                attr='replace',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=' '),
+                                Constant(value='')],
+                            keywords=[]),
+                        generators=[
+                            comprehension(
+                                target=Name(id='fork', ctx=Store()),
+                                iter=Call(
+                                    func=Attribute(
+                                        value=Name(id='Hardfork', ctx=Load()),
+                                        attr='discover',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='supported_forks', ctx=Load()),
+                            attr='extend',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='EXCEPTION_MAPS', ctx=Load()),
+                                    attr='keys',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='supported_forks', ctx=Store())],
+                    value=ListComp(
+                        elt=Name(id='fork', ctx=Load()),
+                        generators=[
+                            comprehension(
+                                target=Name(id='fork', ctx=Store()),
+                                iter=Name(id='supported_forks', ctx=Load()),
+                                ifs=[
+                                    Compare(
+                                        left=Call(
+                                            func=Attribute(
+                                                value=Name(id='fork', ctx=Load()),
+                                                attr='casefold',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ops=[
+                                            NotIn()],
+                                        comparators=[
+                                            Name(id='UNSUPPORTED_FORKS', ctx=Load())])],
+                                is_async=0)])),
+                Return(
+                    value=Name(id='supported_forks', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='List', ctx=Load()),
+                slice=Name(id='str', ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='get_stream_logger',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='name',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get a logger that writes to stdout.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='logger', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='logging', ctx=Load()),
+                            attr='getLogger',
+                            ctx=Load()),
+                        args=[
+                            Name(id='name', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Attribute(
+                            value=Name(id='logger', ctx=Load()),
+                            attr='handlers',
+                            ctx=Load())),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='logger', ctx=Load()),
+                                    attr='setLevel',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[
+                                    keyword(
+                                        arg='level',
+                                        value=Attribute(
+                                            value=Name(id='logging', ctx=Load()),
+                                            attr='INFO',
+                                            ctx=Load()))])),
+                        Assign(
+                            targets=[
+                                Name(id='stream_handler', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='logging', ctx=Load()),
+                                    attr='StreamHandler',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='formatter', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='logging', ctx=Load()),
+                                    attr='Formatter',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='%(levelname)s:%(name)s:%(message)s')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stream_handler', ctx=Load()),
+                                    attr='setFormatter',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='formatter', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='logger', ctx=Load()),
+                                    attr='addHandler',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='stream_handler', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='logger', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Any', ctx=Load())),
+        FunctionDef(
+            name='secp256k1_sign',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='msg_hash',
+                        annotation=Name(id='Hash32', ctx=Load())),
+                    arg(
+                        arg='secret_key',
+                        annotation=Name(id='int', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Returns the signature of a message hash given the secret key.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='private_key', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='coincurve', ctx=Load()),
+                                attr='PrivateKey',
+                                ctx=Load()),
+                            attr='from_int',
+                            ctx=Load()),
+                        args=[
+                            Name(id='secret_key', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='signature', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='private_key', ctx=Load()),
+                            attr='sign_recoverable',
+                            ctx=Load()),
+                        args=[
+                            Name(id='msg_hash', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='hasher',
+                                value=Constant(value=None))])),
+                Return(
+                    value=Tuple(
+                        elts=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='U256', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='signature', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=0),
+                                            upper=Constant(value=32)),
+                                        ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='U256', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='signature', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=32),
+                                            upper=Constant(value=64)),
+                                        ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='signature', ctx=Load()),
+                                        slice=Constant(value=64),
+                                        ctx=Load())],
+                                keywords=[])],
+                        ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='U256', ctx=Load()),
+                        Constant(value=Ellipsis)],
+                    ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])

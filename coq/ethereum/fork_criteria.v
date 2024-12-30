@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Activation criteria for forks.
 

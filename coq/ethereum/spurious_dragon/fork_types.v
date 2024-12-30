@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Types
 ^^^^^^^^^^^^^^
@@ -16,9 +17,10 @@ Require dataclasses.
 Require ethereum_types.bytes.
 Require ethereum_types.frozen.
 Require ethereum_types.numeric.
-Require ..crypto.hash.
+Require ethereum.__init__.
+Require ethereum.crypto.hash.
 
-Definition encode_account : M unit :=
+Definition encode_account (raw_account_data : Account) (storage_root : Bytes) : M Bytes :=
   (*
       Encode `Account` dataclass.
 
@@ -26,4 +28,4 @@ Definition encode_account : M unit :=
       encoded without providing a storage root.
       *)
   (* TODO statement *)
-
+  M.pure tt.

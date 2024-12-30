@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Transactions are atomic units of work created externally to Ethereum and
 submitted to be executed. If Ethereum is viewed as a state machine,
@@ -9,4 +10,4 @@ Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.frozen.
 Require ethereum_types.numeric.
-Require dao_fork.fork_types.
+Require ethereum.dao_fork.fork_types.

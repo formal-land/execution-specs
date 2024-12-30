@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require gray_glacier.fork_types.
-Require gray_glacier.vm.precompiled_contracts.alt_bn128.
-Require gray_glacier.vm.precompiled_contracts.blake2f.
-Require gray_glacier.vm.precompiled_contracts.ecrecover.
-Require gray_glacier.vm.precompiled_contracts.identity.
-Require gray_glacier.vm.precompiled_contracts.modexp.
-Require gray_glacier.vm.precompiled_contracts.ripemd160.
-Require gray_glacier.vm.precompiled_contracts.sha256.
+Require ethereum.gray_glacier.fork_types.
+Require ethereum.gray_glacier.vm.precompiled_contracts.__init__.
+Require ethereum.gray_glacier.vm.precompiled_contracts.alt_bn128.
+Require ethereum.gray_glacier.vm.precompiled_contracts.blake2f.
+Require ethereum.gray_glacier.vm.precompiled_contracts.ecrecover.
+Require ethereum.gray_glacier.vm.precompiled_contracts.identity.
+Require ethereum.gray_glacier.vm.precompiled_contracts.modexp.
+Require ethereum.gray_glacier.vm.precompiled_contracts.ripemd160.
+Require ethereum.gray_glacier.vm.precompiled_contracts.sha256.

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Storage Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Implementations of the EVM storage related instructions.
 *)
 
 Require ethereum_types.numeric.
-Require tangerine_whistle.state.
-Require tangerine_whistle.vm.gas.
-Require tangerine_whistle.vm.stack.
+Require ethereum.tangerine_whistle.state.
+Require ethereum.tangerine_whistle.vm.__init__.
+Require ethereum.tangerine_whistle.vm.gas.
+Require ethereum.tangerine_whistle.vm.stack.
 
-Definition sload : M unit :=
+Definition sload (evm : Evm) : M unit :=
   (*
       Loads to the stack, the value corresponding to a certain key from the
       storage of the current account.
@@ -28,28 +30,36 @@ Definition sload : M unit :=
           The current EVM frame.
 
       *)
-  let* key := stack.pop (|
-    evm.["stack"]
-  |).["to_be_bytes32"] (|
+  do* M.assign "key" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_be_bytes32" |) ~(|
 
-  |) in
-  do* gas.charge_gas (|
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_SLOAD
-  |) in
-  let* value := state.get_storage (|
-    evm.["env"].["state"],
-    evm.["message"].["current_target"],
-    key
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    value
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.assign "value" [[
+    state.get_storage ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "current_target" |),
+      M.get_local ~(| "key" |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition sstore : M unit :=
+Definition sstore (evm : Evm) : M unit :=
   (*
       Stores a value at a certain key in the current context's storage.
 
@@ -59,30 +69,40 @@ Definition sstore : M unit :=
           The current EVM frame.
 
       *)
-  let* key := stack.pop (|
-    evm.["stack"]
-  |).["to_be_bytes32"] (|
+  do* M.assign "key" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_be_bytes32" |) ~(|
 
-  |) in
-  let* new_value := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* current_value := state.get_storage (|
-    evm.["env"].["state"],
-    evm.["message"].["current_target"],
-    key
-  |) in
+    |) in
+  ]] in
+  do* M.assign "new_value" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "current_value" [[
+    state.get_storage ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "current_target" |),
+      M.get_local ~(| "key" |)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
-    gas_cost
-  |) in
-  do* state.set_storage (|
-    evm.["env"].["state"],
-    evm.["message"].["current_target"],
-    key,
-    new_value
-  |) in
-  (* TODO statement *)
-
+    M.get_local ~(| "gas_cost" |)
+  |) ]] in
+  do* [[ state.set_storage ~(|
+    M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "current_target" |),
+    M.get_local ~(| "key" |),
+    M.get_local ~(| "new_value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

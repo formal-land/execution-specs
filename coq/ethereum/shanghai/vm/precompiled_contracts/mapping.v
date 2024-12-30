@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require shanghai.fork_types.
-Require shanghai.vm.precompiled_contracts.alt_bn128.
-Require shanghai.vm.precompiled_contracts.blake2f.
-Require shanghai.vm.precompiled_contracts.ecrecover.
-Require shanghai.vm.precompiled_contracts.identity.
-Require shanghai.vm.precompiled_contracts.modexp.
-Require shanghai.vm.precompiled_contracts.ripemd160.
-Require shanghai.vm.precompiled_contracts.sha256.
+Require ethereum.shanghai.fork_types.
+Require ethereum.shanghai.vm.precompiled_contracts.__init__.
+Require ethereum.shanghai.vm.precompiled_contracts.alt_bn128.
+Require ethereum.shanghai.vm.precompiled_contracts.blake2f.
+Require ethereum.shanghai.vm.precompiled_contracts.ecrecover.
+Require ethereum.shanghai.vm.precompiled_contracts.identity.
+Require ethereum.shanghai.vm.precompiled_contracts.modexp.
+Require ethereum.shanghai.vm.precompiled_contracts.ripemd160.
+Require ethereum.shanghai.vm.precompiled_contracts.sha256.

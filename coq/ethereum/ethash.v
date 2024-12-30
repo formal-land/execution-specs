@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethash is a proof-of-work algorithm designed to be [ASIC] resistant through
 [memory hardness][mem-hard].
@@ -32,7 +33,7 @@ Require ethereum_types.numeric.
 Require ethereum.crypto.hash.
 Require ethereum.utils.numeric.
 
-Definition epoch : M unit :=
+Definition epoch (block_number : Uint) : M Uint :=
   (*
       Obtain the epoch number to which the block identified by `block_number`
       belongs. The first epoch is numbered zero.
@@ -45,9 +46,9 @@ Definition epoch : M unit :=
       [`generate_dataset`]: ref:ethereum.ethash.generate_dataset
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition cache_size : M unit :=
+Definition cache_size (block_number : Uint) : M Uint :=
   (*
       Obtain the cache size (in bytes) of the epoch to which `block_number`
       belongs.
@@ -65,13 +66,17 @@ Definition cache_size : M unit :=
       [`CACHE_EPOCH_GROWTH_SIZE`]: ref:ethereum.ethash.CACHE_EPOCH_GROWTH_SIZE
       [`generate_cache`]: ref:ethereum.ethash.generate_cache
       *)
-  let* size := (* TODO expression *) in
+  do* M.assign "size" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.aug_assign [[ M.get_local ~(| "size" |) ]] [[
+    M.get_local ~(| "HASH_BYTES" |)
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-  (* TODO statement *)
+  M.pure tt.
 
-
-Definition dataset_size : M unit :=
+Definition dataset_size (block_number : Uint) : M Uint :=
   (*
       Obtain the dataset size (in bytes) of the epoch to which `block_number`
       belongs.
@@ -91,28 +96,36 @@ Definition dataset_size : M unit :=
       [`generate_dataset`]: ref:ethereum.ethash.generate_dataset
       [`generate_dataset_item`]: ref:ethereum.ethash.generate_dataset_item
       *)
-  let* size := (* TODO expression *) in
+  do* M.assign "size" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.aug_assign [[ M.get_local ~(| "size" |) ]] [[
+    M.get_local ~(| "MIX_BYTES" |)
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-  (* TODO statement *)
+  M.pure tt.
 
-
-Definition generate_seed : M unit :=
+Definition generate_seed (block_number : Uint) : M Hash32 :=
   (*
       Obtain the cache generation seed for the block identified by
       `block_number`. See [`generate_cache`].
 
       [`generate_cache`]: ref:ethereum.ethash.generate_cache
       *)
-  let* epoch_number := epoch (|
-    block_number
-  |) in
-  let* seed := (* TODO expression *) in
+  do* M.assign "epoch_number" [[
+    M.get_local ~(| "epoch" |) ~(|
+      block_number
+    |) in
+  ]] in
+  do* M.assign "seed" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition generate_cache : M unit :=
+Definition generate_cache (block_number : Uint) : M (* TODO type *) :=
   (*
       Generate the cache for the block identified by `block_number`. See
       [`generate_dataset`] for how the cache is used.
@@ -125,20 +138,28 @@ Definition generate_cache : M unit :=
       [`generate_dataset`]: ref:ethereum.ethash.generate_dataset
       [RandMemoHash]: http://www.hashcash.org/papers/memohash.pdf
       *)
-  let* seed := generate_seed (|
-    block_number
-  |) in
-  let* cache_size_bytes := cache_size (|
-    block_number
-  |) in
-  let* cache_size_words := (* TODO expression *) in
-  let* cache := (* TODO expression *) in
+  do* M.assign "seed" [[
+    M.get_local ~(| "generate_seed" |) ~(|
+      block_number
+    |) in
+  ]] in
+  do* M.assign "cache_size_bytes" [[
+    M.get_local ~(| "cache_size" |) ~(|
+      block_number
+    |) in
+  ]] in
+  do* M.assign "cache_size_words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "cache" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition fnv : M unit :=
+Definition fnv (a : (* TODO type *)) (b : (* TODO type *)) : M U32 :=
   (*
       A non-associative substitute for XOR, inspired by the [FNV] hash by Fowler,
       Noll, and Vo. See [`fnv_hash`], [`generate_dataset_item`], and
@@ -154,11 +175,13 @@ Definition fnv : M unit :=
       [FNV]: https://w.wiki/XKZ
       [FNV-1]: http://www.isthe.com/chongo/tech/comp/fnv/#FNV-1
       *)
-  let* result := (* TODO expression *) in
+  do* M.assign "result" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition fnv_hash : M unit :=
+Definition fnv_hash (mix_integers : (* TODO type *)) (data : (* TODO type *)) : M (* TODO type *) :=
   (*
       Combines `data` into `mix_integers` using [`fnv`]. See [`hashimoto`] and
       [`generate_dataset_item`].
@@ -168,9 +191,9 @@ Definition fnv_hash : M unit :=
       [`fnv`]: ref:ethereum.ethash.fnv
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition generate_dataset_item : M unit :=
+Definition generate_dataset_item (cache : (* TODO type *)) (index : Uint) : M Hash64 :=
   (*
       Generate a particular dataset item 0-indexed by `index` by hashing
       pseudorandomly-selected entries from `cache` together. See [`fnv`] and
@@ -183,24 +206,30 @@ Definition generate_dataset_item : M unit :=
       [`generate_dataset`]: ref:ethereum.ethash.generate_dataset
       [`generate_cache`]: ref:ethereum.ethash.generate_cache
       *)
-  let* mix := ethereum.crypto.hash.keccak512 (|
-    (* TODO expression *).["to_le_bytes64"] (|
+  do* M.assign "mix" [[
+    ethereum.crypto.hash.keccak512 ~(|
+      M.get_field ~(| (* TODO expression *), "to_le_bytes64" |) ~(|
 
-    |)
-  |) in
-  let* mix_integers := ethereum.utils.numeric.le_bytes_to_uint32_sequence (|
-    mix
-  |) in
+      |)
+    |) in
+  ]] in
+  do* M.assign "mix_integers" [[
+    ethereum.utils.numeric.le_bytes_to_uint32_sequence ~(|
+      M.get_local ~(| "mix" |)
+    |) in
+  ]] in
   (* TODO statement *)
-  let* mix := ethereum.crypto.hash.Hash64 (|
-    ethereum.utils.numeric.le_uint32_sequence_to_bytes (|
-      mix_integers
-    |)
-  |) in
+  do* M.assign "mix" [[
+    ethereum.crypto.hash.Hash64 ~(|
+      ethereum.utils.numeric.le_uint32_sequence_to_bytes ~(|
+        M.get_local ~(| "mix_integers" |)
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition generate_dataset : M unit :=
+Definition generate_dataset (block_number : Uint) : M (* TODO type *) :=
   (*
       Generate the full dataset for the block identified by `block_number`.
 
@@ -210,9 +239,9 @@ Definition generate_dataset : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hashimoto : M unit :=
+Definition hashimoto (header_hash : Hash32) (nonce : Bytes8) (dataset_size : Uint) (fetch_dataset_item : (* TODO type *)) : M (* TODO type *) :=
   (*
       Obtain the mix digest and the final value for a header, by aggregating
       data from the full dataset.
@@ -234,32 +263,48 @@ Definition hashimoto : M unit :=
       [RLP hash]: ref:ethereum.rlp.rlp_hash
       [`dataset_size`]: ref:ethereum.ethash.dataset_size
       *)
-  let* nonce_le := bytes (|
-    reversed (|
-      nonce
-    |)
-  |) in
-  let* seed_hash := ethereum.crypto.hash.keccak512 (|
-    (* TODO expression *)
-  |) in
-  let* seed_head := ethereum_types.numeric.U32.["from_le_bytes"] (|
-    (* TODO expression *)
-  |) in
-  let* rows := (* TODO expression *) in
-  let* mix := (* TODO expression *) in
+  do* M.assign "nonce_le" [[
+    M.get_local ~(| "bytes" |) ~(|
+      M.get_local ~(| "reversed" |) ~(|
+        nonce
+      |)
+    |) in
+  ]] in
+  do* M.assign "seed_hash" [[
+    ethereum.crypto.hash.keccak512 ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* M.assign "seed_head" [[
+    M.get_field ~(| ethereum_types.numeric.U32, "from_le_bytes" |) ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* M.assign "rows" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "mix" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* compressed_mix := (* TODO expression *) in
+  do* M.assign "compressed_mix" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* mix_digest := ethereum.utils.numeric.le_uint32_sequence_to_bytes (|
-    compressed_mix
-  |) in
-  let* result := ethereum.crypto.hash.keccak256 (|
-    (* TODO expression *)
-  |) in
+  do* M.assign "mix_digest" [[
+    ethereum.utils.numeric.le_uint32_sequence_to_bytes ~(|
+      M.get_local ~(| "compressed_mix" |)
+    |) in
+  ]] in
+  do* M.assign "result" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hashimoto_light : M unit :=
+Definition hashimoto_light (header_hash : Hash32) (nonce : Bytes8) (cache : (* TODO type *)) (dataset_size : Uint) : M (* TODO type *) :=
   (*
       Run the [`hashimoto`] algorithm by generating dataset item using the cache
       instead of loading the full dataset into main memory.
@@ -284,4 +329,4 @@ Definition hashimoto_light : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Blake2 PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,11 @@ Implementation of the `Blake2` precompiled contract.
 *)
 
 Require ethereum.crypto.blake2.
-Require london.vm.
-Require london.vm.gas.
-Require london.vm.exceptions.
+Require ethereum.london.vm.
+Require ethereum.london.vm.gas.
+Require ethereum.london.vm.exceptions.
 
-Definition blake2f : M unit :=
+Definition blake2f (evm : Evm) : M unit :=
   (*
       Writes the Blake2 hash to output.
 
@@ -26,16 +27,20 @@ Definition blake2f : M unit :=
       evm :
           The current EVM frame.
       *)
-  let* data := evm.["message"].["data"] in
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
   (* TODO statement *)
-  let* blake2b := ethereum.crypto.blake2.Blake2b (|
+  do* M.assign "blake2b" [[
+    ethereum.crypto.blake2.Blake2b ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO assignment *)
-  do* vm.gas.charge_gas (|
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
+  |) ]] in
   (* TODO statement *)
   (* TODO assignment *)
-
+  M.pure tt.

@@ -1,0 +1,1113 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nRead transaction data from json file and return the\nrelevant transaction.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='fields')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='List')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes0'),
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='rlp')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes'),
+                alias(name='hex_to_bytes32'),
+                alias(name='hex_to_hash'),
+                alias(name='hex_to_u256'),
+                alias(name='hex_to_uint')],
+            level=0),
+        ClassDef(
+            name='UnsupportedTx',
+            bases=[
+                Name(id='Exception', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Exception for unsupported transactions')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='encoded_params',
+                                annotation=Name(id='bytes', ctx=Load())),
+                            arg(
+                                arg='error_message',
+                                annotation=Name(id='str', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='super', ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    attr='__init__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='error_message', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='encoded_params',
+                                    ctx=Store())],
+                            value=Name(id='encoded_params', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='error_message',
+                                    ctx=Store())],
+                            value=Name(id='error_message', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        ClassDef(
+            name='TransactionLoad',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Class for loading transaction data from json file\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='raw',
+                                annotation=Name(id='Any', ctx=Load())),
+                            arg(
+                                arg='fork',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='raw',
+                                    ctx=Store())],
+                            value=Name(id='raw', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='fork',
+                                    ctx=Store())],
+                            value=Name(id='fork', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='json_to_chain_id',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get chain ID for the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='U64', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U64', ctx=Load())),
+                FunctionDef(
+                    name='json_to_nonce',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the nonce for the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='nonce')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_gas_price',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the gas price for the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='gasPrice')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='json_to_gas',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the gas limit for the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='gasLimit')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='json_to_to',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get to address for the transaction.')),
+                        If(
+                            test=Compare(
+                                left=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='raw',
+                                            ctx=Load()),
+                                        attr='get',
+                                        ctx=Load()),
+                                    args=[
+                                        Constant(value='to')],
+                                    keywords=[]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='')]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='Bytes0', ctx=Load()),
+                                        args=[
+                                            Constant(value=b'')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='hex_to_address',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='to')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Bytes', ctx=Load())),
+                FunctionDef(
+                    name='json_to_value',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the value of the transaction.')),
+                        Assign(
+                            targets=[
+                                Name(id='value', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='raw',
+                                        ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='value')],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='0x')]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_data',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the data of the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='data')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Bytes', ctx=Load())),
+                FunctionDef(
+                    name='json_to_access_list',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the access list of the transaction.')),
+                        Assign(
+                            targets=[
+                                Name(id='access_list', ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        For(
+                            target=Name(id='sublist', ctx=Store()),
+                            iter=Subscript(
+                                value=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='raw',
+                                    ctx=Load()),
+                                slice=Constant(value='accessList'),
+                                ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='access_list', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='fork',
+                                                                ctx=Load()),
+                                                            attr='hex_to_address',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='sublist', ctx=Load()),
+                                                                    attr='get',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='address')],
+                                                                keywords=[])],
+                                                        keywords=[]),
+                                                    ListComp(
+                                                        elt=Call(
+                                                            func=Name(id='hex_to_bytes32', ctx=Load()),
+                                                            args=[
+                                                                Name(id='key', ctx=Load())],
+                                                            keywords=[]),
+                                                        generators=[
+                                                            comprehension(
+                                                                target=Name(id='key', ctx=Store()),
+                                                                iter=Call(
+                                                                    func=Attribute(
+                                                                        value=Name(id='sublist', ctx=Load()),
+                                                                        attr='get',
+                                                                        ctx=Load()),
+                                                                    args=[
+                                                                        Constant(value='storageKeys')],
+                                                                    keywords=[]),
+                                                                ifs=[],
+                                                                is_async=0)])],
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='access_list', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load())),
+                FunctionDef(
+                    name='json_to_max_priority_fee_per_gas',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the max priority fee per gas of the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='maxPriorityFeePerGas')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='json_to_max_fee_per_gas',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the max fee per gas of the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='maxFeePerGas')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='json_to_max_fee_per_blob_gas',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Get the max priority fee per blobgas of the transaction.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='maxFeePerBlobGas')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_blob_versioned_hashes',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the blob versioned hashes of the transaction.')),
+                        Return(
+                            value=ListComp(
+                                elt=Call(
+                                    func=Name(id='hex_to_hash', ctx=Load()),
+                                    args=[
+                                        Name(id='blob_hash', ctx=Load())],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='blob_hash', ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='raw',
+                                                    ctx=Load()),
+                                                attr='get',
+                                                ctx=Load()),
+                                            args=[
+                                                Constant(value='blobVersionedHashes')],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)]))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='Bytes32', ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='json_to_v',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the v value of the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    IfExp(
+                                        test=Compare(
+                                            left=Constant(value='y_parity'),
+                                            ops=[
+                                                In()],
+                                            comparators=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='raw',
+                                                    ctx=Load())]),
+                                        body=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='raw',
+                                                    ctx=Load()),
+                                                attr='get',
+                                                ctx=Load()),
+                                            args=[
+                                                Constant(value='y_parity')],
+                                            keywords=[]),
+                                        orelse=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='raw',
+                                                    ctx=Load()),
+                                                attr='get',
+                                                ctx=Load()),
+                                            args=[
+                                                Constant(value='v')],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_y_parity',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the y parity of the transaction.')),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='json_to_v',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_r',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the r value of the transaction')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='r')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='json_to_s',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get the s value of the transaction')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='s')],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='get_parameters',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='tx_cls',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Extract all the transaction parameters from the json file\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='parameters', ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        For(
+                            target=Name(id='field', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='fields', ctx=Load()),
+                                args=[
+                                    Name(id='tx_cls', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='parameters', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Call(
+                                                    func=Name(id='getattr', ctx=Load()),
+                                                    args=[
+                                                        Name(id='self', ctx=Load()),
+                                                        JoinedStr(
+                                                            values=[
+                                                                Constant(value='json_to_'),
+                                                                FormattedValue(
+                                                                    value=Attribute(
+                                                                        value=Name(id='field', ctx=Load()),
+                                                                        attr='name',
+                                                                        ctx=Load()),
+                                                                    conversion=-1)])],
+                                                    keywords=[]),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='parameters', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='List', ctx=Load())),
+                FunctionDef(
+                    name='get_legacy_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Return the approprtiate class for legacy transactions.')),
+                        If(
+                            test=Call(
+                                func=Name(id='hasattr', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    Constant(value='LegacyTransaction')],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='fork',
+                                            ctx=Load()),
+                                        attr='LegacyTransaction',
+                                        ctx=Load()))],
+                            orelse=[
+                                Return(
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='fork',
+                                            ctx=Load()),
+                                        attr='Transaction',
+                                        ctx=Load()))])],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load())),
+                FunctionDef(
+                    name='read',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Convert json transaction data to a transaction object')),
+                        If(
+                            test=Compare(
+                                left=Constant(value='type'),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='raw',
+                                        ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='tx_type', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='type')],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='tx_type', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value='0x3')]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='tx_cls', ctx=Store())],
+                                            value=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='fork',
+                                                    ctx=Load()),
+                                                attr='BlobTransaction',
+                                                ctx=Load())),
+                                        Assign(
+                                            targets=[
+                                                Name(id='tx_byte_prefix', ctx=Store())],
+                                            value=Constant(value=b'\x03'))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Name(id='tx_type', ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value='0x2')]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='tx_cls', ctx=Store())],
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='fork',
+                                                            ctx=Load()),
+                                                        attr='FeeMarketTransaction',
+                                                        ctx=Load())),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='tx_byte_prefix', ctx=Store())],
+                                                    value=Constant(value=b'\x02'))],
+                                            orelse=[
+                                                If(
+                                                    test=Compare(
+                                                        left=Name(id='tx_type', ctx=Load()),
+                                                        ops=[
+                                                            Eq()],
+                                                        comparators=[
+                                                            Constant(value='0x1')]),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_cls', ctx=Store())],
+                                                            value=Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='fork',
+                                                                    ctx=Load()),
+                                                                attr='AccessListTransaction',
+                                                                ctx=Load())),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_byte_prefix', ctx=Store())],
+                                                            value=Constant(value=b'\x01'))],
+                                                    orelse=[
+                                                        If(
+                                                            test=Compare(
+                                                                left=Name(id='tx_type', ctx=Load()),
+                                                                ops=[
+                                                                    Eq()],
+                                                                comparators=[
+                                                                    Constant(value='0x0')]),
+                                                            body=[
+                                                                Assign(
+                                                                    targets=[
+                                                                        Name(id='tx_cls', ctx=Store())],
+                                                                    value=Call(
+                                                                        func=Attribute(
+                                                                            value=Name(id='self', ctx=Load()),
+                                                                            attr='get_legacy_transaction',
+                                                                            ctx=Load()),
+                                                                        args=[],
+                                                                        keywords=[])),
+                                                                Assign(
+                                                                    targets=[
+                                                                        Name(id='tx_byte_prefix', ctx=Store())],
+                                                                    value=Constant(value=b''))],
+                                                            orelse=[
+                                                                Raise(
+                                                                    exc=Call(
+                                                                        func=Name(id='ValueError', ctx=Load()),
+                                                                        args=[
+                                                                            JoinedStr(
+                                                                                values=[
+                                                                                    Constant(value='Unknown transaction type: '),
+                                                                                    FormattedValue(
+                                                                                        value=Name(id='tx_type', ctx=Load()),
+                                                                                        conversion=-1)])],
+                                                                        keywords=[]))])])])])],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Constant(value='maxFeePerBlobGas'),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='raw',
+                                                ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='tx_cls', ctx=Store())],
+                                            value=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='fork',
+                                                    ctx=Load()),
+                                                attr='BlobTransaction',
+                                                ctx=Load())),
+                                        Assign(
+                                            targets=[
+                                                Name(id='tx_byte_prefix', ctx=Store())],
+                                            value=Constant(value=b'\x03'))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Constant(value='maxFeePerGas'),
+                                                ops=[
+                                                    In()],
+                                                comparators=[
+                                                    Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='raw',
+                                                        ctx=Load())]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='tx_cls', ctx=Store())],
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='fork',
+                                                            ctx=Load()),
+                                                        attr='FeeMarketTransaction',
+                                                        ctx=Load())),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='tx_byte_prefix', ctx=Store())],
+                                                    value=Constant(value=b'\x02'))],
+                                            orelse=[
+                                                If(
+                                                    test=Compare(
+                                                        left=Constant(value='accessList'),
+                                                        ops=[
+                                                            In()],
+                                                        comparators=[
+                                                            Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='raw',
+                                                                ctx=Load())]),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_cls', ctx=Store())],
+                                                            value=Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='fork',
+                                                                    ctx=Load()),
+                                                                attr='AccessListTransaction',
+                                                                ctx=Load())),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_byte_prefix', ctx=Store())],
+                                                            value=Constant(value=b'\x01'))],
+                                                    orelse=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_cls', ctx=Store())],
+                                                            value=Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='get_legacy_transaction',
+                                                                    ctx=Load()),
+                                                                args=[],
+                                                                keywords=[])),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='tx_byte_prefix', ctx=Store())],
+                                                            value=Constant(value=b''))])])])]),
+                        Assign(
+                            targets=[
+                                Name(id='parameters', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='get_parameters',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='tx_cls', ctx=Load())],
+                                keywords=[])),
+                        Try(
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='tx_cls', ctx=Load()),
+                                        args=[
+                                            Starred(
+                                                value=Name(id='parameters', ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='Exception', ctx=Load()),
+                                    name='e',
+                                    body=[
+                                        Raise(
+                                            exc=Call(
+                                                func=Name(id='UnsupportedTx', ctx=Load()),
+                                                args=[
+                                                    BinOp(
+                                                        left=Name(id='tx_byte_prefix', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Call(
+                                                            func=Attribute(
+                                                                value=Name(id='rlp', ctx=Load()),
+                                                                attr='encode',
+                                                                ctx=Load()),
+                                                            args=[
+                                                                Name(id='parameters', ctx=Load())],
+                                                            keywords=[])),
+                                                    Call(
+                                                        func=Name(id='str', ctx=Load()),
+                                                        args=[
+                                                            Name(id='e', ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]),
+                                            cause=Name(id='e', ctx=Load()))])],
+                            orelse=[],
+                            finalbody=[])],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

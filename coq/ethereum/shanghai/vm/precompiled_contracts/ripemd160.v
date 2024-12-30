@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) RIPEMD160 PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,7 +14,7 @@ Implementation of the `RIPEMD160` precompiled contract.
 *)
 
 
-Definition ripemd160 : M unit :=
+Definition ripemd160 (evm : Evm) : M unit :=
   (*
       Writes the ripemd160 hash to output.
 
@@ -22,21 +23,29 @@ Definition ripemd160 : M unit :=
       evm :
           The current EVM frame.
       *)
-  let* data := evm.["message"].["data"] in
-  let* word_count := (* TODO expression *) in
-  do* charge_gas (|
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
+  do* M.assign "word_count" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ M.get_local ~(| "charge_gas" |) ~(|
     evm,
     (* TODO expression *)
-  |) in
-  let* hash_bytes := hashlib.["new"] (|
-    (* TODO expression *),
-    data
-  |).["digest"] (|
+  |) ]] in
+  do* M.assign "hash_bytes" [[
+    M.get_field ~(| M.get_field ~(| M.get_local ~(| "hashlib" |), "new" |) ~(|
+      (* TODO constant *),
+      M.get_local ~(| "data" |)
+    |), "digest" |) ~(|
 
-  |) in
-  let* padded_hash := left_pad_zero_bytes (|
-    hash_bytes,
-    (* TODO expression *)
-  |) in
+    |) in
+  ]] in
+  do* M.assign "padded_hash" [[
+    M.get_local ~(| "left_pad_zero_bytes" |) ~(|
+      M.get_local ~(| "hash_bytes" |),
+      32
+    |) in
+  ]] in
   (* TODO assignment *)
-
+  M.pure tt.

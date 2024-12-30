@@ -1,0 +1,5 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Specification Tools\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nLibrary of utilities and tools necessary for rendering (or otherwise working\nwith) the Ethereum specifications.\n'))],
+    type_ignores=[])

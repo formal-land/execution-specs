@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Utility Functions For Hexadecimal Strings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,9 +15,9 @@ types.
 *)
 
 Require ethereum.utils.hexadecimal.
-Require homestead.fork_types.
+Require ethereum.homestead.fork_types.
 
-Definition hex_to_root : M unit :=
+Definition hex_to_root (hex_string : str) : M Root :=
   (*
       Convert hex string to trie root.
 
@@ -31,9 +32,9 @@ Definition hex_to_root : M unit :=
           Trie root obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bloom : M unit :=
+Definition hex_to_bloom (hex_string : str) : M Bloom :=
   (*
       Convert hex string to bloom.
 
@@ -48,9 +49,9 @@ Definition hex_to_bloom : M unit :=
           Bloom obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_address : M unit :=
+Definition hex_to_address (hex_string : str) : M Address :=
   (*
       Convert hex string to Address (20 bytes).
 
@@ -65,4 +66,4 @@ Definition hex_to_address : M unit :=
           The address obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
-
+  M.pure tt.

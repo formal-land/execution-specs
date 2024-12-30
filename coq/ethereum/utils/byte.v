@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Utility Functions For Byte Strings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,7 +17,7 @@ Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 
-Definition left_pad_zero_bytes : M unit :=
+Definition left_pad_zero_bytes (value : Bytes) (size : (* TODO type *)) : M Bytes :=
   (*
       Left pad zeroes to `value` if its length is less than the given `size`.
 
@@ -33,9 +34,9 @@ Definition left_pad_zero_bytes : M unit :=
           left padded byte string of given `size`.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition right_pad_zero_bytes : M unit :=
+Definition right_pad_zero_bytes (value : Bytes) (size : (* TODO type *)) : M Bytes :=
   (*
       Right pad zeroes to `value` if its length is less than the given `size`.
 
@@ -52,4 +53,4 @@ Definition right_pad_zero_bytes : M unit :=
           right padded byte string of given `size`.
       *)
   (* TODO statement *)
-
+  M.pure tt.

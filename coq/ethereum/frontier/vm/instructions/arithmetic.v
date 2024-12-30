@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Arithmetic Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,10 +15,11 @@ Implementations of the EVM Arithmetic instructions.
 
 Require ethereum_types.numeric.
 Require ethereum.utils.numeric.
-Require frontier.vm.gas.
-Require frontier.vm.stack.
+Require ethereum.frontier.vm.__init__.
+Require ethereum.frontier.vm.gas.
+Require ethereum.frontier.vm.stack.
 
-Definition add : M unit :=
+Definition add (evm : Evm) : M unit :=
   (*
       Adds the top two elements of the stack together, and pushes the result back
       on the stack.
@@ -28,27 +30,37 @@ Definition add : M unit :=
           The current EVM frame.
 
       *)
-  let* x := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* y := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
-  let* result := x.["wrapping_add"] (|
-    y
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.assign "result" [[
+    M.get_field ~(| M.get_local ~(| "x" |), "wrapping_add" |) ~(|
+      M.get_local ~(| "y" |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition sub : M unit :=
+Definition sub (evm : Evm) : M unit :=
   (*
       Subtracts the top two elements of the stack, and pushes the result back
       on the stack.
@@ -59,27 +71,37 @@ Definition sub : M unit :=
           The current EVM frame.
 
       *)
-  let* x := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* y := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
-  let* result := x.["wrapping_sub"] (|
-    y
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.assign "result" [[
+    M.get_field ~(| M.get_local ~(| "x" |), "wrapping_sub" |) ~(|
+      M.get_local ~(| "y" |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mul : M unit :=
+Definition mul (evm : Evm) : M unit :=
   (*
       Multiply the top two elements of the stack, and pushes the result back
       on the stack.
@@ -90,27 +112,37 @@ Definition mul : M unit :=
           The current EVM frame.
 
       *)
-  let* x := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* y := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
-  let* result := x.["wrapping_mul"] (|
-    y
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.assign "result" [[
+    M.get_field ~(| M.get_local ~(| "x" |), "wrapping_mul" |) ~(|
+      M.get_local ~(| "y" |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition div : M unit :=
+Definition div (evm : Evm) : M unit :=
   (*
       Integer division of the top two elements of the stack. Pushes the result
       back on the stack.
@@ -121,25 +153,33 @@ Definition div : M unit :=
           The current EVM frame.
 
       *)
-  let* dividend := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* divisor := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "dividend" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "divisor" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    quotient
-  |) in
-  (* TODO statement *)
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "quotient" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition sdiv : M unit :=
+Definition sdiv (evm : Evm) : M unit :=
   (*
       Signed integer division of the top two elements of the stack. Pushes the
       result back on the stack.
@@ -150,31 +190,39 @@ Definition sdiv : M unit :=
           The current EVM frame.
 
       *)
-  let* dividend := stack.pop (|
-    evm.["stack"]
-  |).["to_signed"] (|
+  do* M.assign "dividend" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_signed" |) ~(|
 
-  |) in
-  let* divisor := stack.pop (|
-    evm.["stack"]
-  |).["to_signed"] (|
+    |) in
+  ]] in
+  do* M.assign "divisor" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_signed" |) ~(|
 
-  |) in
-  do* gas.charge_gas (|
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_signed"] (|
-      quotient
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_signed" |) ~(|
+      M.get_local ~(| "quotient" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mod : M unit :=
+Definition mod (evm : Evm) : M unit :=
   (*
       Modulo remainder of the top two elements of the stack. Pushes the result
       back on the stack.
@@ -185,25 +233,33 @@ Definition mod : M unit :=
           The current EVM frame.
 
       *)
-  let* x := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* y := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    remainder
-  |) in
-  (* TODO statement *)
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "remainder" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition smod : M unit :=
+Definition smod (evm : Evm) : M unit :=
   (*
       Signed modulo remainder of the top two elements of the stack. Pushes the
       result back on the stack.
@@ -214,31 +270,39 @@ Definition smod : M unit :=
           The current EVM frame.
 
       *)
-  let* x := stack.pop (|
-    evm.["stack"]
-  |).["to_signed"] (|
+  do* M.assign "x" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_signed" |) ~(|
 
-  |) in
-  let* y := stack.pop (|
-    evm.["stack"]
-  |).["to_signed"] (|
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_signed" |) ~(|
 
-  |) in
-  do* gas.charge_gas (|
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_signed"] (|
-      remainder
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_signed" |) ~(|
+      M.get_local ~(| "remainder" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition addmod : M unit :=
+Definition addmod (evm : Evm) : M unit :=
   (*
       Modulo addition of the top 2 elements with the 3rd element. Pushes the
       result back on the stack.
@@ -249,34 +313,44 @@ Definition addmod : M unit :=
           The current EVM frame.
 
       *)
-  let* x := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* y := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* z := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "z" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_MID
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mulmod : M unit :=
+Definition mulmod (evm : Evm) : M unit :=
   (*
       Modulo multiplication of the top 2 elements with the 3rd element. Pushes
       the result back on the stack.
@@ -287,34 +361,44 @@ Definition mulmod : M unit :=
           The current EVM frame.
 
       *)
-  let* x := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* y := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* z := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "x" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "z" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_MID
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition exp : M unit :=
+Definition exp (evm : Evm) : M unit :=
   (*
       Exponential operation of the top 2 elements. Pushes the result back on
       the stack.
@@ -325,39 +409,53 @@ Definition exp : M unit :=
           The current EVM frame.
 
       *)
-  let* base := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* exponent := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* exponent_bits := exponent.["bit_length"] (|
+  do* M.assign "base" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "exponent" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "exponent_bits" [[
+    M.get_field ~(| M.get_local ~(| "exponent" |), "bit_length" |) ~(|
 
-  |) in
-  let* exponent_bytes := (* TODO expression *) in
-  do* gas.charge_gas (|
+    |) in
+  ]] in
+  do* M.assign "exponent_bytes" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  let* result := ethereum_types.numeric.U256 (|
-    pow (|
-      base,
-      exponent,
-      (* TODO expression *)
+  |) ]] in
+  do* M.assign "result" [[
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "pow" |) ~(|
+        M.get_local ~(| "base" |),
+        M.get_local ~(| "exponent" |),
+        (* TODO expression *)
+      |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
     |)
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
+  ]] in
+  M.pure tt.
 
-
-Definition signextend : M unit :=
+Definition signextend (evm : Evm) : M unit :=
   (*
       Sign extend operation. In other words, extend a signed number which
       fits in N bytes to 32 bytes.
@@ -368,20 +466,28 @@ Definition signextend : M unit :=
           The current EVM frame.
 
       *)
-  let* byte_num := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* value := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "byte_num" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "value" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    result
-  |) in
-  (* TODO statement *)
-
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "result" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

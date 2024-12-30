@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 State Trie
 ^^^^^^^^^^
@@ -14,7 +15,7 @@ The state trie is the structure responsible for storing
 *)
 
 
-Definition encode_internal_node : M unit :=
+Definition encode_internal_node (node : (* TODO type *)) : M (* TODO type *) :=
   (*
       Encodes a Merkle Trie node into its RLP form. The RLP will then be
       serialized into a `Bytes` and hashed unless it is less that 32 bytes
@@ -35,22 +36,24 @@ Definition encode_internal_node : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-  let* encoded := rlp.["encode"] (|
-    unencoded
-  |) in
+  do* M.assign "encoded" [[
+    M.get_field ~(| M.get_local ~(| "rlp" |), "encode" |) ~(|
+      M.get_local ~(| "unencoded" |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition encode_node : M unit :=
+Definition encode_node (node : Node) (storage_root : (* TODO type *)) : M Bytes :=
   (*
       Encode a Node for storage in the Merkle Trie.
 
       Currently mostly an unimplemented stub.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition copy_trie : M unit :=
+Definition copy_trie (trie : (* TODO type *)) : M (* TODO type *) :=
   (*
       Create a copy of `trie`. Since only frozen objects may be stored in tries,
       the contents are reused.
@@ -66,9 +69,9 @@ Definition copy_trie : M unit :=
           A copy of the trie.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition trie_set : M unit :=
+Definition trie_set (trie : (* TODO type *)) (key : K) (value : V) : M unit :=
   (*
       Stores an item in a Merkle Trie.
 
@@ -85,9 +88,9 @@ Definition trie_set : M unit :=
           Node to insert at `key`.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition trie_get : M unit :=
+Definition trie_get (trie : (* TODO type *)) (key : K) : M V :=
   (*
       Gets an item from the Merkle Trie.
 
@@ -106,17 +109,17 @@ Definition trie_get : M unit :=
           Node at `key` in the trie.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition common_prefix_length : M unit :=
+Definition common_prefix_length (a : Sequence) (b : Sequence) : M int :=
   (*
       Find the longest common prefix of two sequences.
       *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition nibble_list_to_compact : M unit :=
+Definition nibble_list_to_compact (x : Bytes) (is_leaf : bool) : M Bytes :=
   (*
       Compresses nibble-list into a standard byte array with a flag.
 
@@ -150,14 +153,16 @@ Definition nibble_list_to_compact : M unit :=
       compressed : `bytearray`
           Compact byte array.
       *)
-  let* compact := bytearray (|
+  do* M.assign "compact" [[
+    M.get_local ~(| "bytearray" |) ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition bytes_to_nibble_list : M unit :=
+Definition bytes_to_nibble_list (bytes_ : Bytes) : M Bytes :=
   (*
       Converts a `Bytes` into to a sequence of nibbles (bytes with value < 16).
 
@@ -171,14 +176,16 @@ Definition bytes_to_nibble_list : M unit :=
       nibble_list : `Bytes`
           The `Bytes` in nibble-list format.
       *)
-  let* nibble_list := bytearray (|
-    (* TODO expression *)
-  |) in
+  do* M.assign "nibble_list" [[
+    M.get_local ~(| "bytearray" |) ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition _prepare_trie : M unit :=
+Definition _prepare_trie (trie : (* TODO type *)) (get_storage_root : (* TODO type *)) : M (* TODO type *) :=
   (*
       Prepares the trie for root calculation. Removes values that are empty,
       hashes the keys (if `secured == True`) and encodes all the nodes.
@@ -199,9 +206,9 @@ Definition _prepare_trie : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition root : M unit :=
+Definition root (trie : (* TODO type *)) (get_storage_root : (* TODO type *)) : M Root :=
   (*
       Computes the root of a modified merkle patricia trie (MPT).
 
@@ -219,22 +226,26 @@ Definition root : M unit :=
       root : `.fork_types.Root`
           MPT root of the underlying key-value pairs.
       *)
-  let* obj := _prepare_trie (|
-    trie,
-    get_storage_root
-  |) in
-  let* root_node := encode_internal_node (|
-    patricialize (|
-      obj,
-      Uint (|
-        (* TODO expression *)
+  do* M.assign "obj" [[
+    M.get_local ~(| "_prepare_trie" |) ~(|
+      trie,
+      get_storage_root
+    |) in
+  ]] in
+  do* M.assign "root_node" [[
+    M.get_local ~(| "encode_internal_node" |) ~(|
+      M.get_local ~(| "patricialize" |) ~(|
+        M.get_local ~(| "obj" |),
+        M.get_local ~(| "Uint" |) ~(|
+          0
+        |)
       |)
-    |)
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition patricialize : M unit :=
+Definition patricialize (obj : (* TODO type *)) (level : Uint) : M (* TODO type *) :=
   (*
       Structural composition function.
 
@@ -254,21 +265,29 @@ Definition patricialize : M unit :=
           Root node of `obj`.
       *)
   (* TODO statement *)
-  let* arbitrary_key := next (|
-    iter (|
-      obj
-    |)
-  |) in
+  do* M.assign "arbitrary_key" [[
+    M.get_local ~(| "next" |) ~(|
+      M.get_local ~(| "iter" |) ~(|
+        obj
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
-  let* substring := (* TODO expression *) in
-  let* prefix_length := len (|
-    substring
-  |) in
+  do* M.assign "substring" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "prefix_length" [[
+    M.get_local ~(| "len" |) ~(|
+      M.get_local ~(| "substring" |)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* value := (* TODO expression *) in
+  do* M.assign "value" [[
+    (* TODO constant *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

@@ -1,0 +1,1747 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe module implements the raw EVM tracer for t8n.\n')),
+        Import(
+            names=[
+                alias(name='json')]),
+        Import(
+            names=[
+                alias(name='os')]),
+        ImportFrom(
+            module='contextlib',
+            names=[
+                alias(name='ExitStack')],
+            level=0),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='asdict'),
+                alias(name='dataclass'),
+                alias(name='is_dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Protocol'),
+                alias(name='TextIO'),
+                alias(name='Union'),
+                alias(name='runtime_checkable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.trace',
+            names=[
+                alias(name='EvmStop'),
+                alias(name='GasAndRefund'),
+                alias(name='OpEnd'),
+                alias(name='OpException'),
+                alias(name='OpStart'),
+                alias(name='PrecompileEnd'),
+                alias(name='PrecompileStart'),
+                alias(name='TraceEvent'),
+                alias(name='TransactionEnd'),
+                alias(name='TransactionStart')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='EXCLUDE_FROM_OUTPUT', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='gasCostTraced'),
+                    Constant(value='errorTraced'),
+                    Constant(value='precompile')],
+                ctx=Load())),
+        ClassDef(
+            name='Trace',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements the raw EVM trace.\n    ')),
+                AnnAssign(
+                    target=Name(id='pc', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='op', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='str', ctx=Load()),
+                                    Name(id='int', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gasCost', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='memory', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='str', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='memSize', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='stack', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Name(id='str', ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='returnData', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='str', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='depth', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='refund', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='opName', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gasCostTraced', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    value=Constant(value=False),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='errorTraced', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    value=Constant(value=False),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='precompile', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    value=Constant(value=False),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='str', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='FinalTrace',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements final trace for a tx.\n    ')),
+                AnnAssign(
+                    target=Name(id='output', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gasUsed', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='str', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='gas_used',
+                                annotation=Name(id='int', ctx=Load())),
+                            arg(
+                                arg='output',
+                                annotation=Name(id='bytes', ctx=Load())),
+                            arg(
+                                arg='error',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='Exception', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='output',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='output', ctx=Load()),
+                                    attr='hex',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='gasUsed',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex', ctx=Load()),
+                                args=[
+                                    Name(id='gas_used', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Name(id='error', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='error',
+                                            ctx=Store())],
+                                    value=Attribute(
+                                        value=Call(
+                                            func=Name(id='type', ctx=Load()),
+                                            args=[
+                                                Name(id='error', ctx=Load())],
+                                            keywords=[]),
+                                        attr='__name__',
+                                        ctx=Load()))],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Environment',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements the environment interface for trace.\n    ')),
+                AnnAssign(
+                    target=Name(id='traces', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Constant(value='Trace'),
+                                    Constant(value='FinalTrace')],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='runtime_checkable', ctx=Load())]),
+        ClassDef(
+            name='Message',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements the message interface for trace.\n    ')),
+                AnnAssign(
+                    target=Name(id='depth', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='parent_evm', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Constant(value='Evm'),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='runtime_checkable', ctx=Load())]),
+        ClassDef(
+            name='EvmWithoutReturnData',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements the EVM interface for pre-byzantium forks trace.\n    ')),
+                AnnAssign(
+                    target=Name(id='pc', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='stack', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='U256', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='memory', ctx=Store()),
+                    annotation=Name(id='bytearray', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_left', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='env', ctx=Store()),
+                    annotation=Name(id='Environment', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='refund_counter', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='running', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='message', ctx=Store()),
+                    annotation=Name(id='Message', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='runtime_checkable', ctx=Load())]),
+        ClassDef(
+            name='EvmWithReturnData',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The class implements the EVM interface for post-byzantium forks trace.\n    ')),
+                AnnAssign(
+                    target=Name(id='pc', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='stack', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='U256', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='memory', ctx=Store()),
+                    annotation=Name(id='bytearray', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_left', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='env', ctx=Store()),
+                    annotation=Name(id='Environment', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='refund_counter', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='running', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='message', ctx=Store()),
+                    annotation=Name(id='Message', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='return_data', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='runtime_checkable', ctx=Load())]),
+        Assign(
+            targets=[
+                Name(id='Evm', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='EvmWithoutReturnData', ctx=Load()),
+                        Name(id='EvmWithReturnData', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='evm_trace',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='event',
+                        annotation=Name(id='TraceEvent', ctx=Load())),
+                    arg(
+                        arg='trace_memory',
+                        annotation=Name(id='bool', ctx=Load())),
+                    arg(
+                        arg='trace_stack',
+                        annotation=Name(id='bool', ctx=Load())),
+                    arg(
+                        arg='trace_return_data',
+                        annotation=Name(id='bool', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=False),
+                    Constant(value=True),
+                    Constant(value=False)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Create a trace of the event.\n    ')),
+                Assert(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Name(id='EvmWithoutReturnData', ctx=Load()),
+                                    Name(id='EvmWithReturnData', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='last_trace', ctx=Store())],
+                    value=Constant(value=None)),
+                If(
+                    test=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='env',
+                            ctx=Load()),
+                        attr='traces',
+                        ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='last_trace', ctx=Store())],
+                            value=Subscript(
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='env',
+                                        ctx=Load()),
+                                    attr='traces',
+                                    ctx=Load()),
+                                slice=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1)),
+                                ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='refund_counter', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='refund_counter',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='parent_evm', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='parent_evm',
+                        ctx=Load())),
+                While(
+                    test=Compare(
+                        left=Name(id='parent_evm', ctx=Load()),
+                        ops=[
+                            IsNot()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        AugAssign(
+                            target=Name(id='refund_counter', ctx=Store()),
+                            op=Add(),
+                            value=Attribute(
+                                value=Name(id='parent_evm', ctx=Load()),
+                                attr='refund_counter',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='parent_evm', ctx=Store())],
+                            value=Attribute(
+                                value=Attribute(
+                                    value=Name(id='parent_evm', ctx=Load()),
+                                    attr='message',
+                                    ctx=Load()),
+                                attr='parent_evm',
+                                ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='len_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='return_data', ctx=Store())],
+                    value=Constant(value=None)),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='evm', ctx=Load()),
+                                    Name(id='EvmWithReturnData', ctx=Load())],
+                                keywords=[]),
+                            Name(id='trace_return_data', ctx=Load())]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='return_data', ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='return_data',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[])))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='memory', ctx=Store())],
+                    value=Constant(value=None)),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Name(id='trace_memory', ctx=Load()),
+                            Compare(
+                                left=Name(id='len_memory', ctx=Load()),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Constant(value=0)])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='memory', ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='memory',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[])))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='stack', ctx=Store())],
+                    value=Constant(value=None)),
+                If(
+                    test=Name(id='trace_stack', ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='stack', ctx=Store())],
+                            value=ListComp(
+                                elt=Call(
+                                    func=Name(id='hex', ctx=Load()),
+                                    args=[
+                                        Name(id='i', ctx=Load())],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='i', ctx=Store()),
+                                        iter=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='stack',
+                                            ctx=Load()),
+                                        ifs=[],
+                                        is_async=0)]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='event', ctx=Load()),
+                            Name(id='TransactionStart', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Pass()],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='event', ctx=Load()),
+                                    Name(id='TransactionEnd', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='final_trace', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='FinalTrace', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='event', ctx=Load()),
+                                                attr='gas_used',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='event', ctx=Load()),
+                                                attr='output',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='event', ctx=Load()),
+                                                attr='error',
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='evm', ctx=Load()),
+                                                    attr='env',
+                                                    ctx=Load()),
+                                                attr='traces',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='final_trace', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='event', ctx=Load()),
+                                            Name(id='PrecompileStart', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='new_trace', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='Trace', ctx=Load()),
+                                                args=[],
+                                                keywords=[
+                                                    keyword(
+                                                        arg='pc',
+                                                        value=Call(
+                                                            func=Name(id='int', ctx=Load()),
+                                                            args=[
+                                                                Attribute(
+                                                                    value=Name(id='evm', ctx=Load()),
+                                                                    attr='pc',
+                                                                    ctx=Load())],
+                                                            keywords=[])),
+                                                    keyword(
+                                                        arg='op',
+                                                        value=BinOp(
+                                                            left=Constant(value='0x'),
+                                                            op=Add(),
+                                                            right=Call(
+                                                                func=Attribute(
+                                                                    value=Call(
+                                                                        func=Attribute(
+                                                                            value=Attribute(
+                                                                                value=Name(id='event', ctx=Load()),
+                                                                                attr='address',
+                                                                                ctx=Load()),
+                                                                            attr='hex',
+                                                                            ctx=Load()),
+                                                                        args=[],
+                                                                        keywords=[]),
+                                                                    attr='lstrip',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='0')],
+                                                                keywords=[]))),
+                                                    keyword(
+                                                        arg='gas',
+                                                        value=Call(
+                                                            func=Name(id='hex', ctx=Load()),
+                                                            args=[
+                                                                Attribute(
+                                                                    value=Name(id='evm', ctx=Load()),
+                                                                    attr='gas_left',
+                                                                    ctx=Load())],
+                                                            keywords=[])),
+                                                    keyword(
+                                                        arg='gasCost',
+                                                        value=Constant(value='0x0')),
+                                                    keyword(
+                                                        arg='memory',
+                                                        value=Name(id='memory', ctx=Load())),
+                                                    keyword(
+                                                        arg='memSize',
+                                                        value=Name(id='len_memory', ctx=Load())),
+                                                    keyword(
+                                                        arg='stack',
+                                                        value=Name(id='stack', ctx=Load())),
+                                                    keyword(
+                                                        arg='returnData',
+                                                        value=Name(id='return_data', ctx=Load())),
+                                                    keyword(
+                                                        arg='depth',
+                                                        value=BinOp(
+                                                            left=Call(
+                                                                func=Name(id='int', ctx=Load()),
+                                                                args=[
+                                                                    Attribute(
+                                                                        value=Attribute(
+                                                                            value=Name(id='evm', ctx=Load()),
+                                                                            attr='message',
+                                                                            ctx=Load()),
+                                                                        attr='depth',
+                                                                        ctx=Load())],
+                                                                keywords=[]),
+                                                            op=Add(),
+                                                            right=Constant(value=1))),
+                                                    keyword(
+                                                        arg='refund',
+                                                        value=Name(id='refund_counter', ctx=Load())),
+                                                    keyword(
+                                                        arg='opName',
+                                                        value=BinOp(
+                                                            left=Constant(value='0x'),
+                                                            op=Add(),
+                                                            right=Call(
+                                                                func=Attribute(
+                                                                    value=Call(
+                                                                        func=Attribute(
+                                                                            value=Attribute(
+                                                                                value=Name(id='event', ctx=Load()),
+                                                                                attr='address',
+                                                                                ctx=Load()),
+                                                                            attr='hex',
+                                                                            ctx=Load()),
+                                                                        args=[],
+                                                                        keywords=[]),
+                                                                    attr='lstrip',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='0')],
+                                                                keywords=[]))),
+                                                    keyword(
+                                                        arg='precompile',
+                                                        value=Constant(value=True))])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='evm', ctx=Load()),
+                                                            attr='env',
+                                                            ctx=Load()),
+                                                        attr='traces',
+                                                        ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='new_trace', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='event', ctx=Load()),
+                                                    Name(id='PrecompileEnd', ctx=Load())],
+                                                keywords=[]),
+                                            body=[
+                                                Assert(
+                                                    test=Call(
+                                                        func=Name(id='isinstance', ctx=Load()),
+                                                        args=[
+                                                            Name(id='last_trace', ctx=Load()),
+                                                            Name(id='Trace', ctx=Load())],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Attribute(
+                                                            value=Name(id='last_trace', ctx=Load()),
+                                                            attr='gasCostTraced',
+                                                            ctx=Store())],
+                                                    value=Constant(value=True)),
+                                                Assign(
+                                                    targets=[
+                                                        Attribute(
+                                                            value=Name(id='last_trace', ctx=Load()),
+                                                            attr='errorTraced',
+                                                            ctx=Store())],
+                                                    value=Constant(value=True))],
+                                            orelse=[
+                                                If(
+                                                    test=Call(
+                                                        func=Name(id='isinstance', ctx=Load()),
+                                                        args=[
+                                                            Name(id='event', ctx=Load()),
+                                                            Name(id='OpStart', ctx=Load())],
+                                                        keywords=[]),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='op', ctx=Store())],
+                                                            value=Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='event', ctx=Load()),
+                                                                    attr='op',
+                                                                    ctx=Load()),
+                                                                attr='value',
+                                                                ctx=Load())),
+                                                        If(
+                                                            test=Compare(
+                                                                left=Name(id='op', ctx=Load()),
+                                                                ops=[
+                                                                    Eq()],
+                                                                comparators=[
+                                                                    Constant(value='InvalidOpcode')]),
+                                                            body=[
+                                                                Assign(
+                                                                    targets=[
+                                                                        Name(id='op', ctx=Store())],
+                                                                    value=Constant(value='Invalid'))],
+                                                            orelse=[]),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='new_trace', ctx=Store())],
+                                                            value=Call(
+                                                                func=Name(id='Trace', ctx=Load()),
+                                                                args=[],
+                                                                keywords=[
+                                                                    keyword(
+                                                                        arg='pc',
+                                                                        value=Call(
+                                                                            func=Name(id='int', ctx=Load()),
+                                                                            args=[
+                                                                                Attribute(
+                                                                                    value=Name(id='evm', ctx=Load()),
+                                                                                    attr='pc',
+                                                                                    ctx=Load())],
+                                                                            keywords=[])),
+                                                                    keyword(
+                                                                        arg='op',
+                                                                        value=Name(id='op', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='gas',
+                                                                        value=Call(
+                                                                            func=Name(id='hex', ctx=Load()),
+                                                                            args=[
+                                                                                Attribute(
+                                                                                    value=Name(id='evm', ctx=Load()),
+                                                                                    attr='gas_left',
+                                                                                    ctx=Load())],
+                                                                            keywords=[])),
+                                                                    keyword(
+                                                                        arg='gasCost',
+                                                                        value=Constant(value='0x0')),
+                                                                    keyword(
+                                                                        arg='memory',
+                                                                        value=Name(id='memory', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='memSize',
+                                                                        value=Name(id='len_memory', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='stack',
+                                                                        value=Name(id='stack', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='returnData',
+                                                                        value=Name(id='return_data', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='depth',
+                                                                        value=BinOp(
+                                                                            left=Call(
+                                                                                func=Name(id='int', ctx=Load()),
+                                                                                args=[
+                                                                                    Attribute(
+                                                                                        value=Attribute(
+                                                                                            value=Name(id='evm', ctx=Load()),
+                                                                                            attr='message',
+                                                                                            ctx=Load()),
+                                                                                        attr='depth',
+                                                                                        ctx=Load())],
+                                                                                keywords=[]),
+                                                                            op=Add(),
+                                                                            right=Constant(value=1))),
+                                                                    keyword(
+                                                                        arg='refund',
+                                                                        value=Name(id='refund_counter', ctx=Load())),
+                                                                    keyword(
+                                                                        arg='opName',
+                                                                        value=Subscript(
+                                                                            value=Call(
+                                                                                func=Attribute(
+                                                                                    value=Call(
+                                                                                        func=Name(id='str', ctx=Load()),
+                                                                                        args=[
+                                                                                            Attribute(
+                                                                                                value=Name(id='event', ctx=Load()),
+                                                                                                attr='op',
+                                                                                                ctx=Load())],
+                                                                                        keywords=[]),
+                                                                                    attr='split',
+                                                                                    ctx=Load()),
+                                                                                args=[
+                                                                                    Constant(value='.')],
+                                                                                keywords=[]),
+                                                                            slice=UnaryOp(
+                                                                                op=USub(),
+                                                                                operand=Constant(value=1)),
+                                                                            ctx=Load()))])),
+                                                        Expr(
+                                                            value=Call(
+                                                                func=Attribute(
+                                                                    value=Attribute(
+                                                                        value=Attribute(
+                                                                            value=Name(id='evm', ctx=Load()),
+                                                                            attr='env',
+                                                                            ctx=Load()),
+                                                                        attr='traces',
+                                                                        ctx=Load()),
+                                                                    attr='append',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Name(id='new_trace', ctx=Load())],
+                                                                keywords=[]))],
+                                                    orelse=[
+                                                        If(
+                                                            test=Call(
+                                                                func=Name(id='isinstance', ctx=Load()),
+                                                                args=[
+                                                                    Name(id='event', ctx=Load()),
+                                                                    Name(id='OpEnd', ctx=Load())],
+                                                                keywords=[]),
+                                                            body=[
+                                                                Assert(
+                                                                    test=Call(
+                                                                        func=Name(id='isinstance', ctx=Load()),
+                                                                        args=[
+                                                                            Name(id='last_trace', ctx=Load()),
+                                                                            Name(id='Trace', ctx=Load())],
+                                                                        keywords=[])),
+                                                                Assign(
+                                                                    targets=[
+                                                                        Attribute(
+                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                            attr='gasCostTraced',
+                                                                            ctx=Store())],
+                                                                    value=Constant(value=True)),
+                                                                Assign(
+                                                                    targets=[
+                                                                        Attribute(
+                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                            attr='errorTraced',
+                                                                            ctx=Store())],
+                                                                    value=Constant(value=True))],
+                                                            orelse=[
+                                                                If(
+                                                                    test=Call(
+                                                                        func=Name(id='isinstance', ctx=Load()),
+                                                                        args=[
+                                                                            Name(id='event', ctx=Load()),
+                                                                            Name(id='OpException', ctx=Load())],
+                                                                        keywords=[]),
+                                                                    body=[
+                                                                        If(
+                                                                            test=Compare(
+                                                                                left=Name(id='last_trace', ctx=Load()),
+                                                                                ops=[
+                                                                                    IsNot()],
+                                                                                comparators=[
+                                                                                    Constant(value=None)]),
+                                                                            body=[
+                                                                                Assert(
+                                                                                    test=Call(
+                                                                                        func=Name(id='isinstance', ctx=Load()),
+                                                                                        args=[
+                                                                                            Name(id='last_trace', ctx=Load()),
+                                                                                            Name(id='Trace', ctx=Load())],
+                                                                                        keywords=[]))],
+                                                                            orelse=[]),
+                                                                        If(
+                                                                            test=BoolOp(
+                                                                                op=Or(),
+                                                                                values=[
+                                                                                    UnaryOp(
+                                                                                        op=Not(),
+                                                                                        operand=Name(id='last_trace', ctx=Load())),
+                                                                                    Attribute(
+                                                                                        value=Name(id='last_trace', ctx=Load()),
+                                                                                        attr='errorTraced',
+                                                                                        ctx=Load()),
+                                                                                    Compare(
+                                                                                        left=Attribute(
+                                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                                            attr='depth',
+                                                                                            ctx=Load()),
+                                                                                        ops=[
+                                                                                            Eq()],
+                                                                                        comparators=[
+                                                                                            Attribute(
+                                                                                                value=Attribute(
+                                                                                                    value=Name(id='evm', ctx=Load()),
+                                                                                                    attr='message',
+                                                                                                    ctx=Load()),
+                                                                                                attr='depth',
+                                                                                                ctx=Load())])]),
+                                                                            body=[
+                                                                                If(
+                                                                                    test=UnaryOp(
+                                                                                        op=Not(),
+                                                                                        operand=Call(
+                                                                                            func=Name(id='hasattr', ctx=Load()),
+                                                                                            args=[
+                                                                                                Attribute(
+                                                                                                    value=Name(id='event', ctx=Load()),
+                                                                                                    attr='error',
+                                                                                                    ctx=Load()),
+                                                                                                Constant(value='code')],
+                                                                                            keywords=[])),
+                                                                                    body=[
+                                                                                        Assign(
+                                                                                            targets=[
+                                                                                                Name(id='name', ctx=Store())],
+                                                                                            value=Attribute(
+                                                                                                value=Attribute(
+                                                                                                    value=Attribute(
+                                                                                                        value=Name(id='event', ctx=Load()),
+                                                                                                        attr='error',
+                                                                                                        ctx=Load()),
+                                                                                                    attr='__class__',
+                                                                                                    ctx=Load()),
+                                                                                                attr='__name__',
+                                                                                                ctx=Load())),
+                                                                                        Raise(
+                                                                                            exc=Call(
+                                                                                                func=Name(id='TypeError', ctx=Load()),
+                                                                                                args=[
+                                                                                                    JoinedStr(
+                                                                                                        values=[
+                                                                                                            Constant(value='OpException event error type `'),
+                                                                                                            FormattedValue(
+                                                                                                                value=Name(id='name', ctx=Load()),
+                                                                                                                conversion=-1),
+                                                                                                            Constant(value='` does not have code')])],
+                                                                                                keywords=[]),
+                                                                                            cause=Attribute(
+                                                                                                value=Name(id='event', ctx=Load()),
+                                                                                                attr='error',
+                                                                                                ctx=Load()))],
+                                                                                    orelse=[]),
+                                                                                Assign(
+                                                                                    targets=[
+                                                                                        Name(id='new_trace', ctx=Store())],
+                                                                                    value=Call(
+                                                                                        func=Name(id='Trace', ctx=Load()),
+                                                                                        args=[],
+                                                                                        keywords=[
+                                                                                            keyword(
+                                                                                                arg='pc',
+                                                                                                value=Call(
+                                                                                                    func=Name(id='int', ctx=Load()),
+                                                                                                    args=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='evm', ctx=Load()),
+                                                                                                            attr='pc',
+                                                                                                            ctx=Load())],
+                                                                                                    keywords=[])),
+                                                                                            keyword(
+                                                                                                arg='op',
+                                                                                                value=Attribute(
+                                                                                                    value=Attribute(
+                                                                                                        value=Name(id='event', ctx=Load()),
+                                                                                                        attr='error',
+                                                                                                        ctx=Load()),
+                                                                                                    attr='code',
+                                                                                                    ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='gas',
+                                                                                                value=Call(
+                                                                                                    func=Name(id='hex', ctx=Load()),
+                                                                                                    args=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='evm', ctx=Load()),
+                                                                                                            attr='gas_left',
+                                                                                                            ctx=Load())],
+                                                                                                    keywords=[])),
+                                                                                            keyword(
+                                                                                                arg='gasCost',
+                                                                                                value=Constant(value='0x0')),
+                                                                                            keyword(
+                                                                                                arg='memory',
+                                                                                                value=Name(id='memory', ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='memSize',
+                                                                                                value=Name(id='len_memory', ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='stack',
+                                                                                                value=Name(id='stack', ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='returnData',
+                                                                                                value=Name(id='return_data', ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='depth',
+                                                                                                value=BinOp(
+                                                                                                    left=Call(
+                                                                                                        func=Name(id='int', ctx=Load()),
+                                                                                                        args=[
+                                                                                                            Attribute(
+                                                                                                                value=Attribute(
+                                                                                                                    value=Name(id='evm', ctx=Load()),
+                                                                                                                    attr='message',
+                                                                                                                    ctx=Load()),
+                                                                                                                attr='depth',
+                                                                                                                ctx=Load())],
+                                                                                                        keywords=[]),
+                                                                                                    op=Add(),
+                                                                                                    right=Constant(value=1))),
+                                                                                            keyword(
+                                                                                                arg='refund',
+                                                                                                value=Name(id='refund_counter', ctx=Load())),
+                                                                                            keyword(
+                                                                                                arg='opName',
+                                                                                                value=Constant(value='InvalidOpcode')),
+                                                                                            keyword(
+                                                                                                arg='gasCostTraced',
+                                                                                                value=Constant(value=True)),
+                                                                                            keyword(
+                                                                                                arg='errorTraced',
+                                                                                                value=Constant(value=True)),
+                                                                                            keyword(
+                                                                                                arg='error',
+                                                                                                value=Attribute(
+                                                                                                    value=Call(
+                                                                                                        func=Name(id='type', ctx=Load()),
+                                                                                                        args=[
+                                                                                                            Attribute(
+                                                                                                                value=Name(id='event', ctx=Load()),
+                                                                                                                attr='error',
+                                                                                                                ctx=Load())],
+                                                                                                        keywords=[]),
+                                                                                                    attr='__name__',
+                                                                                                    ctx=Load()))])),
+                                                                                Expr(
+                                                                                    value=Call(
+                                                                                        func=Attribute(
+                                                                                            value=Attribute(
+                                                                                                value=Attribute(
+                                                                                                    value=Name(id='evm', ctx=Load()),
+                                                                                                    attr='env',
+                                                                                                    ctx=Load()),
+                                                                                                attr='traces',
+                                                                                                ctx=Load()),
+                                                                                            attr='append',
+                                                                                            ctx=Load()),
+                                                                                        args=[
+                                                                                            Name(id='new_trace', ctx=Load())],
+                                                                                        keywords=[]))],
+                                                                            orelse=[
+                                                                                If(
+                                                                                    test=UnaryOp(
+                                                                                        op=Not(),
+                                                                                        operand=Attribute(
+                                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                                            attr='errorTraced',
+                                                                                            ctx=Load())),
+                                                                                    body=[
+                                                                                        Assign(
+                                                                                            targets=[
+                                                                                                Attribute(
+                                                                                                    value=Name(id='last_trace', ctx=Load()),
+                                                                                                    attr='error',
+                                                                                                    ctx=Store())],
+                                                                                            value=Attribute(
+                                                                                                value=Call(
+                                                                                                    func=Name(id='type', ctx=Load()),
+                                                                                                    args=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='event', ctx=Load()),
+                                                                                                            attr='error',
+                                                                                                            ctx=Load())],
+                                                                                                    keywords=[]),
+                                                                                                attr='__name__',
+                                                                                                ctx=Load())),
+                                                                                        Assign(
+                                                                                            targets=[
+                                                                                                Attribute(
+                                                                                                    value=Name(id='last_trace', ctx=Load()),
+                                                                                                    attr='errorTraced',
+                                                                                                    ctx=Store())],
+                                                                                            value=Constant(value=True))],
+                                                                                    orelse=[])])],
+                                                                    orelse=[
+                                                                        If(
+                                                                            test=Call(
+                                                                                func=Name(id='isinstance', ctx=Load()),
+                                                                                args=[
+                                                                                    Name(id='event', ctx=Load()),
+                                                                                    Name(id='EvmStop', ctx=Load())],
+                                                                                keywords=[]),
+                                                                            body=[
+                                                                                If(
+                                                                                    test=UnaryOp(
+                                                                                        op=Not(),
+                                                                                        operand=Attribute(
+                                                                                            value=Name(id='evm', ctx=Load()),
+                                                                                            attr='running',
+                                                                                            ctx=Load())),
+                                                                                    body=[
+                                                                                        Return()],
+                                                                                    orelse=[
+                                                                                        If(
+                                                                                            test=Compare(
+                                                                                                left=Call(
+                                                                                                    func=Name(id='len', ctx=Load()),
+                                                                                                    args=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='evm', ctx=Load()),
+                                                                                                            attr='code',
+                                                                                                            ctx=Load())],
+                                                                                                    keywords=[]),
+                                                                                                ops=[
+                                                                                                    Eq()],
+                                                                                                comparators=[
+                                                                                                    Constant(value=0)]),
+                                                                                            body=[
+                                                                                                Return()],
+                                                                                            orelse=[
+                                                                                                Expr(
+                                                                                                    value=Call(
+                                                                                                        func=Name(id='evm_trace', ctx=Load()),
+                                                                                                        args=[
+                                                                                                            Name(id='evm', ctx=Load()),
+                                                                                                            Call(
+                                                                                                                func=Name(id='OpStart', ctx=Load()),
+                                                                                                                args=[
+                                                                                                                    Attribute(
+                                                                                                                        value=Name(id='event', ctx=Load()),
+                                                                                                                        attr='op',
+                                                                                                                        ctx=Load())],
+                                                                                                                keywords=[]),
+                                                                                                            Name(id='trace_memory', ctx=Load()),
+                                                                                                            Name(id='trace_stack', ctx=Load()),
+                                                                                                            Name(id='trace_return_data', ctx=Load())],
+                                                                                                        keywords=[]))])])],
+                                                                            orelse=[
+                                                                                If(
+                                                                                    test=Call(
+                                                                                        func=Name(id='isinstance', ctx=Load()),
+                                                                                        args=[
+                                                                                            Name(id='event', ctx=Load()),
+                                                                                            Name(id='GasAndRefund', ctx=Load())],
+                                                                                        keywords=[]),
+                                                                                    body=[
+                                                                                        If(
+                                                                                            test=UnaryOp(
+                                                                                                op=Not(),
+                                                                                                operand=Attribute(
+                                                                                                    value=Attribute(
+                                                                                                        value=Name(id='evm', ctx=Load()),
+                                                                                                        attr='env',
+                                                                                                        ctx=Load()),
+                                                                                                    attr='traces',
+                                                                                                    ctx=Load())),
+                                                                                            body=[
+                                                                                                Return()],
+                                                                                            orelse=[]),
+                                                                                        Assert(
+                                                                                            test=Call(
+                                                                                                func=Name(id='isinstance', ctx=Load()),
+                                                                                                args=[
+                                                                                                    Name(id='last_trace', ctx=Load()),
+                                                                                                    Name(id='Trace', ctx=Load())],
+                                                                                                keywords=[])),
+                                                                                        If(
+                                                                                            test=UnaryOp(
+                                                                                                op=Not(),
+                                                                                                operand=Attribute(
+                                                                                                    value=Name(id='last_trace', ctx=Load()),
+                                                                                                    attr='gasCostTraced',
+                                                                                                    ctx=Load())),
+                                                                                            body=[
+                                                                                                Assign(
+                                                                                                    targets=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                                                            attr='gasCost',
+                                                                                                            ctx=Store())],
+                                                                                                    value=Call(
+                                                                                                        func=Name(id='hex', ctx=Load()),
+                                                                                                        args=[
+                                                                                                            Attribute(
+                                                                                                                value=Name(id='event', ctx=Load()),
+                                                                                                                attr='gas_cost',
+                                                                                                                ctx=Load())],
+                                                                                                        keywords=[])),
+                                                                                                Assign(
+                                                                                                    targets=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                                                            attr='refund',
+                                                                                                            ctx=Store())],
+                                                                                                    value=Name(id='refund_counter', ctx=Load())),
+                                                                                                Assign(
+                                                                                                    targets=[
+                                                                                                        Attribute(
+                                                                                                            value=Name(id='last_trace', ctx=Load()),
+                                                                                                            attr='gasCostTraced',
+                                                                                                            ctx=Store())],
+                                                                                                    value=Constant(value=True))],
+                                                                                            orelse=[])],
+                                                                                    orelse=[])])])])])])])])])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        ClassDef(
+            name='_TraceJsonEncoder',
+            bases=[
+                Attribute(
+                    value=Name(id='json', ctx=Load()),
+                    attr='JSONEncoder',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='retain',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='k',
+                                annotation=Name(id='str', ctx=Load())),
+                            arg(
+                                arg='v',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='object', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='v', ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Return(
+                                    value=Constant(value=False))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='k', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Name(id='EXCLUDE_FROM_OUTPUT', ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Constant(value=False))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='k', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='pc'),
+                                            Constant(value='gas'),
+                                            Constant(value='gasCost'),
+                                            Constant(value='refund')],
+                                        ctx=Load())]),
+                            body=[
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='v', ctx=Load()),
+                                                    Name(id='str', ctx=Load())],
+                                                keywords=[]),
+                                            Compare(
+                                                left=Call(
+                                                    func=Attribute(
+                                                        value=Call(
+                                                            func=Name(id='int', ctx=Load()),
+                                                            args=[
+                                                                Name(id='v', ctx=Load()),
+                                                                Constant(value=0)],
+                                                            keywords=[]),
+                                                        attr='bit_length',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[]),
+                                                ops=[
+                                                    Gt()],
+                                                comparators=[
+                                                    Constant(value=64)])]),
+                                    body=[
+                                        Return(
+                                            value=Constant(value=False))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Return(
+                            value=Constant(value=True))],
+                    decorator_list=[
+                        Name(id='staticmethod', ctx=Load())],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='default',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='obj',
+                                annotation=Name(id='object', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=BoolOp(
+                                op=Or(),
+                                values=[
+                                    UnaryOp(
+                                        op=Not(),
+                                        operand=Call(
+                                            func=Name(id='is_dataclass', ctx=Load()),
+                                            args=[
+                                                Name(id='obj', ctx=Load())],
+                                            keywords=[])),
+                                    Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='obj', ctx=Load()),
+                                            Name(id='type', ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='super', ctx=Load()),
+                                                args=[],
+                                                keywords=[]),
+                                            attr='default',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='obj', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='trace', ctx=Store())],
+                            value=DictComp(
+                                key=Name(id='k', ctx=Load()),
+                                value=Name(id='v', ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Tuple(
+                                            elts=[
+                                                Name(id='k', ctx=Store()),
+                                                Name(id='v', ctx=Store())],
+                                            ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Call(
+                                                    func=Name(id='asdict', ctx=Load()),
+                                                    args=[
+                                                        Name(id='obj', ctx=Load())],
+                                                    keywords=[]),
+                                                attr='items',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ifs=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='_TraceJsonEncoder', ctx=Load()),
+                                                    attr='retain',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='k', ctx=Load()),
+                                                    Name(id='v', ctx=Load())],
+                                                keywords=[])],
+                                        is_async=0)])),
+                        Return(
+                            value=Name(id='trace', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='object', ctx=Load()))],
+            decorator_list=[]),
+        FunctionDef(
+            name='output_op_trace',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trace',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Trace', ctx=Load()),
+                                    Name(id='FinalTrace', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='json_file',
+                        annotation=Name(id='TextIO', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Output a single trace to a json file.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='json', ctx=Load()),
+                            attr='dump',
+                            ctx=Load()),
+                        args=[
+                            Name(id='trace', ctx=Load()),
+                            Name(id='json_file', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='separators',
+                                value=Tuple(
+                                    elts=[
+                                        Constant(value=','),
+                                        Constant(value=':')],
+                                    ctx=Load())),
+                            keyword(
+                                arg='cls',
+                                value=Name(id='_TraceJsonEncoder', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='json_file', ctx=Load()),
+                            attr='write',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\n')],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='output_traces',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='traces',
+                        annotation=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Union', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='Trace', ctx=Load()),
+                                        Name(id='FinalTrace', ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='tx_index',
+                        annotation=Name(id='int', ctx=Load())),
+                    arg(
+                        arg='tx_hash',
+                        annotation=Name(id='bytes', ctx=Load())),
+                    arg(
+                        arg='output_basedir',
+                        annotation=BinOp(
+                            left=Name(id='str', ctx=Load()),
+                            op=BitOr(),
+                            right=Name(id='TextIO', ctx=Load())))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value='.')]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Output the traces to a json file.\n    ')),
+                With(
+                    items=[
+                        withitem(
+                            context_expr=Call(
+                                func=Name(id='ExitStack', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            optional_vars=Name(id='stack', ctx=Store()))],
+                    body=[
+                        AnnAssign(
+                            target=Name(id='json_file', ctx=Store()),
+                            annotation=Name(id='TextIO', ctx=Load()),
+                            simple=1),
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='output_basedir', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='tx_hash_str', ctx=Store())],
+                                    value=BinOp(
+                                        left=Constant(value='0x'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Name(id='tx_hash', ctx=Load()),
+                                                attr='hex',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]))),
+                                Assign(
+                                    targets=[
+                                        Name(id='output_path', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='os', ctx=Load()),
+                                                attr='path',
+                                                ctx=Load()),
+                                            attr='join',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='output_basedir', ctx=Load()),
+                                            JoinedStr(
+                                                values=[
+                                                    Constant(value='trace-'),
+                                                    FormattedValue(
+                                                        value=Name(id='tx_index', ctx=Load()),
+                                                        conversion=-1),
+                                                    Constant(value='-'),
+                                                    FormattedValue(
+                                                        value=Name(id='tx_hash_str', ctx=Load()),
+                                                        conversion=-1),
+                                                    Constant(value='.jsonl')])],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='json_file', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='open', ctx=Load()),
+                                        args=[
+                                            Name(id='output_path', ctx=Load()),
+                                            Constant(value='w')],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stack', ctx=Load()),
+                                            attr='push',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='json_file', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='json_file', ctx=Store())],
+                                    value=Name(id='output_basedir', ctx=Load()))]),
+                        For(
+                            target=Name(id='trace', ctx=Store()),
+                            iter=Name(id='traces', ctx=Load()),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='getattr', ctx=Load()),
+                                        args=[
+                                            Name(id='trace', ctx=Load()),
+                                            Constant(value='precompile'),
+                                            Constant(value=False)],
+                                        keywords=[]),
+                                    body=[
+                                        Continue()],
+                                    orelse=[]),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='output_op_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='trace', ctx=Load()),
+                                            Name(id='json_file', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])])],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

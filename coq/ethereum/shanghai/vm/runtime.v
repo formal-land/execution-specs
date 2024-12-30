@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Runtime Operations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,9 +15,9 @@ Runtime related operations used while executing EVM code.
 
 Require typing.
 Require ethereum_types.numeric.
-Require shanghai.vm.instructions.
+Require ethereum.shanghai.vm.instructions.
 
-Definition get_valid_jump_destinations : M unit :=
+Definition get_valid_jump_destinations (code : bytes) : M (* TODO type *) :=
   (*
       Analyze the evm code to obtain the set of valid jump destinations.
 
@@ -38,12 +39,16 @@ Definition get_valid_jump_destinations : M unit :=
       valid_jump_destinations: `Set[Uint]`
           The set of valid jump destinations in the code.
       *)
-  let* valid_jump_destinations := set (|
+  do* M.assign "valid_jump_destinations" [[
+    M.get_local ~(| "set" |) ~(|
 
-  |) in
-  let* pc := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
+    |) in
+  ]] in
+  do* M.assign "pc" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

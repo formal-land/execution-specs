@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Elliptic Curves
 ^^^^^^^^^^^^^^^
@@ -5,7 +6,7 @@ Elliptic Curves
 
 Require typing.
 
-Definition secp256k1_recover : M unit :=
+Definition secp256k1_recover (r : U256) (s : U256) (v : U256) (msg_hash : Hash32) : M Bytes :=
   (*
       Recovers the public key from a given signature.
 
@@ -25,24 +26,34 @@ Definition secp256k1_recover : M unit :=
       public_key : `ethereum.base_types.Bytes`
           Recovered public key.
       *)
-  let* r_bytes := r.["to_be_bytes32"] (|
+  do* M.assign "r_bytes" [[
+    M.get_field ~(| r, "to_be_bytes32" |) ~(|
 
-  |) in
-  let* s_bytes := s.["to_be_bytes32"] (|
+    |) in
+  ]] in
+  do* M.assign "s_bytes" [[
+    M.get_field ~(| s, "to_be_bytes32" |) ~(|
 
-  |) in
-  let* signature := bytearray (|
-    (* TODO expression *)
-  |) in
+    |) in
+  ]] in
+  do* M.assign "signature" [[
+    M.get_local ~(| "bytearray" |) ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
   (* TODO assignment *)
   (* TODO assignment *)
   (* TODO assignment *)
-  let* public_key := coincurve.["PublicKey"].["from_signature_and_message"] (|
-    bytes (|
-      signature
-    |),
-    msg_hash
-  |) in
-  let* public_key := (* TODO expression *) in
+  do* M.assign "public_key" [[
+    M.get_field ~(| M.get_field ~(| M.get_local ~(| "coincurve" |), "PublicKey" |), "from_signature_and_message" |) ~(|
+      M.get_local ~(| "bytes" |) ~(|
+        M.get_local ~(| "signature" |)
+      |),
+      msg_hash
+    |) in
+  ]] in
+  do* M.assign "public_key" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-
+  M.pure tt.

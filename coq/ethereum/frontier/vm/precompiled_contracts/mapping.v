@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,8 +14,9 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require frontier.fork_types.
-Require frontier.vm.precompiled_contracts.ecrecover.
-Require frontier.vm.precompiled_contracts.identity.
-Require frontier.vm.precompiled_contracts.ripemd160.
-Require frontier.vm.precompiled_contracts.sha256.
+Require ethereum.frontier.fork_types.
+Require ethereum.frontier.vm.precompiled_contracts.__init__.
+Require ethereum.frontier.vm.precompiled_contracts.ecrecover.
+Require ethereum.frontier.vm.precompiled_contracts.identity.
+Require ethereum.frontier.vm.precompiled_contracts.ripemd160.
+Require ethereum.frontier.vm.precompiled_contracts.sha256.

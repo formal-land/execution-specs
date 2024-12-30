@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) MODEXP PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,100 +15,120 @@ Implementation of the `MODEXP` precompiled contract.
 
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require gray_glacier.vm.
-Require gray_glacier.vm.gas.
-Require gray_glacier.vm.memory.
+Require ethereum.gray_glacier.vm.
+Require ethereum.gray_glacier.vm.gas.
+Require ethereum.gray_glacier.vm.memory.
 
-Definition modexp : M unit :=
+Definition modexp (evm : Evm) : M unit :=
   (*
       Calculates `(base**exp) % modulus` for arbitrary sized `base`, `exp` and.
       `modulus`. The return value is the same length as the modulus.
       *)
-  let* data := evm.["message"].["data"] in
-  let* base_length := ethereum_types.numeric.U256.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |),
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |)
-    |)
-  |) in
-  let* exp_length := ethereum_types.numeric.U256.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |),
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |)
-    |)
-  |) in
-  let* modulus_length := ethereum_types.numeric.U256.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |),
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |)
-    |)
-  |) in
-  let* exp_start := (* TODO expression *) in
-  let* exp_head := ethereum_types.numeric.Uint.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      exp_start,
-      min (|
-        ethereum_types.numeric.U256 (|
-          (* TODO expression *)
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
+  do* M.assign "base_length" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        ethereum_types.numeric.U256 ~(|
+          0
         |),
-        exp_length
+        ethereum_types.numeric.U256 ~(|
+          32
+        |)
       |)
-    |)
-  |) in
-  do* vm.gas.charge_gas (|
+    |) in
+  ]] in
+  do* M.assign "exp_length" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        ethereum_types.numeric.U256 ~(|
+          32
+        |),
+        ethereum_types.numeric.U256 ~(|
+          32
+        |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "modulus_length" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        ethereum_types.numeric.U256 ~(|
+          64
+        |),
+        ethereum_types.numeric.U256 ~(|
+          32
+        |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "exp_start" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "exp_head" [[
+    M.get_field ~(| ethereum_types.numeric.Uint, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        M.get_local ~(| "exp_start" |),
+        M.get_local ~(| "min" |) ~(|
+          ethereum_types.numeric.U256 ~(|
+            32
+          |),
+          M.get_local ~(| "exp_length" |)
+        |)
+      |)
+    |) in
+  ]] in
+  do* [[ vm.gas.charge_gas ~(|
     evm,
-    gas_cost (|
-      base_length,
-      modulus_length,
-      exp_length,
-      exp_head
+    M.get_local ~(| "gas_cost" |) ~(|
+      M.get_local ~(| "base_length" |),
+      M.get_local ~(| "modulus_length" |),
+      M.get_local ~(| "exp_length" |),
+      M.get_local ~(| "exp_head" |)
     |)
-  |) in
+  |) ]] in
   (* TODO statement *)
-  let* base := ethereum_types.numeric.Uint.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |),
-      base_length
-    |)
-  |) in
-  let* exp := ethereum_types.numeric.Uint.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      exp_start,
-      exp_length
-    |)
-  |) in
-  let* modulus_start := (* TODO expression *) in
-  let* modulus := ethereum_types.numeric.Uint.["from_be_bytes"] (|
-    memory.buffer_read (|
-      data,
-      modulus_start,
-      modulus_length
-    |)
-  |) in
+  do* M.assign "base" [[
+    M.get_field ~(| ethereum_types.numeric.Uint, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        ethereum_types.numeric.U256 ~(|
+          96
+        |),
+        M.get_local ~(| "base_length" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "exp" [[
+    M.get_field ~(| ethereum_types.numeric.Uint, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        M.get_local ~(| "exp_start" |),
+        M.get_local ~(| "exp_length" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "modulus_start" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "modulus" [[
+    M.get_field ~(| ethereum_types.numeric.Uint, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_local ~(| "data" |),
+        M.get_local ~(| "modulus_start" |),
+        M.get_local ~(| "modulus_length" |)
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition complexity : M unit :=
+Definition complexity (base_length : U256) (modulus_length : U256) : M Uint :=
   (*
       Estimate the complexity of performing a modular exponentiation.
 
@@ -126,19 +147,23 @@ Definition complexity : M unit :=
       complexity : `Uint`
           Complexity of performing the operation.
       *)
-  let* max_length := max (|
-    ethereum_types.numeric.Uint (|
-      base_length
-    |),
-    ethereum_types.numeric.Uint (|
-      modulus_length
-    |)
-  |) in
-  let* words := (* TODO expression *) in
+  do* M.assign "max_length" [[
+    M.get_local ~(| "max" |) ~(|
+      ethereum_types.numeric.Uint ~(|
+        base_length
+      |),
+      ethereum_types.numeric.Uint ~(|
+        modulus_length
+      |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition iterations : M unit :=
+Definition iterations (exponent_length : U256) (exponent_head : Uint) : M Uint :=
   (*
       Calculate the number of iterations required to perform a modular
       exponentiation.
@@ -161,9 +186,9 @@ Definition iterations : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition gas_cost : M unit :=
+Definition gas_cost (base_length : U256) (modulus_length : U256) (exponent_length : U256) (exponent_head : Uint) : M Uint :=
   (*
       Calculate the gas cost of performing a modular exponentiation.
 
@@ -189,15 +214,23 @@ Definition gas_cost : M unit :=
       gas_cost : `Uint`
           Gas required for performing the operation.
       *)
-  let* multiplication_complexity := complexity (|
-    base_length,
-    modulus_length
-  |) in
-  let* iteration_count := iterations (|
-    exponent_length,
-    exponent_head
-  |) in
-  let* cost := (* TODO expression *) in
+  do* M.assign "multiplication_complexity" [[
+    M.get_local ~(| "complexity" |) ~(|
+      base_length,
+      modulus_length
+    |) in
+  ]] in
+  do* M.assign "iteration_count" [[
+    M.get_local ~(| "iterations" |) ~(|
+      exponent_length,
+      exponent_head
+    |) in
+  ]] in
+  do* M.assign "cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.aug_assign [[ M.get_local ~(| "cost" |) ]] [[
+    M.get_local ~(| "GQUADDIVISOR" |)
+  ]] in
   (* TODO statement *)
-  (* TODO statement *)
-
+  M.pure tt.

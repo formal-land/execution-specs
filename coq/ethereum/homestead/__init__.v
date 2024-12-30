@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Homestead fork increases the gas cost of creating contracts, restricts the
 range of valid ECDSA signatures for transactions (but not precompiles), tweaks

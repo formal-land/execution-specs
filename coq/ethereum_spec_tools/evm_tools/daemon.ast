@@ -1,0 +1,897 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nRun ethereum-spec-evm as a daemon.\n')),
+        Import(
+            names=[
+                alias(name='argparse')]),
+        Import(
+            names=[
+                alias(name='json')]),
+        Import(
+            names=[
+                alias(name='os.path')]),
+        Import(
+            names=[
+                alias(name='socketserver')]),
+        Import(
+            names=[
+                alias(name='time')]),
+        ImportFrom(
+            module='http.server',
+            names=[
+                alias(name='BaseHTTPRequestHandler')],
+            level=0),
+        ImportFrom(
+            module='io',
+            names=[
+                alias(name='StringIO'),
+                alias(name='TextIOWrapper')],
+            level=0),
+        ImportFrom(
+            module='socket',
+            names=[
+                alias(name='socket')],
+            level=0),
+        ImportFrom(
+            module='threading',
+            names=[
+                alias(name='Thread')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Tuple'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='urllib.parse',
+            names=[
+                alias(name='parse_qs'),
+                alias(name='urlparse')],
+            level=0),
+        FunctionDef(
+            name='daemon_arguments',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='subparsers',
+                        annotation=Attribute(
+                            value=Name(id='argparse', ctx=Load()),
+                            attr='_SubParsersAction',
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Adds the arguments for the daemon tool subparser.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='parser', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='subparsers', ctx=Load()),
+                            attr='add_parser',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='daemon')],
+                        keywords=[
+                            keyword(
+                                arg='help',
+                                value=Constant(value='Spawn t8n as a daemon'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--uds')],
+                        keywords=[
+                            keyword(
+                                arg='help',
+                                value=Constant(value='Unix domain socket path'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--timeout')],
+                        keywords=[
+                            keyword(
+                                arg='help',
+                                value=Constant(value='Timeout to shutdown daemon if there are not requests (0 for no timeout)')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='int', ctx=Load()))]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        ClassDef(
+            name='_EvmToolHandler',
+            bases=[
+                Name(id='BaseHTTPRequestHandler', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='log_request',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='code',
+                                annotation=BinOp(
+                                    left=Name(id='int', ctx=Load()),
+                                    op=BitOr(),
+                                    right=Name(id='str', ctx=Load()))),
+                            arg(
+                                arg='size',
+                                annotation=BinOp(
+                                    left=Name(id='int', ctx=Load()),
+                                    op=BitOr(),
+                                    right=Name(id='str', ctx=Load())))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value='-'),
+                            Constant(value='-')]),
+                    body=[
+                        Expr(
+                            value=Constant(value="Don't log requests")),
+                        Pass()],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='do_POST',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        ImportFrom(
+                            names=[
+                                alias(name='main')],
+                            level=1),
+                        Assign(
+                            targets=[
+                                Name(id='content_length', ctx=Store())],
+                            value=Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='headers',
+                                            ctx=Load()),
+                                        slice=Constant(value='Content-Length'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='content_bytes', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='rfile',
+                                        ctx=Load()),
+                                    attr='read',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='content_length', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='content', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='json', ctx=Load()),
+                                    attr='loads',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='content_bytes', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='input_string', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='json', ctx=Load()),
+                                    attr='dumps',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='content', ctx=Load()),
+                                        slice=Constant(value='input'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='input', ctx=Store())],
+                            value=Call(
+                                func=Name(id='StringIO', ctx=Load()),
+                                args=[
+                                    Name(id='input_string', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='args', ctx=Store())],
+                            value=List(
+                                elts=[
+                                    Constant(value='t8n'),
+                                    Constant(value='--input.env=stdin'),
+                                    Constant(value='--input.alloc=stdin'),
+                                    Constant(value='--input.txs=stdin'),
+                                    Constant(value='--output.result=stdout'),
+                                    Constant(value='--output.body=stdout'),
+                                    Constant(value='--output.alloc=stdout'),
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='--state.fork='),
+                                            FormattedValue(
+                                                value=Subscript(
+                                                    value=Subscript(
+                                                        value=Name(id='content', ctx=Load()),
+                                                        slice=Constant(value='state'),
+                                                        ctx=Load()),
+                                                    slice=Constant(value='fork'),
+                                                    ctx=Load()),
+                                                conversion=-1)]),
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='--state.chainid='),
+                                            FormattedValue(
+                                                value=Subscript(
+                                                    value=Subscript(
+                                                        value=Name(id='content', ctx=Load()),
+                                                        slice=Constant(value='state'),
+                                                        ctx=Load()),
+                                                    slice=Constant(value='chainid'),
+                                                    ctx=Load()),
+                                                conversion=-1)]),
+                                    JoinedStr(
+                                        values=[
+                                            Constant(value='--state.reward='),
+                                            FormattedValue(
+                                                value=Subscript(
+                                                    value=Subscript(
+                                                        value=Name(id='content', ctx=Load()),
+                                                        slice=Constant(value='state'),
+                                                        ctx=Load()),
+                                                    slice=Constant(value='reward'),
+                                                    ctx=Load()),
+                                                conversion=-1)])],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='query_string', ctx=Store())],
+                            value=Attribute(
+                                value=Call(
+                                    func=Name(id='urlparse', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='path',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                attr='query',
+                                ctx=Load())),
+                        If(
+                            test=Name(id='query_string', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='query', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='parse_qs', ctx=Load()),
+                                        args=[
+                                            Name(id='query_string', ctx=Load())],
+                                        keywords=[
+                                            keyword(
+                                                arg='keep_blank_values',
+                                                value=Constant(value=True)),
+                                            keyword(
+                                                arg='strict_parsing',
+                                                value=Constant(value=True)),
+                                            keyword(
+                                                arg='errors',
+                                                value=Constant(value='strict'))])),
+                                AugAssign(
+                                    target=Name(id='args', ctx=Store()),
+                                    op=Add(),
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='query', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='arg'),
+                                            List(elts=[], ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='send_response',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=200)],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='send_header',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Content-type'),
+                                    Constant(value='application/octet-stream')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='end_headers',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='out_wrapper', ctx=Store())],
+                            value=Call(
+                                func=Name(id='TextIOWrapper', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='wfile',
+                                        ctx=Load())],
+                                keywords=[
+                                    keyword(
+                                        arg='encoding',
+                                        value=Constant(value='utf-8'))])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='main', ctx=Load()),
+                                args=[],
+                                keywords=[
+                                    keyword(
+                                        arg='args',
+                                        value=Name(id='args', ctx=Load())),
+                                    keyword(
+                                        arg='out_file',
+                                        value=Name(id='out_wrapper', ctx=Load())),
+                                    keyword(
+                                        arg='in_file',
+                                        value=Name(id='input', ctx=Load()))])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='out_wrapper', ctx=Load()),
+                                    attr='flush',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        ClassDef(
+            name='_UnixSocketHttpServer',
+            bases=[
+                Attribute(
+                    value=Name(id='socketserver', ctx=Load()),
+                    attr='UnixStreamServer',
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                AnnAssign(
+                    target=Name(id='last_response', ctx=Store()),
+                    annotation=Name(id='float', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='shutdown_timeout', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        vararg=arg(
+                            arg='args',
+                            annotation=Name(id='Any', ctx=Load())),
+                        kwonlyargs=[
+                            arg(
+                                arg='shutdown_timeout',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kw_defaults=[
+                            None],
+                        kwarg=arg(
+                            arg='kwargs',
+                            annotation=Name(id='Any', ctx=Load())),
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='shutdown_timeout',
+                                    ctx=Store())],
+                            value=Name(id='shutdown_timeout', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='last_response',
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Attribute(
+                                        value=Name(id='time', ctx=Load()),
+                                        attr='monotonic',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                op=Add(),
+                                right=Constant(value=60.0))),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='super', ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    attr='__init__',
+                                    ctx=Load()),
+                                args=[
+                                    Starred(
+                                        value=Name(id='args', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[
+                                    keyword(
+                                        value=Name(id='kwargs', ctx=Load()))]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='get_request',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='request', ctx=Store()),
+                                        Name(id='client_address', ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='super', ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    attr='get_request',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Name(id='request', ctx=Load()),
+                                    List(
+                                        elts=[
+                                            Constant(value='local'),
+                                            Constant(value=0)],
+                                        ctx=Load())],
+                                ctx=Load()))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Any', ctx=Load()),
+                                Name(id='Any', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='finish_request',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='request',
+                                annotation=Subscript(
+                                    value=Name(id='Union', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='socket', ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='Tuple', ctx=Load()),
+                                                slice=Tuple(
+                                                    elts=[
+                                                        Name(id='bytes', ctx=Load()),
+                                                        Name(id='socket', ctx=Load())],
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='client_address',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Try(
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='super', ctx=Load()),
+                                                args=[],
+                                                keywords=[]),
+                                            attr='finish_request',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='request', ctx=Load()),
+                                            Name(id='client_address', ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[],
+                            orelse=[],
+                            finalbody=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='last_response',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='time', ctx=Load()),
+                                            attr='monotonic',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))])],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='check_timeout',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        While(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='shutdown_timeout',
+                                    ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='time', ctx=Load()),
+                                            attr='sleep',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=11.0)],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='now', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='time', ctx=Load()),
+                                            attr='monotonic',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='last_response', ctx=Store())],
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='last_response',
+                                        ctx=Load())),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='last_response', ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='last_response',
+                                                    ctx=Store())],
+                                            value=Name(id='now', ctx=Load()))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=BinOp(
+                                                    left=Name(id='now', ctx=Load()),
+                                                    op=Sub(),
+                                                    right=Name(id='last_response', ctx=Load())),
+                                                ops=[
+                                                    Gt()],
+                                                comparators=[
+                                                    Call(
+                                                        func=Name(id='float', ctx=Load()),
+                                                        args=[
+                                                            Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='shutdown_timeout',
+                                                                ctx=Load())],
+                                                        keywords=[])]),
+                                            body=[
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='shutdown',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])),
+                                                Break()],
+                                            orelse=[])])],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        ClassDef(
+            name='Daemon',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Converts HTTP requests into ethereum-spec-evm calls.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='options',
+                                annotation=Attribute(
+                                    value=Name(id='argparse', ctx=Load()),
+                                    attr='Namespace',
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='uds',
+                                    ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Try(
+                                    body=[
+                                        ImportFrom(
+                                            module='platformdirs',
+                                            names=[
+                                                alias(name='user_runtime_dir')],
+                                            level=0)],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='ImportError', ctx=Load()),
+                                            name='e',
+                                            body=[
+                                                Raise(
+                                                    exc=Call(
+                                                        func=Name(id='Exception', ctx=Load()),
+                                                        args=[
+                                                            Constant(value='Missing plaformdirs dependency (try installing ethereum[tools] extra)')],
+                                                        keywords=[]),
+                                                    cause=Name(id='e', ctx=Load()))])],
+                                    orelse=[],
+                                    finalbody=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='runtime_dir', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='user_runtime_dir', ctx=Load()),
+                                        args=[],
+                                        keywords=[
+                                            keyword(
+                                                arg='appname',
+                                                value=Constant(value='ethereum-spec-evm')),
+                                            keyword(
+                                                arg='appauthor',
+                                                value=Constant(value='org.ethereum')),
+                                            keyword(
+                                                arg='ensure_exists',
+                                                value=Constant(value=True))])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='uds',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='os', ctx=Load()),
+                                                attr='path',
+                                                ctx=Load()),
+                                            attr='join',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='runtime_dir', ctx=Load()),
+                                            Constant(value='daemon.sock')],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='uds',
+                                            ctx=Store())],
+                                    value=Attribute(
+                                        value=Name(id='options', ctx=Load()),
+                                        attr='uds',
+                                        ctx=Load()))]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='timeout',
+                                    ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='options', ctx=Load()),
+                                attr='timeout',
+                                ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='_run',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Try(
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='os', ctx=Load()),
+                                            attr='remove',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='uds',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='IOError', ctx=Load()),
+                                    body=[
+                                        Pass()])],
+                            orelse=[],
+                            finalbody=[]),
+                        With(
+                            items=[
+                                withitem(
+                                    context_expr=Call(
+                                        func=Name(id='_UnixSocketHttpServer', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='uds',
+                                                ctx=Load()),
+                                            Name(id='_EvmToolHandler', ctx=Load())],
+                                        keywords=[
+                                            keyword(
+                                                arg='shutdown_timeout',
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='timeout',
+                                                    ctx=Load()))]),
+                                    optional_vars=Name(id='server', ctx=Store()))],
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='server', ctx=Load()),
+                                            attr='timeout',
+                                            ctx=Store())],
+                                    value=Constant(value=7.0)),
+                                Assign(
+                                    targets=[
+                                        Name(id='timer', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Thread', ctx=Load()),
+                                        args=[],
+                                        keywords=[
+                                            keyword(
+                                                arg='target',
+                                                value=Attribute(
+                                                    value=Name(id='server', ctx=Load()),
+                                                    attr='check_timeout',
+                                                    ctx=Load())),
+                                            keyword(
+                                                arg='daemon',
+                                                value=Constant(value=True))])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='timer', ctx=Load()),
+                                            attr='start',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='server', ctx=Load()),
+                                            attr='serve_forever',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))]),
+                        Return(
+                            value=Constant(value=0))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load())),
+                FunctionDef(
+                    name='run',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Execute the tool.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='_run',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

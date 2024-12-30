@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Utility Functions For Hexadecimal Strings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,7 +17,7 @@ Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.crypto.hash.
 
-Definition has_hex_prefix : M unit :=
+Definition has_hex_prefix (hex_string : str) : M bool :=
   (*
       Check if a hex string starts with hex prefix (0x).
 
@@ -31,9 +32,9 @@ Definition has_hex_prefix : M unit :=
           Boolean indicating whether the hex string has 0x prefix.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition remove_hex_prefix : M unit :=
+Definition remove_hex_prefix (hex_string : str) : M str :=
   (*
       Remove 0x prefix from a hex string if present. This function returns the
       passed hex string if it isn't prefixed with 0x.
@@ -50,9 +51,9 @@ Definition remove_hex_prefix : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bytes : M unit :=
+Definition hex_to_bytes (hex_string : str) : M Bytes :=
   (*
       Convert hex string to bytes.
 
@@ -67,9 +68,9 @@ Definition hex_to_bytes : M unit :=
           Byte stream corresponding to the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bytes8 : M unit :=
+Definition hex_to_bytes8 (hex_string : str) : M Bytes8 :=
   (*
       Convert hex string to 8 bytes.
 
@@ -84,9 +85,9 @@ Definition hex_to_bytes8 : M unit :=
           8-byte stream corresponding to the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bytes20 : M unit :=
+Definition hex_to_bytes20 (hex_string : str) : M Bytes20 :=
   (*
       Convert hex string to 20 bytes.
 
@@ -101,9 +102,9 @@ Definition hex_to_bytes20 : M unit :=
           20-byte stream corresponding to the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bytes32 : M unit :=
+Definition hex_to_bytes32 (hex_string : str) : M Bytes32 :=
   (*
       Convert hex string to 32 bytes.
 
@@ -118,9 +119,9 @@ Definition hex_to_bytes32 : M unit :=
           32-byte stream corresponding to the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_bytes256 : M unit :=
+Definition hex_to_bytes256 (hex_string : str) : M Bytes256 :=
   (*
       Convert hex string to 256 bytes.
 
@@ -135,9 +136,9 @@ Definition hex_to_bytes256 : M unit :=
           256-byte stream corresponding to the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_hash : M unit :=
+Definition hex_to_hash (hex_string : str) : M Hash32 :=
   (*
       Convert hex string to hash32 (32 bytes).
 
@@ -152,9 +153,9 @@ Definition hex_to_hash : M unit :=
           32-byte stream obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_uint : M unit :=
+Definition hex_to_uint (hex_string : str) : M Uint :=
   (*
       Convert hex string to Uint.
 
@@ -169,9 +170,9 @@ Definition hex_to_uint : M unit :=
           The unsigned integer obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_u64 : M unit :=
+Definition hex_to_u64 (hex_string : str) : M U64 :=
   (*
       Convert hex string to U64.
 
@@ -186,9 +187,9 @@ Definition hex_to_u64 : M unit :=
           The U64 integer obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_to_u256 : M unit :=
+Definition hex_to_u256 (hex_string : str) : M U256 :=
   (*
       Convert hex string to U256.
 
@@ -203,4 +204,4 @@ Definition hex_to_u256 : M unit :=
           The U256 integer obtained from the given hexadecimal string.
       *)
   (* TODO statement *)
-
+  M.pure tt.

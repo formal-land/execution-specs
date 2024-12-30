@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Frontier is the first production-ready iteration of the Ethereum protocol.
 *)

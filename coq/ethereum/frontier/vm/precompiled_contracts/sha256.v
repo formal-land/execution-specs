@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) SHA256 PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,7 +14,7 @@ Implementation of the `SHA256` precompiled contract.
 *)
 
 
-Definition sha256 : M unit :=
+Definition sha256 (evm : Evm) : M unit :=
   (*
       Writes the sha256 hash to output.
 
@@ -22,11 +23,15 @@ Definition sha256 : M unit :=
       evm :
           The current EVM frame.
       *)
-  let* data := evm.["message"].["data"] in
-  let* word_count := (* TODO expression *) in
-  do* charge_gas (|
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
+  do* M.assign "word_count" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ M.get_local ~(| "charge_gas" |) ~(|
     evm,
     (* TODO expression *)
-  |) in
+  |) ]] in
   (* TODO assignment *)
-
+  M.pure tt.

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Defines the functions required for creating EVM traces during execution.
 
@@ -17,10 +18,10 @@ See [EIP-3155] for more details on EVM traces.
 *)
 
 
-Definition discard_evm_trace : M unit :=
+Definition discard_evm_trace (evm : object) (event : TraceEvent) (trace_memory : bool) (trace_stack : bool) (trace_return_data : bool) : M unit :=
   (*
       An [`EvmTracer`] that discards all events.
 
       [`EvmTracer`]: ref:ethereum.trace.EvmTracer
       *)
-
+  M.pure tt.

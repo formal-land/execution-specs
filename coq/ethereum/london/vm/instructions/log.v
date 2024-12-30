@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Logging Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,13 +15,14 @@ Implementations of the EVM logging instructions.
 
 Require functools.
 Require ethereum_types.numeric.
-Require london.blocks.
-Require london.vm.exceptions.
-Require london.vm.gas.
-Require london.vm.memory.
-Require london.vm.stack.
+Require ethereum.london.blocks.
+Require ethereum.london.vm.__init__.
+Require ethereum.london.vm.exceptions.
+Require ethereum.london.vm.gas.
+Require ethereum.london.vm.memory.
+Require ethereum.london.vm.stack.
 
-Definition log_n : M unit :=
+Definition log_n (evm : Evm) (num_topics : U256) : M unit :=
   (*
       Appends a log entry, having `num_topics` topics, to the evm logs.
 
@@ -35,27 +37,43 @@ Definition log_n : M unit :=
           The number of topics to be included in the log entry.
 
       *)
-  let* memory_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* size := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* topics := (* TODO expression *) in
+  do* M.assign "memory_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "size" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "topics" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
   (* TODO statement *)
-  (* TODO statement *)
-  let* log_entry := blocks.Log (|
+  do* M.assign "log_entry" [[
+    blocks.Log ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO assignment *)
-  (* TODO statement *)
-
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

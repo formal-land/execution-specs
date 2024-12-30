@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Environmental Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,13 +15,14 @@ Implementations of the EVM environment related instructions.
 
 Require ethereum_types.numeric.
 Require ethereum.utils.numeric.
-Require homestead.state.
-Require homestead.utils.address.
-Require homestead.vm.memory.
-Require homestead.vm.gas.
-Require homestead.vm.stack.
+Require ethereum.homestead.state.
+Require ethereum.homestead.utils.address.
+Require ethereum.homestead.vm.memory.
+Require ethereum.homestead.vm.__init__.
+Require ethereum.homestead.vm.gas.
+Require ethereum.homestead.vm.stack.
 
-Definition address : M unit :=
+Definition address (evm : Evm) : M unit :=
   (*
       Pushes the address of the current executing account to the stack.
 
@@ -31,20 +33,24 @@ Definition address : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      evm.["message"].["current_target"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "current_target" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition balance : M unit :=
+Definition balance (evm : Evm) : M unit :=
   (*
       Pushes the balance of the given account onto the stack.
 
@@ -54,27 +60,35 @@ Definition balance : M unit :=
           The current EVM frame.
 
       *)
-  let* address := utils.address.to_address (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "address" [[
+    utils.address.to_address ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BALANCE
-  |) in
-  let* balance := state.get_account (|
-    evm.["env"].["state"],
-    address
-  |).["balance"] in
-  do* stack.push (|
-    evm.["stack"],
-    balance
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.assign "balance" [[
+    M.get_field ~(| state.get_account ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+      M.get_local ~(| "address" |)
+    |), "balance" |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "balance" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition origin : M unit :=
+Definition origin (evm : Evm) : M unit :=
   (*
       Pushes the address of the original transaction sender to the stack.
       The origin address can only be an EOA.
@@ -86,20 +100,24 @@ Definition origin : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      evm.["env"].["origin"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "origin" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition caller : M unit :=
+Definition caller (evm : Evm) : M unit :=
   (*
       Pushes the address of the caller onto the stack.
 
@@ -110,20 +128,24 @@ Definition caller : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      evm.["message"].["caller"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "caller" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition callvalue : M unit :=
+Definition callvalue (evm : Evm) : M unit :=
   (*
       Push the value (in wei) sent with the call onto the stack.
 
@@ -134,18 +156,22 @@ Definition callvalue : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    evm.["message"].["value"]
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition calldataload : M unit :=
+Definition calldataload (evm : Evm) : M unit :=
   (*
       Push a word (32 bytes) of the input data belonging to the current
       environment onto the stack.
@@ -156,30 +182,38 @@ Definition calldataload : M unit :=
           The current EVM frame.
 
       *)
-  let* start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
-  let* value := vm.memory.buffer_read (|
-    evm.["message"].["data"],
-    start_index,
-    ethereum_types.numeric.U256 (|
-      (* TODO expression *)
+  |) ]] in
+  do* M.assign "value" [[
+    vm.memory.buffer_read ~(|
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |),
+      M.get_local ~(| "start_index" |),
+      ethereum_types.numeric.U256 ~(|
+        32
+      |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_local ~(| "value" |)
     |)
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      value
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
     |)
-  |) in
-  (* TODO statement *)
+  ]] in
+  M.pure tt.
 
-
-Definition calldatasize : M unit :=
+Definition calldatasize (evm : Evm) : M unit :=
   (*
       Push the size of input data in current environment onto the stack.
 
@@ -190,22 +224,26 @@ Definition calldatasize : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      len (|
-        evm.["message"].["data"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "len" |) ~(|
+        M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |)
       |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition calldatacopy : M unit :=
+Definition calldatacopy (evm : Evm) : M unit :=
   (*
       Copy a portion of the input data in current environment to memory.
 
@@ -218,40 +256,60 @@ Definition calldatacopy : M unit :=
           The current EVM frame.
 
       *)
-  let* memory_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* data_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* size := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* words := (* TODO expression *) in
-  let* copy_gas_cost := (* TODO expression *) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "memory_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "data_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "size" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "copy_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* value := vm.memory.buffer_read (|
-    evm.["message"].["data"],
-    data_start_index,
-    size
-  |) in
-  do* vm.memory.memory_write (|
-    evm.["memory"],
-    memory_start_index,
-    value
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "value" [[
+    vm.memory.buffer_read ~(|
+      M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |),
+      M.get_local ~(| "data_start_index" |),
+      M.get_local ~(| "size" |)
+    |) in
+  ]] in
+  do* [[ vm.memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "memory_start_index" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition codesize : M unit :=
+Definition codesize (evm : Evm) : M unit :=
   (*
       Push the size of code running in current environment onto the stack.
 
@@ -262,22 +320,26 @@ Definition codesize : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      len (|
-        evm.["code"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "len" |) ~(|
+        M.get_field ~(| evm, "code" |)
       |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition codecopy : M unit :=
+Definition codecopy (evm : Evm) : M unit :=
   (*
       Copy a portion of the code in current environment to memory.
 
@@ -290,40 +352,60 @@ Definition codecopy : M unit :=
           The current EVM frame.
 
       *)
-  let* memory_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* code_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* size := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* words := (* TODO expression *) in
-  let* copy_gas_cost := (* TODO expression *) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "memory_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "code_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "size" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "copy_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* value := vm.memory.buffer_read (|
-    evm.["code"],
-    code_start_index,
-    size
-  |) in
-  do* vm.memory.memory_write (|
-    evm.["memory"],
-    memory_start_index,
-    value
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "value" [[
+    vm.memory.buffer_read ~(|
+      M.get_field ~(| evm, "code" |),
+      M.get_local ~(| "code_start_index" |),
+      M.get_local ~(| "size" |)
+    |) in
+  ]] in
+  do* [[ vm.memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "memory_start_index" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition gasprice : M unit :=
+Definition gasprice (evm : Evm) : M unit :=
   (*
       Push the gas price used in current environment onto the stack.
 
@@ -334,20 +416,24 @@ Definition gasprice : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["env"].["gas_price"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "gas_price" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition extcodesize : M unit :=
+Definition extcodesize (evm : Evm) : M unit :=
   (*
       Push the code size of a given account onto the stack.
 
@@ -357,31 +443,39 @@ Definition extcodesize : M unit :=
           The current EVM frame.
 
       *)
-  let* address := utils.address.to_address (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "address" [[
+    utils.address.to_address ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_EXTERNAL
-  |) in
-  let* codesize := ethereum_types.numeric.U256 (|
-    len (|
-      state.get_account (|
-        evm.["env"].["state"],
-        address
-      |).["code"]
+  |) ]] in
+  do* M.assign "codesize" [[
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "len" |) ~(|
+        M.get_field ~(| state.get_account ~(|
+          M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+          M.get_local ~(| "address" |)
+        |), "code" |)
+      |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "codesize" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
     |)
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    codesize
-  |) in
-  (* TODO statement *)
+  ]] in
+  M.pure tt.
 
-
-Definition extcodecopy : M unit :=
+Definition extcodecopy (evm : Evm) : M unit :=
   (*
       Copy a portion of an account's code to memory.
 
@@ -391,44 +485,68 @@ Definition extcodecopy : M unit :=
           The current EVM frame.
 
       *)
-  let* address := utils.address.to_address (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  let* memory_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* code_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* size := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* words := (* TODO expression *) in
-  let* copy_gas_cost := (* TODO expression *) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "address" [[
+    utils.address.to_address ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "memory_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "code_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "size" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "copy_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* code := state.get_account (|
-    evm.["env"].["state"],
-    address
-  |).["code"] in
-  let* value := vm.memory.buffer_read (|
-    code,
-    code_start_index,
-    size
-  |) in
-  do* vm.memory.memory_write (|
-    evm.["memory"],
-    memory_start_index,
-    value
-  |) in
-  (* TODO statement *)
-
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "code" [[
+    M.get_field ~(| state.get_account ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "state" |),
+      M.get_local ~(| "address" |)
+    |), "code" |) in
+  ]] in
+  do* M.assign "value" [[
+    vm.memory.buffer_read ~(|
+      M.get_local ~(| "code" |),
+      M.get_local ~(| "code_start_index" |),
+      M.get_local ~(| "size" |)
+    |) in
+  ]] in
+  do* [[ vm.memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "memory_start_index" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

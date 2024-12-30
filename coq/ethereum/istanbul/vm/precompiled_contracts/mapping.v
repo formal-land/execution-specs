@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,11 +14,12 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require istanbul.fork_types.
-Require istanbul.vm.precompiled_contracts.alt_bn128.
-Require istanbul.vm.precompiled_contracts.blake2f.
-Require istanbul.vm.precompiled_contracts.ecrecover.
-Require istanbul.vm.precompiled_contracts.identity.
-Require istanbul.vm.precompiled_contracts.modexp.
-Require istanbul.vm.precompiled_contracts.ripemd160.
-Require istanbul.vm.precompiled_contracts.sha256.
+Require ethereum.istanbul.fork_types.
+Require ethereum.istanbul.vm.precompiled_contracts.__init__.
+Require ethereum.istanbul.vm.precompiled_contracts.alt_bn128.
+Require ethereum.istanbul.vm.precompiled_contracts.blake2f.
+Require ethereum.istanbul.vm.precompiled_contracts.ecrecover.
+Require ethereum.istanbul.vm.precompiled_contracts.identity.
+Require ethereum.istanbul.vm.precompiled_contracts.modexp.
+Require ethereum.istanbul.vm.precompiled_contracts.ripemd160.
+Require ethereum.istanbul.vm.precompiled_contracts.sha256.

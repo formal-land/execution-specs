@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Stack Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,11 +15,12 @@ Implementations of the EVM stack related instructions.
 
 Require functools.
 Require ethereum_types.numeric.
-Require arrow_glacier.vm.exceptions.
-Require arrow_glacier.vm.gas.
-Require arrow_glacier.vm.memory.
+Require ethereum.arrow_glacier.vm.__init__.
+Require ethereum.arrow_glacier.vm.exceptions.
+Require ethereum.arrow_glacier.vm.gas.
+Require ethereum.arrow_glacier.vm.memory.
 
-Definition pop : M unit :=
+Definition pop (evm : Evm) : M unit :=
   (*
       Remove item from stack.
 
@@ -28,18 +30,22 @@ Definition pop : M unit :=
           The current EVM frame.
 
       *)
-  do* stack.["pop"] (|
-    evm.["stack"]
-  |) in
-  do* gas.charge_gas (|
+  do* [[ M.get_field ~(| __init__.stack, "pop" |) ~(|
+    M.get_field ~(| evm, "stack" |)
+  |) ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
+  |) ]] in
   (* TODO statement *)
-  (* TODO statement *)
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition push_n : M unit :=
+Definition push_n (evm : Evm) (num_bytes : int) : M unit :=
   (*
       Pushes a N-byte immediate onto the stack.
 
@@ -54,29 +60,33 @@ Definition push_n : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
-  let* data_to_push := ethereum_types.numeric.U256.["from_be_bytes"] (|
-    memory.buffer_read (|
-      evm.["code"],
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
-      |),
-      ethereum_types.numeric.U256 (|
-        num_bytes
+  |) ]] in
+  do* M.assign "data_to_push" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_field ~(| evm, "code" |),
+        ethereum_types.numeric.U256 ~(|
+          (* TODO expression *)
+        |),
+        ethereum_types.numeric.U256 ~(|
+          num_bytes
+        |)
       |)
-    |)
-  |) in
-  do* stack.["push"] (|
-    evm.["stack"],
-    data_to_push
-  |) in
-  (* TODO statement *)
+    |) in
+  ]] in
+  do* [[ M.get_field ~(| __init__.stack, "push" |) ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "data_to_push" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  M.pure tt.
 
-
-Definition dup_n : M unit :=
+Definition dup_n (evm : Evm) (item_number : int) : M unit :=
   (*
       Duplicate the Nth stack item (from top of the stack) to the top of stack.
 
@@ -91,20 +101,26 @@ Definition dup_n : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
-  let* data_to_duplicate := (* TODO expression *) in
-  do* stack.["push"] (|
-    evm.["stack"],
-    data_to_duplicate
-  |) in
-  (* TODO statement *)
+  do* M.assign "data_to_duplicate" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ M.get_field ~(| __init__.stack, "push" |) ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "data_to_duplicate" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition swap_n : M unit :=
+Definition swap_n (evm : Evm) (item_number : int) : M unit :=
   (*
       Swap the top and the `item_number` element of the stack, where
       the top of the stack is position zero.
@@ -123,11 +139,15 @@ Definition swap_n : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_VERY_LOW
-  |) in
+  |) ]] in
   (* TODO statement *)
   (* TODO assignment *)
-  (* TODO statement *)
-
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For The Message Data-structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,13 +17,13 @@ specification.
 Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require london.fork_types.
-Require london.state.
-Require london.vm.
-Require london.vm.precompiled_contracts.mapping.
-Require london.utils.address.
+Require ethereum.london.fork_types.
+Require ethereum.london.state.
+Require ethereum.london.vm.
+Require ethereum.london.vm.precompiled_contracts.mapping.
+Require ethereum.london.utils.address.
 
-Definition prepare_message : M unit :=
+Definition prepare_message (caller : Address) (target : (* TODO type *)) (value : U256) (data : Bytes) (gas : Uint) (env : Environment) (code_address : (* TODO type *)) (should_transfer_value : bool) (is_static : bool) (preaccessed_addresses : (* TODO type *)) (preaccessed_storage_keys : (* TODO type *)) : M Message :=
   (*
       Execute a transaction against the provided environment.
 
@@ -61,22 +62,24 @@ Definition prepare_message : M unit :=
           Items containing contract creation or message call specific data.
       *)
   (* TODO statement *)
-  let* accessed_addresses := set (|
+  do* M.assign "accessed_addresses" [[
+    M.get_local ~(| "set" |) ~(|
 
-  |) in
-  do* accessed_addresses.["add"] (|
-    current_target
-  |) in
-  do* accessed_addresses.["add"] (|
+    |) in
+  ]] in
+  do* [[ M.get_field ~(| M.get_local ~(| "accessed_addresses" |), "add" |) ~(|
+    M.get_local ~(| "current_target" |)
+  |) ]] in
+  do* [[ M.get_field ~(| M.get_local ~(| "accessed_addresses" |), "add" |) ~(|
     caller
-  |) in
-  do* accessed_addresses.["update"] (|
-    vm.precompiled_contracts.mapping.PRE_COMPILED_CONTRACTS.["keys"] (|
+  |) ]] in
+  do* [[ M.get_field ~(| M.get_local ~(| "accessed_addresses" |), "update" |) ~(|
+    M.get_field ~(| vm.precompiled_contracts.mapping.PRE_COMPILED_CONTRACTS, "keys" |) ~(|
 
     |)
-  |) in
-  do* accessed_addresses.["update"] (|
+  |) ]] in
+  do* [[ M.get_field ~(| M.get_local ~(| "accessed_addresses" |), "update" |) ~(|
     preaccessed_addresses
-  |) in
+  |) ]] in
   (* TODO statement *)
-
+  M.pure tt.

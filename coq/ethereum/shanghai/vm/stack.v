@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Stack
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,9 +15,9 @@ Implementation of the stack operators for the EVM.
 
 Require typing.
 Require ethereum_types.numeric.
-Require shanghai.vm.exceptions.
+Require ethereum.shanghai.vm.exceptions.
 
-Definition pop : M unit :=
+Definition pop (stack : (* TODO type *)) : M U256 :=
   (*
       Pops the top item off of `stack`.
 
@@ -33,9 +34,9 @@ Definition pop : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition push : M unit :=
+Definition push (stack : (* TODO type *)) (value : U256) : M unit :=
   (*
       Pushes `value` onto `stack`.
 
@@ -50,4 +51,4 @@ Definition push : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

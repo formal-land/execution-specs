@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 State
 ^^^^^
@@ -22,11 +23,11 @@ Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.frozen.
 Require ethereum_types.numeric.
-Require cancun.blocks.
-Require cancun.fork_types.
-Require cancun.trie.
+Require ethereum.cancun.blocks.
+Require ethereum.cancun.fork_types.
+Require ethereum.cancun.trie.
 
-Definition close_state : M unit :=
+Definition close_state (state : State) : M unit :=
   (*
       Free resources held by the state. Used by optimized implementations to
       release file descriptors.
@@ -35,9 +36,9 @@ Definition close_state : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition begin_transaction : M unit :=
+Definition begin_transaction (state : State) (transient_storage : TransientStorage) : M unit :=
   (*
       Start a state transaction.
 
@@ -51,15 +52,15 @@ Definition begin_transaction : M unit :=
       transient_storage : TransientStorage
           The transient storage of the transaction.
       *)
-  do* state.["_snapshots"].["append"] (|
+  do* [[ M.get_field ~(| M.get_field ~(| state, "_snapshots" |), "append" |) ~(|
     (* TODO expression *)
-  |) in
-  do* transient_storage.["_snapshots"].["append"] (|
+  |) ]] in
+  do* [[ M.get_field ~(| M.get_field ~(| transient_storage, "_snapshots" |), "append" |) ~(|
     (* TODO expression *)
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition commit_transaction : M unit :=
+Definition commit_transaction (state : State) (transient_storage : TransientStorage) : M unit :=
   (*
       Commit a state transaction.
 
@@ -70,16 +71,16 @@ Definition commit_transaction : M unit :=
       transient_storage : TransientStorage
           The transient storage of the transaction.
       *)
-  do* state.["_snapshots"].["pop"] (|
+  do* [[ M.get_field ~(| M.get_field ~(| state, "_snapshots" |), "pop" |) ~(|
 
-  |) in
+  |) ]] in
   (* TODO statement *)
-  do* transient_storage.["_snapshots"].["pop"] (|
+  do* [[ M.get_field ~(| M.get_field ~(| transient_storage, "_snapshots" |), "pop" |) ~(|
 
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition rollback_transaction : M unit :=
+Definition rollback_transaction (state : State) (transient_storage : TransientStorage) : M unit :=
   (*
       Rollback a state transaction, resetting the state to the point when the
       corresponding `start_transaction()` call was made.
@@ -94,9 +95,9 @@ Definition rollback_transaction : M unit :=
   (* TODO assignment *)
   (* TODO statement *)
   (* TODO assignment *)
+  M.pure tt.
 
-
-Definition get_account : M unit :=
+Definition get_account (state : State) (address : Address) : M Account :=
   (*
       Get the `Account` object at an address. Returns `EMPTY_ACCOUNT` if there
       is no account at the address.
@@ -116,14 +117,16 @@ Definition get_account : M unit :=
       account : `Account`
           Account at address.
       *)
-  let* account := get_account_optional (|
-    state,
-    address
-  |) in
+  do* M.assign "account" [[
+    M.get_local ~(| "get_account_optional" |) ~(|
+      state,
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition get_account_optional : M unit :=
+Definition get_account_optional (state : State) (address : Address) : M (* TODO type *) :=
   (*
       Get the `Account` object at an address. Returns `None` (rather than
       `EMPTY_ACCOUNT`) if there is no account at the address.
@@ -140,14 +143,16 @@ Definition get_account_optional : M unit :=
       account : `Account`
           Account at address.
       *)
-  let* account := trie.trie_get (|
-    state.["_main_trie"],
-    address
-  |) in
+  do* M.assign "account" [[
+    trie.trie_get ~(|
+      M.get_field ~(| state, "_main_trie" |),
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition set_account : M unit :=
+Definition set_account (state : State) (address : Address) (account : (* TODO type *)) : M unit :=
   (*
       Set the `Account` object at an address. Setting to `None` deletes
       the account (but not its storage, see `destroy_account()`).
@@ -161,14 +166,14 @@ Definition set_account : M unit :=
       account : `Account`
           Account to set at address.
       *)
-  do* trie.trie_set (|
-    state.["_main_trie"],
+  do* [[ trie.trie_set ~(|
+    M.get_field ~(| state, "_main_trie" |),
     address,
     account
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition destroy_account : M unit :=
+Definition destroy_account (state : State) (address : Address) : M unit :=
   (*
       Completely remove the account at `address` and all of its storage.
 
@@ -183,18 +188,18 @@ Definition destroy_account : M unit :=
       address : `Address`
           Address of account to destroy.
       *)
-  do* destroy_storage (|
+  do* [[ M.get_local ~(| "destroy_storage" |) ~(|
     state,
     address
-  |) in
-  do* set_account (|
+  |) ]] in
+  do* [[ M.get_local ~(| "set_account" |) ~(|
     state,
     address,
-    (* TODO expression *)
-  |) in
+    tt
+  |) ]] in
+  M.pure tt.
 
-
-Definition destroy_storage : M unit :=
+Definition destroy_storage (state : State) (address : Address) : M unit :=
   (*
       Completely remove the storage at `address`.
 
@@ -206,9 +211,9 @@ Definition destroy_storage : M unit :=
           Address of account whose storage is to be deleted.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition mark_account_created : M unit :=
+Definition mark_account_created (state : State) (address : Address) : M unit :=
   (*
       Mark an account as having been created in the current transaction.
       This information is used by `get_storage_original()` to handle an obscure
@@ -225,12 +230,12 @@ Definition mark_account_created : M unit :=
       address : `Address`
           Address of the account that has been created.
       *)
-  do* state.["created_accounts"].["add"] (|
+  do* [[ M.get_field ~(| M.get_field ~(| state, "created_accounts" |), "add" |) ~(|
     address
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition get_storage : M unit :=
+Definition get_storage (state : State) (address : Address) (key : Bytes) : M U256 :=
   (*
       Get a value at a storage key on an account. Returns `U256(0)` if the
       storage key has not been set previously.
@@ -249,19 +254,23 @@ Definition get_storage : M unit :=
       value : `U256`
           Value at the key.
       *)
-  let* trie := state.["_storage_tries"].["get"] (|
-    address
-  |) in
+  do* M.assign "trie" [[
+    M.get_field ~(| M.get_field ~(| state, "_storage_tries" |), "get" |) ~(|
+      address
+    |) in
+  ]] in
   (* TODO statement *)
-  let* value := trie.trie_get (|
-    trie,
-    key
-  |) in
+  do* M.assign "value" [[
+    trie.trie_get ~(|
+      M.get_local ~(| "trie" |),
+      key
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition set_storage : M unit :=
+Definition set_storage (state : State) (address : Address) (key : Bytes) (value : U256) : M unit :=
   (*
       Set a value at a storage key on an account. Setting to `U256(0)` deletes
       the key.
@@ -278,19 +287,21 @@ Definition set_storage : M unit :=
           Value to set at the key.
       *)
   (* TODO statement *)
-  let* trie := state.["_storage_tries"].["get"] (|
-    address
-  |) in
+  do* M.assign "trie" [[
+    M.get_field ~(| M.get_field ~(| state, "_storage_tries" |), "get" |) ~(|
+      address
+    |) in
+  ]] in
   (* TODO statement *)
-  do* trie.trie_set (|
-    trie,
+  do* [[ trie.trie_set ~(|
+    M.get_local ~(| "trie" |),
     key,
     value
-  |) in
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition storage_root : M unit :=
+Definition storage_root (state : State) (address : Address) : M Root :=
   (*
       Calculate the storage root of an account.
 
@@ -308,9 +319,9 @@ Definition storage_root : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition state_root : M unit :=
+Definition state_root (state : State) : M Root :=
   (*
       Calculate the state root.
 
@@ -327,9 +338,9 @@ Definition state_root : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition account_exists : M unit :=
+Definition account_exists (state : State) (address : Address) : M bool :=
   (*
       Checks if an account exists in the state trie
 
@@ -346,9 +357,9 @@ Definition account_exists : M unit :=
           True if account exists in the state trie, False otherwise
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition account_has_code_or_nonce : M unit :=
+Definition account_has_code_or_nonce (state : State) (address : Address) : M bool :=
   (*
       Checks if an account has non zero nonce or non empty code
 
@@ -365,14 +376,16 @@ Definition account_has_code_or_nonce : M unit :=
           True if if an account has non zero nonce or non empty code,
           False otherwise.
       *)
-  let* account := get_account (|
-    state,
-    address
-  |) in
+  do* M.assign "account" [[
+    M.get_local ~(| "get_account" |) ~(|
+      state,
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition is_account_empty : M unit :=
+Definition is_account_empty (state : State) (address : Address) : M bool :=
   (*
       Checks if an account has zero nonce, empty code and zero balance.
 
@@ -389,14 +402,16 @@ Definition is_account_empty : M unit :=
           True if if an account has zero nonce, empty code and zero balance,
           False otherwise.
       *)
-  let* account := get_account (|
-    state,
-    address
-  |) in
+  do* M.assign "account" [[
+    M.get_local ~(| "get_account" |) ~(|
+      state,
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition account_exists_and_is_empty : M unit :=
+Definition account_exists_and_is_empty (state : State) (address : Address) : M bool :=
   (*
       Checks if an account exists and has zero nonce, empty code and zero
       balance.
@@ -414,14 +429,16 @@ Definition account_exists_and_is_empty : M unit :=
           True if an account exists and has zero nonce, empty code and zero
           balance, False otherwise.
       *)
-  let* account := get_account_optional (|
-    state,
-    address
-  |) in
+  do* M.assign "account" [[
+    M.get_local ~(| "get_account_optional" |) ~(|
+      state,
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition is_account_alive : M unit :=
+Definition is_account_alive (state : State) (address : Address) : M bool :=
   (*
       Check whether is an account is both in the state and non empty.
 
@@ -437,61 +454,63 @@ Definition is_account_alive : M unit :=
       is_alive : `bool`
           True if the account is alive.
       *)
-  let* account := get_account_optional (|
-    state,
-    address
-  |) in
+  do* M.assign "account" [[
+    M.get_local ~(| "get_account_optional" |) ~(|
+      state,
+      address
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition modify_state : M unit :=
+Definition modify_state (state : State) (address : Address) (f : (* TODO type *)) : M unit :=
   (*
       Modify an `Account` in the `State`.
       *)
-  do* set_account (|
+  do* [[ M.get_local ~(| "set_account" |) ~(|
     state,
     address,
-    ethereum_types.frozen.modify (|
-      get_account (|
+    ethereum_types.frozen.modify ~(|
+      M.get_local ~(| "get_account" |) ~(|
         state,
         address
       |),
       f
     |)
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition move_ether : M unit :=
+Definition move_ether (state : State) (sender_address : Address) (recipient_address : Address) (amount : U256) : M unit :=
   (*
       Move funds between accounts.
       *)
   (* TODO statement *)
   (* TODO statement *)
-  do* modify_state (|
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
     sender_address,
-    reduce_sender_balance
-  |) in
-  do* modify_state (|
+    M.get_local ~(| "reduce_sender_balance" |)
+  |) ]] in
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
     recipient_address,
-    increase_recipient_balance
-  |) in
+    M.get_local ~(| "increase_recipient_balance" |)
+  |) ]] in
+  M.pure tt.
 
-
-Definition process_withdrawal : M unit :=
+Definition process_withdrawal (state : State) (wd : Withdrawal) : M unit :=
   (*
       Increase the balance of the withdrawing account.
       *)
   (* TODO statement *)
-  do* modify_state (|
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
-    wd.["address"],
-    increase_recipient_balance
-  |) in
+    M.get_field ~(| wd, "address" |),
+    M.get_local ~(| "increase_recipient_balance" |)
+  |) ]] in
+  M.pure tt.
 
-
-Definition set_account_balance : M unit :=
+Definition set_account_balance (state : State) (address : Address) (amount : U256) : M unit :=
   (*
       Sets the balance of an account.
 
@@ -507,14 +526,14 @@ Definition set_account_balance : M unit :=
           The amount that needs to set in balance.
       *)
   (* TODO statement *)
-  do* modify_state (|
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
     address,
-    set_balance
-  |) in
+    M.get_local ~(| "set_balance" |)
+  |) ]] in
+  M.pure tt.
 
-
-Definition touch_account : M unit :=
+Definition touch_account (state : State) (address : Address) : M unit :=
   (*
       Initializes an account to state.
 
@@ -527,9 +546,9 @@ Definition touch_account : M unit :=
           The address of the account that need to initialised.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition increment_nonce : M unit :=
+Definition increment_nonce (state : State) (address : Address) : M unit :=
   (*
       Increments the nonce of an account.
 
@@ -542,14 +561,14 @@ Definition increment_nonce : M unit :=
           Address of the account whose nonce needs to be incremented.
       *)
   (* TODO statement *)
-  do* modify_state (|
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
     address,
-    increase_nonce
-  |) in
+    M.get_local ~(| "increase_nonce" |)
+  |) ]] in
+  M.pure tt.
 
-
-Definition set_code : M unit :=
+Definition set_code (state : State) (address : Address) (code : Bytes) : M unit :=
   (*
       Sets Account code.
 
@@ -565,14 +584,14 @@ Definition set_code : M unit :=
           The bytecode that needs to be set.
       *)
   (* TODO statement *)
-  do* modify_state (|
+  do* [[ M.get_local ~(| "modify_state" |) ~(|
     state,
     address,
-    write_code
-  |) in
+    M.get_local ~(| "write_code" |)
+  |) ]] in
+  M.pure tt.
 
-
-Definition get_storage_original : M unit :=
+Definition get_storage_original (state : State) (address : Address) (key : Bytes) : M U256 :=
   (*
       Get the original value in a storage slot i.e. the value before the current
       transaction began. This function reads the value from the snapshots taken
@@ -589,15 +608,17 @@ Definition get_storage_original : M unit :=
       *)
   (* TODO statement *)
   (* TODO assignment *)
-  let* original_account_trie := original_trie.["get"] (|
-    address
-  |) in
+  do* M.assign "original_account_trie" [[
+    M.get_field ~(| M.get_local ~(| "original_trie" |), "get" |) ~(|
+      address
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition get_transient_storage : M unit :=
+Definition get_transient_storage (transient_storage : TransientStorage) (address : Address) (key : Bytes) : M U256 :=
   (*
       Get a value at a storage key on an account from transient storage.
       Returns `U256(0)` if the storage key has not been set previously.
@@ -614,19 +635,23 @@ Definition get_transient_storage : M unit :=
       value : `U256`
           Value at the key.
       *)
-  let* trie := transient_storage.["_tries"].["get"] (|
-    address
-  |) in
+  do* M.assign "trie" [[
+    M.get_field ~(| M.get_field ~(| transient_storage, "_tries" |), "get" |) ~(|
+      address
+    |) in
+  ]] in
   (* TODO statement *)
-  let* value := trie.trie_get (|
-    trie,
-    key
-  |) in
+  do* M.assign "value" [[
+    trie.trie_get ~(|
+      M.get_local ~(| "trie" |),
+      key
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition set_transient_storage : M unit :=
+Definition set_transient_storage (transient_storage : TransientStorage) (address : Address) (key : Bytes) (value : U256) : M unit :=
   (*
       Set a value at a storage key on an account. Setting to `U256(0)` deletes
       the key.
@@ -641,19 +666,21 @@ Definition set_transient_storage : M unit :=
       value : `U256`
           Value to set at the key.
       *)
-  let* trie := transient_storage.["_tries"].["get"] (|
-    address
-  |) in
+  do* M.assign "trie" [[
+    M.get_field ~(| M.get_field ~(| transient_storage, "_tries" |), "get" |) ~(|
+      address
+    |) in
+  ]] in
   (* TODO statement *)
-  do* trie.trie_set (|
-    trie,
+  do* [[ trie.trie_set ~(|
+    M.get_local ~(| "trie" |),
     key,
     value
-  |) in
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition destroy_touched_empty_accounts : M unit :=
+Definition destroy_touched_empty_accounts (state : State) (touched_accounts : (* TODO type *)) : M unit :=
   (*
       Destroy all touched accounts that are empty.
       Parameters
@@ -664,4 +691,4 @@ Definition destroy_touched_empty_accounts : M unit :=
           All the accounts that have been touched in the current transaction.
       *)
   (* TODO statement *)
-
+  M.pure tt.

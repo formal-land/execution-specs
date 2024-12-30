@@ -1,0 +1,252 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nOptimized Spec\n^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThis module contains optimized POW functions can be monkey patched into the\n`fork` module of a fork.\n')),
+        ImportFrom(
+            module='importlib',
+            names=[
+                alias(name='import_module')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Dict'),
+                alias(name='cast')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.ethash',
+            names=[
+                alias(name='epoch')],
+            level=0),
+        ImportFrom(
+            module='ethereum.exceptions',
+            names=[
+                alias(name='InvalidBlock')],
+            level=0),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='add_item')],
+            level=1),
+        Try(
+            body=[
+                Import(
+                    names=[
+                        alias(name='ethash')])],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ImportError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Raise(
+                            exc=Name(id='e', ctx=Load()),
+                            cause=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    Constant(value="Install with `pip install 'ethereum[optimized]'` to enable this package")],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Assign(
+            targets=[
+                Name(id='Header_', ctx=Store())],
+            value=Name(id='Any', ctx=Load())),
+        FunctionDef(
+            name='get_optimized_pow_patches',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='_fork_name',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get a dictionary of patches to be patched into the fork to make it\n    optimized.\n    ')),
+                AnnAssign(
+                    target=Name(id='patches', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='str', ctx=Load()),
+                                Name(id='Any', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Dict(keys=[], values=[]),
+                    simple=1),
+                Assign(
+                    targets=[
+                        Name(id='mod', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cast', ctx=Load()),
+                        args=[
+                            Name(id='Any', ctx=Load()),
+                            Call(
+                                func=Name(id='import_module', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='ethereum.'),
+                                            op=Add(),
+                                            right=Name(id='_fork_name', ctx=Load())),
+                                        op=Add(),
+                                        right=Constant(value='.fork'))],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='hasattr', ctx=Load()),
+                            args=[
+                                Name(id='mod', ctx=Load()),
+                                Constant(value='validate_proof_of_work')],
+                            keywords=[])),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    Constant(value='Attempted to get optimized pow patches for non-pow fork')],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='generate_header_hash_for_pow', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='mod', ctx=Load()),
+                        attr='generate_header_hash_for_pow',
+                        ctx=Load())),
+                FunctionDef(
+                    name='validate_proof_of_work',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='header',
+                                annotation=Name(id='Header_', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `validate_proof_of_work`.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='epoch_number', ctx=Store())],
+                            value=Call(
+                                func=Name(id='epoch', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='header', ctx=Load()),
+                                        attr='number',
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='header_hash', ctx=Store())],
+                            value=Call(
+                                func=Name(id='generate_header_hash_for_pow', ctx=Load()),
+                                args=[
+                                    Name(id='header', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='limit', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='U256', ctx=Load()),
+                                            attr='MAX_VALUE',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Add(),
+                                right=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=1)],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='ethash', ctx=Load()),
+                                    attr='verify',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='epoch_number', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='header_hash', ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='header', ctx=Load()),
+                                        attr='mix_digest',
+                                        ctx=Load()),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='int', ctx=Load()),
+                                            attr='from_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='header', ctx=Load()),
+                                                attr='nonce',
+                                                ctx=Load()),
+                                            Constant(value='big')],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=BinOp(
+                                                left=Name(id='limit', ctx=Load()),
+                                                op=FloorDiv(),
+                                                right=Attribute(
+                                                    value=Name(id='header', ctx=Load()),
+                                                    attr='difficulty',
+                                                    ctx=Load())),
+                                            attr='to_be_bytes32',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Name(id='result', ctx=Load())),
+                            body=[
+                                Raise(
+                                    exc=Name(id='InvalidBlock', ctx=Load()))],
+                            orelse=[])],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                Return(
+                    value=Name(id='patches', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Dict', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='str', ctx=Load()),
+                        Name(id='Any', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])

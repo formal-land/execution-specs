@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Types and functions for beginning a new chain.
 
@@ -14,34 +15,40 @@ The genesis configuration for a chain is specified with a
 *)
 
 
-Definition get_genesis_configuration : M unit :=
+Definition get_genesis_configuration (genesis_file : str) : M GenesisConfiguration :=
   (*
       Read a genesis configuration from the given JSON file path.
 
       The genesis file should be present in the `assets` directory.
       *)
-  let* genesis_path := (* TODO expression *) in
-  let* genesis_bytes := pkgutil.["get_data"] (|
-    (* TODO expression *),
-    genesis_path
-  |) in
+  do* M.assign "genesis_path" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "genesis_bytes" [[
+    M.get_field ~(| M.get_local ~(| "pkgutil" |), "get_data" |) ~(|
+      (* TODO constant *),
+      M.get_local ~(| "genesis_path" |)
+    |) in
+  ]] in
   (* TODO statement *)
-  let* genesis_data := json.["loads"] (|
-    genesis_bytes.["decode"] (|
+  do* M.assign "genesis_data" [[
+    M.get_field ~(| M.get_local ~(| "json" |), "loads" |) ~(|
+      M.get_field ~(| M.get_local ~(| "genesis_bytes" |), "decode" |) ~(|
 
-    |)
-  |) in
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition hex_or_base_10_str_to_u256 : M unit :=
+Definition hex_or_base_10_str_to_u256 (balance : str) : M U256 :=
   (*
       Convert a string in either hexadecimal or base-10 to a `U256`.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition add_genesis_block : M unit :=
+Definition add_genesis_block (hardfork : (* TODO type *)) (chain : Any) (genesis : GenesisConfiguration) : M unit :=
   (*
       Adds the genesis block to an empty blockchain.
 
@@ -82,23 +89,31 @@ Definition add_genesis_block : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* fields := (* TODO expression *) in
+  do* M.assign "fields" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* genesis_header := hardfork.["Header"] (|
+  do* M.assign "genesis_header" [[
+    M.get_field ~(| hardfork, "Header" |) ~(|
 
-  |) in
-  let* block_fields := (* TODO expression *) in
+    |) in
+  ]] in
+  do* M.assign "block_fields" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* genesis_block := hardfork.["Block"] (|
+  do* M.assign "genesis_block" [[
+    M.get_field ~(| hardfork, "Block" |) ~(|
 
-  |) in
-  do* chain.["blocks"].["append"] (|
-    genesis_block
-  |) in
+    |) in
+  ]] in
+  do* [[ M.get_field ~(| M.get_field ~(| chain, "blocks" |), "append" |) ~(|
+    M.get_local ~(| "genesis_block" |)
+  |) ]] in
   (* TODO assignment *)
-
+  M.pure tt.

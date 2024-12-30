@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) POINT EVALUATION PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,11 +16,11 @@ Implementation of the POINT EVALUATION precompiled contract.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.crypto.kzg.
-Require cancun.vm.
-Require cancun.vm.exceptions.
-Require cancun.vm.gas.
+Require ethereum.cancun.vm.
+Require ethereum.cancun.vm.exceptions.
+Require ethereum.cancun.vm.gas.
 
-Definition point_evaluation : M unit :=
+Definition point_evaluation (evm : Evm) : M unit :=
   (*
       A pre-compile that verifies a KZG proof which claims that a blob
       (represented by a commitment) evaluates to a given value at a given point.
@@ -30,27 +31,39 @@ Definition point_evaluation : M unit :=
           The current EVM frame.
 
       *)
-  let* data := evm.["message"].["data"] in
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
   (* TODO statement *)
-  let* versioned_hash := (* TODO expression *) in
-  let* z := ethereum_types.bytes.Bytes32 (|
-    (* TODO expression *)
-  |) in
-  let* y := ethereum_types.bytes.Bytes32 (|
-    (* TODO expression *)
-  |) in
-  let* commitment := ethereum.crypto.kzg.KZGCommitment (|
-    (* TODO expression *)
-  |) in
-  let* proof := ethereum_types.bytes.Bytes48 (|
-    (* TODO expression *)
-  |) in
-  do* vm.gas.charge_gas (|
+  do* M.assign "versioned_hash" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "z" [[
+    ethereum_types.bytes.Bytes32 ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* M.assign "y" [[
+    ethereum_types.bytes.Bytes32 ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* M.assign "commitment" [[
+    ethereum.crypto.kzg.KZGCommitment ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* M.assign "proof" [[
+    ethereum_types.bytes.Bytes48 ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     vm.gas.GAS_POINT_EVALUATION
-  |) in
+  |) ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO assignment *)
-
+  M.pure tt.

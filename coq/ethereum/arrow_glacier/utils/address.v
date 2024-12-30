@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -18,9 +19,10 @@ Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.crypto.hash.
 Require ethereum.utils.byte.
-Require arrow_glacier.fork_types.
+Require ethereum.__init__.
+Require ethereum.arrow_glacier.fork_types.
 
-Definition to_address : M unit :=
+Definition to_address (data : (* TODO type *)) : M Address :=
   (*
       Convert a Uint or U256 value to a valid address (20 bytes).
 
@@ -35,9 +37,9 @@ Definition to_address : M unit :=
           The obtained address.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition compute_contract_address : M unit :=
+Definition compute_contract_address (address : Address) (nonce : Uint) : M Address :=
   (*
       Computes address of the new account that needs to be created.
 
@@ -54,20 +56,26 @@ Definition compute_contract_address : M unit :=
       address: `Address`
           The computed address of the new account.
       *)
-  let* computed_address := ethereum.crypto.hash.keccak256 (|
-    rlp.["encode"] (|
-      (* TODO expression *)
-    |)
-  |) in
-  let* canonical_address := (* TODO expression *) in
-  let* padded_address := ethereum.utils.byte.left_pad_zero_bytes (|
-    canonical_address,
-    (* TODO expression *)
-  |) in
+  do* M.assign "computed_address" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      M.get_field ~(| __init__.rlp, "encode" |) ~(|
+        (* TODO expression *)
+      |)
+    |) in
+  ]] in
+  do* M.assign "canonical_address" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "padded_address" [[
+    ethereum.utils.byte.left_pad_zero_bytes ~(|
+      M.get_local ~(| "canonical_address" |),
+      20
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition compute_create2_contract_address : M unit :=
+Definition compute_create2_contract_address (address : Address) (salt : Bytes32) (call_data : bytearray) : M Address :=
   (*
       Computes address of the new account that needs to be created, which is
       based on the sender address, salt and the call data as well.
@@ -86,14 +94,22 @@ Definition compute_create2_contract_address : M unit :=
       address: `ethereum.arrow_glacier.fork_types.Address`
           The computed address of the new account.
       *)
-  let* preimage := (* TODO expression *) in
-  let* computed_address := ethereum.crypto.hash.keccak256 (|
-    preimage
-  |) in
-  let* canonical_address := (* TODO expression *) in
-  let* padded_address := ethereum.utils.byte.left_pad_zero_bytes (|
-    canonical_address,
-    (* TODO expression *)
-  |) in
+  do* M.assign "preimage" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "computed_address" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      M.get_local ~(| "preimage" |)
+    |) in
+  ]] in
+  do* M.assign "canonical_address" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "padded_address" [[
+    ethereum.utils.byte.left_pad_zero_bytes ~(|
+      M.get_local ~(| "canonical_address" |),
+      20
+    |) in
+  ]] in
   (* TODO statement *)
-
+  M.pure tt.

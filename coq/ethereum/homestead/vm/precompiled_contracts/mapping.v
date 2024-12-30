@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Precompiled Contract Addresses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,8 +14,9 @@ Mapping of precompiled contracts their implementations.
 *)
 
 Require typing.
-Require homestead.fork_types.
-Require homestead.vm.precompiled_contracts.ecrecover.
-Require homestead.vm.precompiled_contracts.identity.
-Require homestead.vm.precompiled_contracts.ripemd160.
-Require homestead.vm.precompiled_contracts.sha256.
+Require ethereum.homestead.fork_types.
+Require ethereum.homestead.vm.precompiled_contracts.__init__.
+Require ethereum.homestead.vm.precompiled_contracts.ecrecover.
+Require ethereum.homestead.vm.precompiled_contracts.identity.
+Require ethereum.homestead.vm.precompiled_contracts.ripemd160.
+Require ethereum.homestead.vm.precompiled_contracts.sha256.

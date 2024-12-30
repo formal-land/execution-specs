@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Block Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -13,10 +14,11 @@ Implementations of the EVM block instructions.
 *)
 
 Require ethereum_types.numeric.
-Require shanghai.vm.gas.
-Require shanghai.vm.stack.
+Require ethereum.shanghai.vm.__init__.
+Require ethereum.shanghai.vm.gas.
+Require ethereum.shanghai.vm.stack.
 
-Definition block_hash : M unit :=
+Definition block_hash (evm : Evm) : M unit :=
   (*
       Push the hash of one of the 256 most recent complete blocks onto the
       stack. The block number to hash is present at the top of the stack.
@@ -33,27 +35,35 @@ Definition block_hash : M unit :=
       :py:class:`~ethereum.shanghai.vm.exceptions.OutOfGasError`
           If `evm.gas_left` is less than `20`.
       *)
-  let* block_number := ethereum_types.numeric.Uint (|
-    stack.pop (|
-      evm.["stack"]
-    |)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "block_number" [[
+    ethereum_types.numeric.Uint ~(|
+      stack.pop ~(|
+        M.get_field ~(| evm, "stack" |)
+      |)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BLOCK_HASH
-  |) in
-  let* max_block_number := (* TODO expression *) in
+  |) ]] in
+  do* M.assign "max_block_number" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      hash
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_local ~(| "hash" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition coinbase : M unit :=
+Definition coinbase (evm : Evm) : M unit :=
   (*
       Push the current block's beneficiary address (address of the block miner)
       onto the stack.
@@ -74,20 +84,24 @@ Definition coinbase : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      evm.["env"].["coinbase"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "coinbase" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition timestamp : M unit :=
+Definition timestamp (evm : Evm) : M unit :=
   (*
       Push the current block's timestamp onto the stack. Here the timestamp
       being referred is actually the unix timestamp in seconds.
@@ -108,18 +122,22 @@ Definition timestamp : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    evm.["env"].["time"]
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| M.get_field ~(| evm, "env" |), "time" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition number : M unit :=
+Definition number (evm : Evm) : M unit :=
   (*
       Push the current block's number onto the stack.
 
@@ -139,20 +157,24 @@ Definition number : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["env"].["number"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "number" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition prev_randao : M unit :=
+Definition prev_randao (evm : Evm) : M unit :=
   (*
       Push the `prev_randao` value onto the stack.
 
@@ -172,20 +194,24 @@ Definition prev_randao : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      evm.["env"].["prev_randao"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "prev_randao" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition gas_limit : M unit :=
+Definition gas_limit (evm : Evm) : M unit :=
   (*
       Push the current block's gas limit onto the stack.
 
@@ -205,20 +231,24 @@ Definition gas_limit : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["env"].["gas_limit"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "gas_limit" |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition chain_id : M unit :=
+Definition chain_id (evm : Evm) : M unit :=
   (*
       Push the chain id onto the stack.
 
@@ -235,15 +265,19 @@ Definition chain_id : M unit :=
           If `evm.gas_left` is less than `2`.
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      evm.["env"].["chain_id"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_field ~(| M.get_field ~(| evm, "env" |), "chain_id" |)
     |)
-  |) in
-  (* TODO statement *)
-
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

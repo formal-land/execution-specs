@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Specification
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -20,16 +21,18 @@ Require ethereum.crypto.elliptic_curve.
 Require ethereum.crypto.hash.
 Require ethereum.ethash.
 Require ethereum.exceptions.
-Require arrow_glacier.blocks.
-Require arrow_glacier.bloom.
-Require arrow_glacier.fork_types.
-Require arrow_glacier.state.
-Require arrow_glacier.transactions.
-Require arrow_glacier.trie.
-Require arrow_glacier.utils.message.
-Require arrow_glacier.vm.interpreter.
+Require ethereum.__init__.
+Require ethereum.arrow_glacier.__init__.
+Require ethereum.arrow_glacier.blocks.
+Require ethereum.arrow_glacier.bloom.
+Require ethereum.arrow_glacier.fork_types.
+Require ethereum.arrow_glacier.state.
+Require ethereum.arrow_glacier.transactions.
+Require ethereum.arrow_glacier.trie.
+Require ethereum.arrow_glacier.utils.message.
+Require ethereum.arrow_glacier.vm.interpreter.
 
-Definition apply_fork : M unit :=
+Definition apply_fork (old : BlockChain) : M BlockChain :=
   (*
       Transforms the state from the previous hard fork (`old`) into the block
       chain object for this hard fork and returns it.
@@ -49,9 +52,9 @@ Definition apply_fork : M unit :=
           Upgraded block chain object for this hard fork.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition get_last_256_block_hashes : M unit :=
+Definition get_last_256_block_hashes (chain : BlockChain) : M (* TODO type *) :=
   (*
       Obtain the list of hashes of the previous 256 blocks in order of
       increasing block number.
@@ -71,22 +74,28 @@ Definition get_last_256_block_hashes : M unit :=
       recent_block_hashes : `List[Hash32]`
           Hashes of the recent 256 blocks in order of increasing block number.
       *)
-  let* recent_blocks := (* TODO expression *) in
+  do* M.assign "recent_blocks" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* recent_block_hashes := (* TODO expression *) in
+  do* M.assign "recent_block_hashes" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* most_recent_block_hash := ethereum.crypto.hash.keccak256 (|
-    rlp.["encode"] (|
-      (* TODO expression *).["header"]
-    |)
-  |) in
-  do* recent_block_hashes.["append"] (|
-    most_recent_block_hash
-  |) in
+  do* M.assign "most_recent_block_hash" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      M.get_field ~(| __init__.rlp, "encode" |) ~(|
+        M.get_field ~(| (* TODO expression *), "header" |)
+      |)
+    |) in
+  ]] in
+  do* [[ M.get_field ~(| M.get_local ~(| "recent_block_hashes" |), "append" |) ~(|
+    M.get_local ~(| "most_recent_block_hash" |)
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition state_transition : M unit :=
+Definition state_transition (chain : BlockChain) (block : Block) : M unit :=
   (*
       Attempts to apply a block to an existing block chain.
 
@@ -108,43 +117,47 @@ Definition state_transition : M unit :=
       block :
           Block to apply to `chain`.
       *)
-  let* parent_header := (* TODO expression *).["header"] in
-  do* validate_header (|
-    block.["header"],
-    parent_header
-  |) in
-  do* validate_ommers (|
-    block.["ommers"],
-    block.["header"],
+  do* M.assign "parent_header" [[
+    M.get_field ~(| (* TODO expression *), "header" |) in
+  ]] in
+  do* [[ M.get_local ~(| "validate_header" |) ~(|
+    M.get_field ~(| block, "header" |),
+    M.get_local ~(| "parent_header" |)
+  |) ]] in
+  do* [[ M.get_local ~(| "validate_ommers" |) ~(|
+    M.get_field ~(| block, "ommers" |),
+    M.get_field ~(| block, "header" |),
     chain
-  |) in
-  let* apply_body_output := apply_body (|
-    chain.["state"],
-    get_last_256_block_hashes (|
-      chain
-    |),
-    block.["header"].["coinbase"],
-    block.["header"].["number"],
-    block.["header"].["base_fee_per_gas"],
-    block.["header"].["gas_limit"],
-    block.["header"].["timestamp"],
-    block.["header"].["difficulty"],
-    block.["transactions"],
-    block.["ommers"],
-    chain.["chain_id"]
-  |) in
+  |) ]] in
+  do* M.assign "apply_body_output" [[
+    M.get_local ~(| "apply_body" |) ~(|
+      M.get_field ~(| chain, "state" |),
+      M.get_local ~(| "get_last_256_block_hashes" |) ~(|
+        chain
+      |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "coinbase" |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "number" |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "base_fee_per_gas" |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "gas_limit" |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "timestamp" |),
+      M.get_field ~(| M.get_field ~(| block, "header" |), "difficulty" |),
+      M.get_field ~(| block, "transactions" |),
+      M.get_field ~(| block, "ommers" |),
+      M.get_field ~(| chain, "chain_id" |)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  do* chain.["blocks"].["append"] (|
+  do* [[ M.get_field ~(| M.get_field ~(| chain, "blocks" |), "append" |) ~(|
     block
-  |) in
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_base_fee_per_gas : M unit :=
+Definition calculate_base_fee_per_gas (block_gas_limit : Uint) (parent_gas_limit : Uint) (parent_gas_used : Uint) (parent_base_fee_per_gas : Uint) : M Uint :=
   (*
       Calculates the base fee per gas for the block.
 
@@ -164,13 +177,15 @@ Definition calculate_base_fee_per_gas : M unit :=
       base_fee_per_gas : `Uint`
           Base fee per gas for the block.
       *)
-  let* parent_gas_target := (* TODO expression *) in
+  do* M.assign "parent_gas_target" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition validate_header : M unit :=
+Definition validate_header (header : Header) (parent_header : Header) : M unit :=
   (*
       Verifies a block header.
 
@@ -189,37 +204,45 @@ Definition validate_header : M unit :=
           Parent Header of the header to check for correctness
       *)
   (* TODO statement *)
-  let* expected_base_fee_per_gas := calculate_base_fee_per_gas (|
-    header.["gas_limit"],
-    parent_header.["gas_limit"],
-    parent_header.["gas_used"],
-    parent_header.["base_fee_per_gas"]
-  |) in
+  do* M.assign "expected_base_fee_per_gas" [[
+    M.get_local ~(| "calculate_base_fee_per_gas" |) ~(|
+      M.get_field ~(| header, "gas_limit" |),
+      M.get_field ~(| parent_header, "gas_limit" |),
+      M.get_field ~(| parent_header, "gas_used" |),
+      M.get_field ~(| parent_header, "base_fee_per_gas" |)
+    |) in
+  ]] in
   (* TODO statement *)
-  let* parent_has_ommers := (* TODO expression *) in
+  do* M.assign "parent_has_ommers" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* block_difficulty := calculate_block_difficulty (|
-    header.["number"],
-    header.["timestamp"],
-    parent_header.["timestamp"],
-    parent_header.["difficulty"],
-    parent_has_ommers
-  |) in
+  do* M.assign "block_difficulty" [[
+    M.get_local ~(| "calculate_block_difficulty" |) ~(|
+      M.get_field ~(| header, "number" |),
+      M.get_field ~(| header, "timestamp" |),
+      M.get_field ~(| parent_header, "timestamp" |),
+      M.get_field ~(| parent_header, "difficulty" |),
+      M.get_local ~(| "parent_has_ommers" |)
+    |) in
+  ]] in
   (* TODO statement *)
-  let* block_parent_hash := ethereum.crypto.hash.keccak256 (|
-    rlp.["encode"] (|
-      parent_header
-    |)
-  |) in
+  do* M.assign "block_parent_hash" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      M.get_field ~(| __init__.rlp, "encode" |) ~(|
+        parent_header
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
-  do* validate_proof_of_work (|
+  do* [[ M.get_local ~(| "validate_proof_of_work" |) ~(|
     header
-  |) in
+  |) ]] in
+  M.pure tt.
 
-
-Definition generate_header_hash_for_pow : M unit :=
+Definition generate_header_hash_for_pow (header : Header) : M Hash32 :=
   (*
       Generate rlp hash of the header which is to be used for Proof-of-Work
       verification.
@@ -242,11 +265,13 @@ Definition generate_header_hash_for_pow : M unit :=
       hash : `Hash32`
           The PoW valid rlp hash of the passed in header.
       *)
-  let* header_data_without_pow_artefacts := (* TODO expression *) in
+  do* M.assign "header_data_without_pow_artefacts" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition validate_proof_of_work : M unit :=
+Definition validate_proof_of_work (header : Header) : M unit :=
   (*
       Validates the Proof of Work constraints.
 
@@ -261,19 +286,25 @@ Definition validate_proof_of_work : M unit :=
       header :
           Header of interest.
       *)
-  let* header_hash := generate_header_hash_for_pow (|
-    header
-  |) in
-  let* cache := ethereum.ethash.generate_cache (|
-    header.["number"]
-  |) in
+  do* M.assign "header_hash" [[
+    M.get_local ~(| "generate_header_hash_for_pow" |) ~(|
+      header
+    |) in
+  ]] in
+  do* M.assign "cache" [[
+    ethereum.ethash.generate_cache ~(|
+      M.get_field ~(| header, "number" |)
+    |) in
+  ]] in
   (* TODO assignment *)
   (* TODO statement *)
-  let* limit := (* TODO expression *) in
+  do* M.assign "limit" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition check_transaction : M unit :=
+Definition check_transaction (tx : Transaction) (base_fee_per_gas : Uint) (gas_available : Uint) (chain_id : U64) : M (* TODO type *) :=
   (*
       Check if the transaction is includable in the block.
 
@@ -301,15 +332,17 @@ Definition check_transaction : M unit :=
           If the transaction is not includable.
       *)
   (* TODO statement *)
-  let* sender_address := recover_sender (|
-    chain_id,
-    tx
-  |) in
+  do* M.assign "sender_address" [[
+    M.get_local ~(| "recover_sender" |) ~(|
+      chain_id,
+      tx
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition make_receipt : M unit :=
+Definition make_receipt (tx : Transaction) (error : (* TODO type *)) (cumulative_gas_used : Uint) (logs : (* TODO type *)) : M (* TODO type *) :=
   (*
       Make the receipt for a transaction that was executed.
 
@@ -330,13 +363,15 @@ Definition make_receipt : M unit :=
       receipt :
           The receipt for the transaction.
       *)
-  let* receipt := blocks.Receipt (|
+  do* M.assign "receipt" [[
+    blocks.Receipt ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition apply_body : M unit :=
+Definition apply_body (state : State) (block_hashes : (* TODO type *)) (coinbase : Address) (block_number : Uint) (base_fee_per_gas : Uint) (block_gas_limit : Uint) (block_time : U256) (block_difficulty : Uint) (transactions : (* TODO type *)) (ommers : (* TODO type *)) (chain_id : U64) : M ApplyBodyOutput :=
   (*
       Executes a block.
 
@@ -379,25 +414,31 @@ Definition apply_body : M unit :=
       apply_body_output : `ApplyBodyOutput`
           Output of applying the block body to the state.
       *)
-  let* gas_available := block_gas_limit in
+  do* M.assign "gas_available" [[
+    block_gas_limit in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  do* pay_rewards (|
+  do* [[ M.get_local ~(| "pay_rewards" |) ~(|
     state,
     block_number,
     coinbase,
     ommers
-  |) in
-  let* block_gas_used := (* TODO expression *) in
-  let* block_logs_bloom := bloom.logs_bloom (|
-    block_logs
-  |) in
+  |) ]] in
+  do* M.assign "block_gas_used" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "block_logs_bloom" [[
+    bloom.logs_bloom ~(|
+      M.get_local ~(| "block_logs" |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition validate_ommers : M unit :=
+Definition validate_ommers (ommers : (* TODO type *)) (block_header : Header) (chain : BlockChain) : M unit :=
   (*
       Validates the ommers mentioned in the block.
 
@@ -419,23 +460,31 @@ Definition validate_ommers : M unit :=
       chain :
           History and current state.
       *)
-  let* block_hash := rlp.["rlp_hash"] (|
-    block_header
-  |) in
+  do* M.assign "block_hash" [[
+    M.get_field ~(| __init__.rlp, "rlp_hash" |) ~(|
+      block_header
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* ommers_hashes := (* TODO expression *) in
+  do* M.assign "ommers_hashes" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* recent_canonical_blocks := (* TODO expression *) in
-  let* recent_canonical_block_hashes := (* TODO expression *) in
+  do* M.assign "recent_canonical_blocks" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "recent_canonical_block_hashes" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition pay_rewards : M unit :=
+Definition pay_rewards (state : State) (block_number : Uint) (coinbase : Address) (ommers : (* TODO type *)) : M unit :=
   (*
       Pay rewards to the block miner as well as the ommers miners.
 
@@ -461,21 +510,25 @@ Definition pay_rewards : M unit :=
       ommers :
           List of ommers mentioned in the current block.
       *)
-  let* ommer_count := ethereum_types.numeric.U256 (|
-    len (|
-      ommers
-    |)
-  |) in
-  let* miner_reward := (* TODO expression *) in
-  do* state.create_ether (|
+  do* M.assign "ommer_count" [[
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "len" |) ~(|
+        ommers
+      |)
+    |) in
+  ]] in
+  do* M.assign "miner_reward" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ state.create_ether ~(|
     state,
     coinbase,
-    miner_reward
-  |) in
+    M.get_local ~(| "miner_reward" |)
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition process_transaction : M unit :=
+Definition process_transaction (env : (* TODO type *)) (tx : Transaction) : M (* TODO type *) :=
   (*
       Execute a transaction against the provided environment.
 
@@ -503,74 +556,108 @@ Definition process_transaction : M unit :=
           Logs generated during execution.
       *)
   (* TODO statement *)
-  let* sender := env.["origin"] in
-  let* sender_account := state.get_account (|
-    env.["state"],
-    sender
-  |) in
+  do* M.assign "sender" [[
+    M.get_field ~(| env, "origin" |) in
+  ]] in
+  do* M.assign "sender_account" [[
+    state.get_account ~(|
+      M.get_field ~(| env, "state" |),
+      M.get_local ~(| "sender" |)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
-  let* effective_gas_fee := (* TODO expression *) in
-  let* gas := (* TODO expression *) in
-  do* state.increment_nonce (|
-    env.["state"],
-    sender
-  |) in
-  let* sender_balance_after_gas_fee := (* TODO expression *) in
-  do* state.set_account_balance (|
-    env.["state"],
-    sender,
-    ethereum_types.numeric.U256 (|
-      sender_balance_after_gas_fee
+  do* M.assign "effective_gas_fee" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "gas" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ state.increment_nonce ~(|
+    M.get_field ~(| env, "state" |),
+    M.get_local ~(| "sender" |)
+  |) ]] in
+  do* M.assign "sender_balance_after_gas_fee" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ state.set_account_balance ~(|
+    M.get_field ~(| env, "state" |),
+    M.get_local ~(| "sender" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "sender_balance_after_gas_fee" |)
     |)
-  |) in
-  let* preaccessed_addresses := set (|
+  |) ]] in
+  do* M.assign "preaccessed_addresses" [[
+    M.get_local ~(| "set" |) ~(|
 
-  |) in
-  let* preaccessed_storage_keys := set (|
+    |) in
+  ]] in
+  do* M.assign "preaccessed_storage_keys" [[
+    M.get_local ~(| "set" |) ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
-  let* message := utils.message.prepare_message (|
-    sender,
-    tx.["to"],
-    tx.["value"],
-    tx.["data"],
-    gas,
-    env
-  |) in
-  let* output := vm.interpreter.process_message_call (|
-    message,
-    env
-  |) in
-  let* gas_used := (* TODO expression *) in
-  let* gas_refund := min (|
-    (* TODO expression *),
-    ethereum_types.numeric.Uint (|
-      output.["refund_counter"]
-    |)
-  |) in
-  let* gas_refund_amount := (* TODO expression *) in
-  let* priority_fee_per_gas := (* TODO expression *) in
-  let* transaction_fee := (* TODO expression *) in
-  let* total_gas_used := (* TODO expression *) in
-  let* sender_balance_after_refund := (* TODO expression *) in
-  do* state.set_account_balance (|
-    env.["state"],
-    sender,
-    sender_balance_after_refund
-  |) in
-  let* coinbase_balance_after_mining_fee := (* TODO expression *) in
+  do* M.assign "message" [[
+    utils.message.prepare_message ~(|
+      M.get_local ~(| "sender" |),
+      M.get_field ~(| tx, "to" |),
+      M.get_field ~(| tx, "value" |),
+      M.get_field ~(| tx, "data" |),
+      M.get_local ~(| "gas" |),
+      env
+    |) in
+  ]] in
+  do* M.assign "output" [[
+    vm.interpreter.process_message_call ~(|
+      M.get_local ~(| "message" |),
+      env
+    |) in
+  ]] in
+  do* M.assign "gas_used" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "gas_refund" [[
+    M.get_local ~(| "min" |) ~(|
+      (* TODO expression *),
+      ethereum_types.numeric.Uint ~(|
+        M.get_field ~(| M.get_local ~(| "output" |), "refund_counter" |)
+      |)
+    |) in
+  ]] in
+  do* M.assign "gas_refund_amount" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "priority_fee_per_gas" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "transaction_fee" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "total_gas_used" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "sender_balance_after_refund" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ state.set_account_balance ~(|
+    M.get_field ~(| env, "state" |),
+    M.get_local ~(| "sender" |),
+    M.get_local ~(| "sender_balance_after_refund" |)
+  |) ]] in
+  do* M.assign "coinbase_balance_after_mining_fee" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition validate_transaction : M unit :=
+Definition validate_transaction (tx : Transaction) : M bool :=
   (*
       Verifies a transaction.
 
@@ -598,9 +685,9 @@ Definition validate_transaction : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_intrinsic_cost : M unit :=
+Definition calculate_intrinsic_cost (tx : Transaction) : M Uint :=
   (*
       Calculates the gas that is charged before execution is started.
 
@@ -623,15 +710,19 @@ Definition calculate_intrinsic_cost : M unit :=
       verified : `ethereum.base_types.Uint`
           The intrinsic cost of the transaction.
       *)
-  let* data_cost := (* TODO expression *) in
+  do* M.assign "data_cost" [[
+    0 in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-  let* access_list_cost := (* TODO expression *) in
+  do* M.assign "access_list_cost" [[
+    0 in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition recover_sender : M unit :=
+Definition recover_sender (chain_id : U64) (tx : Transaction) : M Address :=
   (*
       Extracts the sender address from a transaction.
 
@@ -658,9 +749,9 @@ Definition recover_sender : M unit :=
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition signing_hash_pre155 : M unit :=
+Definition signing_hash_pre155 (tx : LegacyTransaction) : M Hash32 :=
   (*
       Compute the hash of a transaction used in a legacy (pre EIP 155) signature.
 
@@ -675,9 +766,9 @@ Definition signing_hash_pre155 : M unit :=
           Hash of the transaction.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition signing_hash_155 : M unit :=
+Definition signing_hash_155 (tx : LegacyTransaction) (chain_id : U64) : M Hash32 :=
   (*
       Compute the hash of a transaction used in a EIP 155 signature.
 
@@ -694,9 +785,9 @@ Definition signing_hash_155 : M unit :=
           Hash of the transaction.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition signing_hash_2930 : M unit :=
+Definition signing_hash_2930 (tx : AccessListTransaction) : M Hash32 :=
   (*
       Compute the hash of a transaction used in a EIP 2930 signature.
 
@@ -711,9 +802,9 @@ Definition signing_hash_2930 : M unit :=
           Hash of the transaction.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition signing_hash_1559 : M unit :=
+Definition signing_hash_1559 (tx : FeeMarketTransaction) : M Hash32 :=
   (*
       Compute the hash of a transaction used in a EIP 1559 signature.
 
@@ -728,9 +819,9 @@ Definition signing_hash_1559 : M unit :=
           Hash of the transaction.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition compute_header_hash : M unit :=
+Definition compute_header_hash (header : Header) : M Hash32 :=
   (*
       Computes the hash of a block header.
 
@@ -763,9 +854,9 @@ Definition compute_header_hash : M unit :=
           Hash of the header.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition check_gas_limit : M unit :=
+Definition check_gas_limit (gas_limit : Uint) (parent_gas_limit : Uint) : M bool :=
   (*
       Validates the gas limit for a block.
 
@@ -793,14 +884,16 @@ Definition check_gas_limit : M unit :=
       check : `bool`
           True if gas limit constraints are satisfied, False otherwise.
       *)
-  let* max_adjustment_delta := (* TODO expression *) in
+  do* M.assign "max_adjustment_delta" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_block_difficulty : M unit :=
+Definition calculate_block_difficulty (block_number : Uint) (block_timestamp : U256) (parent_timestamp : U256) (parent_difficulty : Uint) (parent_has_ommers : bool) : M Uint :=
   (*
       Computes difficulty of a block using its header and parent header.
 
@@ -839,9 +932,15 @@ Definition calculate_block_difficulty : M unit :=
       difficulty : `ethereum.base_types.Uint`
           Computed difficulty for a block.
       *)
-  let* offset := (* TODO expression *) in
-  let* difficulty := (* TODO expression *) in
-  let* num_bomb_periods := (* TODO expression *) in
+  do* M.assign "offset" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "difficulty" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "num_bomb_periods" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

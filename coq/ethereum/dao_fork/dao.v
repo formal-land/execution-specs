@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Dao Fork
 ^^^^^^^^
@@ -15,10 +16,10 @@ collection of accounts (The Dao and all its children) to a recovery contract.
 The recovery contract was previously created using normal contract deployment.
 *)
 
-Require dao_fork.state.
-Require dao_fork.utils.hexadecimal.
+Require ethereum.dao_fork.state.
+Require ethereum.dao_fork.utils.hexadecimal.
 
-Definition apply_dao : M unit :=
+Definition apply_dao (state : State) : M unit :=
   (*
       Apply the dao fork to the state.
 
@@ -28,4 +29,4 @@ Definition apply_dao : M unit :=
           State before applying the DAO Fork.
       *)
   (* TODO statement *)
-
+  M.pure tt.

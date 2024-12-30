@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 A `Block` is a single link in the chain that is Ethereum. Each `Block` contains
 a `Header` and zero or more transactions. Each `Header` contains associated
@@ -14,6 +15,6 @@ Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.frozen.
 Require ethereum_types.numeric.
-Require ..crypto.hash.
-Require spurious_dragon.fork_types.
-Require spurious_dragon.transactions.
+Require ethereum.crypto.hash.
+Require ethereum.spurious_dragon.fork_types.
+Require ethereum.spurious_dragon.transactions.

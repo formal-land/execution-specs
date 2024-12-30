@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Paris fork transitions Ethereum from a proof-of-work consensus model to a
 proof-of-stake one. This fork is often referred to as "The Merge" because it

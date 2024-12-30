@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Cryptographic Hash Functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,7 +16,7 @@ Cryptographic hashing functions.
 Require Crypto.Hash.
 Require ethereum_types.bytes.
 
-Definition keccak256 : M unit :=
+Definition keccak256 (buffer : Bytes) : M Hash32 :=
   (*
       Computes the keccak256 hash of the input `buffer`.
 
@@ -29,13 +30,15 @@ Definition keccak256 : M unit :=
       hash : `ethereum.base_types.Hash32`
           Output of the hash function.
       *)
-  let* k := Crypto.Hash.keccak.["new"] (|
+  do* M.assign "k" [[
+    M.get_field ~(| Crypto.Hash.keccak, "new" |) ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition keccak512 : M unit :=
+Definition keccak512 (buffer : Bytes) : M Hash64 :=
   (*
       Computes the keccak512 hash of the input `buffer`.
 
@@ -49,8 +52,10 @@ Definition keccak512 : M unit :=
       hash : `ethereum.base_types.Hash32`
           Output of the hash function.
       *)
-  let* k := Crypto.Hash.keccak.["new"] (|
+  do* M.assign "k" [[
+    M.get_field ~(| Crypto.Hash.keccak, "new" |) ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
-
+  M.pure tt.

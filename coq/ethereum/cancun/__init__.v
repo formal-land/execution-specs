@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Cancun fork introduces transient storage, exposes beacon chain roots,
 introduces a new blob-carrying transaction type, adds a memory copying

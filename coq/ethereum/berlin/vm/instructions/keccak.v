@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Keccak Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,11 +16,12 @@ Implementations of the EVM keccak instructions.
 Require ethereum_types.numeric.
 Require ethereum.crypto.hash.
 Require ethereum.utils.numeric.
-Require berlin.vm.gas.
-Require berlin.vm.memory.
-Require berlin.vm.stack.
+Require ethereum.berlin.vm.__init__.
+Require ethereum.berlin.vm.gas.
+Require ethereum.berlin.vm.memory.
+Require ethereum.berlin.vm.stack.
 
-Definition keccak : M unit :=
+Definition keccak (evm : Evm) : M unit :=
   (*
       Pushes to the stack the Keccak-256 hash of a region of memory.
 
@@ -32,36 +34,56 @@ Definition keccak : M unit :=
           The current EVM frame.
 
       *)
-  let* memory_start_index := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* size := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* words := (* TODO expression *) in
-  let* word_gas_cost := (* TODO expression *) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "memory_start_index" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "size" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "word_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* data := memory.memory_read_bytes (|
-    evm.["memory"],
-    memory_start_index,
-    size
-  |) in
-  let* hash := ethereum.crypto.hash.keccak256 (|
-    data
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256.["from_be_bytes"] (|
-      hash
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "data" [[
+    memory.memory_read_bytes ~(|
+      M.get_field ~(| evm, "memory" |),
+      M.get_local ~(| "memory_start_index" |),
+      M.get_local ~(| "size" |)
+    |) in
+  ]] in
+  do* M.assign "hash" [[
+    ethereum.crypto.hash.keccak256 ~(|
+      M.get_local ~(| "data" |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      M.get_local ~(| "hash" |)
     |)
-  |) in
-  (* TODO statement *)
-
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

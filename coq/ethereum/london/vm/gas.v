@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Gas
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -17,9 +18,10 @@ Require typing.
 Require ethereum_types.numeric.
 Require ethereum.trace.
 Require ethereum.utils.numeric.
-Require london.vm.exceptions.
+Require ethereum.london.vm.__init__.
+Require ethereum.london.vm.exceptions.
 
-Definition charge_gas : M unit :=
+Definition charge_gas (evm : Evm) (amount : Uint) : M unit :=
   (*
       Subtracts `amount` from `evm.gas_left`.
 
@@ -31,18 +33,18 @@ Definition charge_gas : M unit :=
           The amount of gas the current operation requires.
 
       *)
-  do* ethereum.trace.evm_trace (|
+  do* [[ ethereum.trace.evm_trace ~(|
     evm,
-    ethereum.trace.GasAndRefund (|
-      int (|
+    ethereum.trace.GasAndRefund ~(|
+      M.get_local ~(| "int" |) ~(|
         amount
       |)
     |)
-  |) in
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_memory_gas_cost : M unit :=
+Definition calculate_memory_gas_cost (size_in_bytes : Uint) : M Uint :=
   (*
       Calculates the gas cost for allocating memory
       to the smallest multiple of 32 bytes,
@@ -58,14 +60,22 @@ Definition calculate_memory_gas_cost : M unit :=
       total_gas_cost : `ethereum.base_types.Uint`
           The gas cost for storing data in memory.
       *)
-  let* size_in_words := (* TODO expression *) in
-  let* linear_cost := (* TODO expression *) in
-  let* quadratic_cost := (* TODO expression *) in
-  let* total_gas_cost := (* TODO expression *) in
+  do* M.assign "size_in_words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "linear_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "quadratic_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "total_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_gas_extend_memory : M unit :=
+Definition calculate_gas_extend_memory (memory : bytearray) (extensions : (* TODO type *)) : M ExtendMemory :=
   (*
       Calculates the gas amount to extend memory
 
@@ -81,22 +91,28 @@ Definition calculate_gas_extend_memory : M unit :=
       -------
       extend_memory: `ExtendMemory`
       *)
-  let* size_to_extend := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
-  let* to_be_paid := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
-  let* current_size := ethereum_types.numeric.Uint (|
-    len (|
-      memory
-    |)
-  |) in
+  do* M.assign "size_to_extend" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "to_be_paid" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "current_size" [[
+    ethereum_types.numeric.Uint ~(|
+      M.get_local ~(| "len" |) ~(|
+        memory
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition calculate_message_call_gas : M unit :=
+Definition calculate_message_call_gas (value : U256) (gas : Uint) (gas_left : Uint) (memory_cost : Uint) (extra_gas : Uint) (call_stipend : Uint) : M MessageCallGas :=
   (*
       Calculates the MessageCallGas (cost and stipend) for
       executing call Opcodes.
@@ -122,18 +138,22 @@ Definition calculate_message_call_gas : M unit :=
       -------
       message_call_gas: `MessageCallGas`
       *)
-  let* call_stipend := (* TODO expression *) in
+  do* M.assign "call_stipend" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
-  let* gas := min (|
-    gas,
-    max_message_call_gas (|
-      (* TODO expression *)
-    |)
-  |) in
+  do* M.assign "gas" [[
+    M.get_local ~(| "min" |) ~(|
+      gas,
+      M.get_local ~(| "max_message_call_gas" |) ~(|
+        (* TODO expression *)
+      |)
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition max_message_call_gas : M unit :=
+Definition max_message_call_gas (gas : Uint) : M Uint :=
   (*
       Calculates the maximum gas that is allowed for making a message call
 
@@ -148,4 +168,4 @@ Definition max_message_call_gas : M unit :=
           The maximum gas allowed for making the message-call.
       *)
   (* TODO statement *)
-
+  M.pure tt.

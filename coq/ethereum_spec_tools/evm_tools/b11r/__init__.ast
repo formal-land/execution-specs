@@ -1,0 +1,727 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nCreate a block builder tool for the given fork.\n')),
+        Import(
+            names=[
+                alias(name='argparse')]),
+        Import(
+            names=[
+                alias(name='json')]),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='TextIO')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='rlp')],
+            level=0),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='get_stream_logger')],
+            level=2),
+        ImportFrom(
+            module='b11r_types',
+            names=[
+                alias(name='Body'),
+                alias(name='Header')],
+            level=1),
+        FunctionDef(
+            name='b11r_arguments',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='subparsers',
+                        annotation=Attribute(
+                            value=Name(id='argparse', ctx=Load()),
+                            attr='_SubParsersAction',
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Adds the arguments for the b11r tool subparser.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='b11r_parser', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='subparsers', ctx=Load()),
+                            attr='add_parser',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='b11r')],
+                        keywords=[
+                            keyword(
+                                arg='help',
+                                value=Constant(value='This is the b11r tool.'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--input.header')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='input_header')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value='header.json'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--input.ommers')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='input_ommers')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--input.txs')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='input_txs')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value='txs.rlp'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--input.withdrawals')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='input_withdrawals')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--output.basedir')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='output_basedir')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--output.block')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='output_block')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value='block.json'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--seal.clique')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='seal_clique')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--seal.ethash')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='seal_ethash')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='bool', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value=False))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--seal.ethash.dir')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='seal_ethash_dir')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value=None))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--seal.ethash.mode')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='seal_ethash_mode')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='str', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value='normal'))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b11r_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='--verbosity')],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='verbosity')),
+                            keyword(
+                                arg='type',
+                                value=Name(id='int', ctx=Load())),
+                            keyword(
+                                arg='default',
+                                value=Constant(value=3))]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        ClassDef(
+            name='B11R',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Creates the b11r tool.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='options',
+                                annotation=Attribute(
+                                    value=Name(id='argparse', ctx=Load()),
+                                    attr='Namespace',
+                                    ctx=Load())),
+                            arg(
+                                arg='out_file',
+                                annotation=Name(id='TextIO', ctx=Load())),
+                            arg(
+                                arg='in_file',
+                                annotation=Name(id='TextIO', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Initializes the b11r tool.\n        ')),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='options',
+                                    ctx=Store())],
+                            value=Name(id='options', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='out_file',
+                                    ctx=Store())],
+                            value=Name(id='out_file', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='in_file',
+                                    ctx=Store())],
+                            value=Name(id='in_file', ctx=Load())),
+                        If(
+                            test=Compare(
+                                left=Constant(value='stdin'),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Tuple(
+                                        elts=[
+                                            Attribute(
+                                                value=Name(id='options', ctx=Load()),
+                                                attr='input_header',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='options', ctx=Load()),
+                                                attr='input_ommers',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='options', ctx=Load()),
+                                                attr='input_txs',
+                                                ctx=Load())],
+                                        ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='stdin', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='json', ctx=Load()),
+                                            attr='load',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='in_file', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='stdin', ctx=Store())],
+                                    value=Constant(value=None))]),
+                        AnnAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='body',
+                                ctx=Store()),
+                            annotation=Name(id='Body', ctx=Load()),
+                            value=Call(
+                                func=Name(id='Body', ctx=Load()),
+                                args=[
+                                    Name(id='options', ctx=Load()),
+                                    Name(id='stdin', ctx=Load())],
+                                keywords=[]),
+                            simple=0),
+                        AnnAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='header',
+                                ctx=Store()),
+                            annotation=Name(id='Header', ctx=Load()),
+                            value=Call(
+                                func=Name(id='Header', ctx=Load()),
+                                args=[
+                                    Name(id='options', ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='body',
+                                        ctx=Load()),
+                                    Name(id='stdin', ctx=Load())],
+                                keywords=[]),
+                            simple=0),
+                        AnnAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='block_rlp',
+                                ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Optional', ctx=Load()),
+                                slice=Name(id='bytes', ctx=Load()),
+                                ctx=Load()),
+                            value=Constant(value=None),
+                            simple=0),
+                        AnnAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='block_hash',
+                                ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Optional', ctx=Load()),
+                                slice=Name(id='Bytes32', ctx=Load()),
+                                ctx=Load()),
+                            value=Constant(value=None),
+                            simple=0),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='logger',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='get_stream_logger', ctx=Load()),
+                                args=[
+                                    Constant(value='B11R')],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='build_block',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Builds the block.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='logger',
+                                        ctx=Load()),
+                                    attr='info',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Building the block...')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='header_to_list', ctx=Store())],
+                            value=ListComp(
+                                elt=Name(id='value', ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='value', ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Call(
+                                                    func=Name(id='vars', ctx=Load()),
+                                                    args=[
+                                                        Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='header',
+                                                            ctx=Load())],
+                                                    keywords=[]),
+                                                attr='values',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ifs=[
+                                            Compare(
+                                                left=Name(id='value', ctx=Load()),
+                                                ops=[
+                                                    IsNot()],
+                                                comparators=[
+                                                    Constant(value=None)])],
+                                        is_async=0)])),
+                        Assign(
+                            targets=[
+                                Name(id='block', ctx=Store())],
+                            value=List(
+                                elts=[
+                                    Name(id='header_to_list', ctx=Load()),
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='body',
+                                            ctx=Load()),
+                                        attr='transactions',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='body',
+                                            ctx=Load()),
+                                        attr='ommers',
+                                        ctx=Load())],
+                                ctx=Load())),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='body',
+                                        ctx=Load()),
+                                    attr='withdrawals',
+                                    ctx=Load()),
+                                ops=[
+                                    IsNot()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='block', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='body',
+                                                    ctx=Load()),
+                                                attr='withdrawals',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='block_rlp',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='encode',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='block', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='block_hash',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='rlp_hash',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='header_to_list', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='run',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Runs the b11r tool.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='build_block',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        If(
+                            test=BoolOp(
+                                op=Or(),
+                                values=[
+                                    UnaryOp(
+                                        op=Not(),
+                                        operand=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='block_rlp',
+                                            ctx=Load())),
+                                    UnaryOp(
+                                        op=Not(),
+                                        operand=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='block_hash',
+                                            ctx=Load()))]),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='ValueError', ctx=Load()),
+                                        args=[
+                                            Constant(value='Cannot output result. Block RLP or block hash is not built.')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Dict(
+                                keys=[
+                                    Constant(value='rlp'),
+                                    Constant(value='hash')],
+                                values=[
+                                    BinOp(
+                                        left=Constant(value='0x'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='block_rlp',
+                                                    ctx=Load()),
+                                                attr='hex',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[])),
+                                    BinOp(
+                                        left=Constant(value='0x'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='block_hash',
+                                                    ctx=Load()),
+                                                attr='hex',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]))])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='logger',
+                                        ctx=Load()),
+                                    attr='info',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='Writing the result...')],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='options',
+                                        ctx=Load()),
+                                    attr='output_block',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdout')]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='json', ctx=Load()),
+                                            attr='dump',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='result', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='out_file',
+                                                ctx=Load())],
+                                        keywords=[
+                                            keyword(
+                                                arg='indent',
+                                                value=Constant(value=4))]))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='options',
+                                                            ctx=Load()),
+                                                        attr='output_block',
+                                                        ctx=Load()),
+                                                    Constant(value='w')],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='dump',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='result', ctx=Load()),
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[
+                                                    keyword(
+                                                        arg='indent',
+                                                        value=Constant(value=4))]))]),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='logger',
+                                                ctx=Load()),
+                                            attr='info',
+                                            ctx=Load()),
+                                        args=[
+                                            JoinedStr(
+                                                values=[
+                                                    Constant(value='The result has been written to '),
+                                                    FormattedValue(
+                                                        value=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='options',
+                                                                ctx=Load()),
+                                                            attr='output_block',
+                                                            ctx=Load()),
+                                                        conversion=-1),
+                                                    Constant(value='.')])],
+                                        keywords=[]))]),
+                        Return(
+                            value=Constant(value=0))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

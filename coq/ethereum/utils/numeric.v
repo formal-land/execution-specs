@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Utility Functions For Numeric Operations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,7 +16,7 @@ Numeric operations specific utility functions used in this specification.
 Require typing.
 Require ethereum_types.numeric.
 
-Definition get_sign : M unit :=
+Definition get_sign (value : int) : M int :=
   (*
       Determines the sign of a number.
 
@@ -31,9 +32,9 @@ Definition get_sign : M unit :=
           The return value is based on math signum function.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition ceil32 : M unit :=
+Definition ceil32 (value : Uint) : M Uint :=
   (*
       Converts a unsigned integer to the next closest multiple of 32.
 
@@ -49,14 +50,18 @@ Definition ceil32 : M unit :=
           else it returns the smallest multiple of 32
           that is greater than `value`.
       *)
-  let* ceiling := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
-  let* remainder := (* TODO expression *) in
+  do* M.assign "ceiling" [[
+    ethereum_types.numeric.Uint ~(|
+      32
+    |) in
+  ]] in
+  do* M.assign "remainder" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition is_prime : M unit :=
+Definition is_prime (number : SupportsInt) : M bool :=
   (*
       Checks if `number` is a prime number.
 
@@ -70,15 +75,17 @@ Definition is_prime : M unit :=
       is_number_prime : `bool`
           Boolean indicating if `number` is prime or not.
       *)
-  let* number := int (|
-    number
-  |) in
+  do* M.assign "number" [[
+    M.get_local ~(| "int" |) ~(|
+      number
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition le_bytes_to_uint32_sequence : M unit :=
+Definition le_bytes_to_uint32_sequence (data : bytes) : M (* TODO type *) :=
   (*
       Convert little endian byte stream `data` to a little endian U32
       sequence i.e., the first U32 number of the sequence is the least
@@ -96,12 +103,14 @@ Definition le_bytes_to_uint32_sequence : M unit :=
           Sequence of U32 numbers obtained from the little endian byte
           stream.
       *)
-  let* sequence := (* TODO expression *) in
+  do* M.assign "sequence" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition le_uint32_sequence_to_bytes : M unit :=
+Definition le_uint32_sequence_to_bytes (sequence : (* TODO type *)) : M bytes :=
   (*
       Obtain little endian byte stream from a little endian U32 sequence
       i.e., the first U32 number of the sequence is the least significant
@@ -126,12 +135,14 @@ Definition le_uint32_sequence_to_bytes : M unit :=
       result : `bytes`
           The byte stream obtained from the little endian U32 stream.
       *)
-  let* result_bytes := (* TODO expression *) in
+  do* M.assign "result_bytes" [[
+    (* TODO constant *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition le_uint32_sequence_to_uint : M unit :=
+Definition le_uint32_sequence_to_uint (sequence : (* TODO type *)) : M Uint :=
   (*
       Obtain Uint from a U32 sequence assuming that this sequence is little
       endian i.e., the first U32 number of the sequence is the least
@@ -148,13 +159,15 @@ Definition le_uint32_sequence_to_uint : M unit :=
           The Uint number obtained from the conversion of the little endian
           U32 stream.
       *)
-  let* sequence_as_bytes := le_uint32_sequence_to_bytes (|
-    sequence
-  |) in
+  do* M.assign "sequence_as_bytes" [[
+    M.get_local ~(| "le_uint32_sequence_to_bytes" |) ~(|
+      sequence
+    |) in
+  ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition taylor_exponential : M unit :=
+Definition taylor_exponential (factor : Uint) (numerator : Uint) (denominator : Uint) : M Uint :=
   (*
       Approximates factor * e ** (numerator / denominator) using
       Taylor expansion.
@@ -174,13 +187,19 @@ Definition taylor_exponential : M unit :=
           The approximation of factor * e ** (numerator / denominator).
 
       *)
-  let* i := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
-  let* output := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
-  let* numerator_accumulated := (* TODO expression *) in
+  do* M.assign "i" [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |) in
+  ]] in
+  do* M.assign "output" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "numerator_accumulated" [[
+    (* TODO expression *) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

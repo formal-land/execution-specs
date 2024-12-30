@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Exceptions specific to this fork.
 *)

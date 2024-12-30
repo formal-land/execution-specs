@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For The Message Data-structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,12 +16,12 @@ Message specific functions used in this frontier version of specification.
 Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require frontier.fork_types.
-Require frontier.state.
-Require frontier.vm.
-Require frontier.utils.address.
+Require ethereum.frontier.fork_types.
+Require ethereum.frontier.state.
+Require ethereum.frontier.vm.
+Require ethereum.frontier.utils.address.
 
-Definition prepare_message : M unit :=
+Definition prepare_message (caller : Address) (target : (* TODO type *)) (value : U256) (data : Bytes) (gas : Uint) (env : Environment) (code_address : (* TODO type *)) : M Message :=
   (*
       Execute a transaction against the provided environment.
 
@@ -50,4 +51,4 @@ Definition prepare_message : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

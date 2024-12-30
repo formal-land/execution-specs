@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Tangerine Whistle fork is the first of two forks responding to a
 denial-of-service attack on the Ethereum network. It tunes the price of various

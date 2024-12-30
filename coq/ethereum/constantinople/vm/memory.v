@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Memory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,7 +17,7 @@ Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.utils.byte.
 
-Definition memory_write : M unit :=
+Definition memory_write (memory : bytearray) (start_position : U256) (value : Bytes) : M unit :=
   (*
       Writes to memory.
 
@@ -30,9 +31,9 @@ Definition memory_write : M unit :=
           Data to write to memory.
       *)
   (* TODO assignment *)
+  M.pure tt.
 
-
-Definition memory_read_bytes : M unit :=
+Definition memory_read_bytes (memory : bytearray) (start_position : U256) (size : U256) : M bytearray :=
   (*
       Read bytes from memory.
 
@@ -51,9 +52,9 @@ Definition memory_read_bytes : M unit :=
           Data read from memory.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition buffer_read : M unit :=
+Definition buffer_read (buffer : Bytes) (start_position : U256) (size : U256) : M Bytes :=
   (*
       Read bytes from a buffer. Padding with zeros if necessary.
 
@@ -72,4 +73,4 @@ Definition buffer_read : M unit :=
           Data read from memory.
       *)
   (* TODO statement *)
-
+  M.pure tt.

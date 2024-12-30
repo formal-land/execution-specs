@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Safe Arithmetic for U256 Integer Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,7 +16,7 @@ Safe arithmetic utility functions for U256 integer type.
 Require typing.
 Require ethereum_types.numeric.
 
-Definition u256_safe_add : M unit :=
+Definition u256_safe_add : M U256 :=
   (*
       Adds together the given sequence of numbers. If the total sum of the
       numbers exceeds `U256.MAX_VALUE` then an exception is raised.
@@ -42,9 +43,9 @@ Definition u256_safe_add : M unit :=
           else `exception_type` is raised.
       *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition u256_safe_multiply : M unit :=
+Definition u256_safe_multiply : M U256 :=
   (*
       Multiplies together the given sequence of numbers. If the net product of
       the numbers exceeds `U256.MAX_VALUE` then an exception is raised.
@@ -70,8 +71,10 @@ Definition u256_safe_multiply : M unit :=
           one raised by `U256` when `U256.value > U256.MAX_VALUE`
           else `exception_type` is raised.
       *)
-  let* result := ethereum_types.numeric.Uint (|
-    (* TODO expression *)
-  |) in
+  do* M.assign "result" [[
+    ethereum_types.numeric.Uint ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
   (* TODO statement *)
-
+  M.pure tt.

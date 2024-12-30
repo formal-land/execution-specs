@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For The Message Data-structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -16,12 +17,12 @@ specification.
 Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require istanbul.fork_types.
-Require istanbul.state.
-Require istanbul.vm.
-Require istanbul.utils.address.
+Require ethereum.istanbul.fork_types.
+Require ethereum.istanbul.state.
+Require ethereum.istanbul.vm.
+Require ethereum.istanbul.utils.address.
 
-Definition prepare_message : M unit :=
+Definition prepare_message (caller : Address) (target : (* TODO type *)) (value : U256) (data : Bytes) (gas : Uint) (env : Environment) (code_address : (* TODO type *)) (should_transfer_value : bool) (is_static : bool) : M Message :=
   (*
       Execute a transaction against the provided environment.
 
@@ -56,4 +57,4 @@ Definition prepare_message : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

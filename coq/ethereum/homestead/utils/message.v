@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Hardfork Utility Functions For The Message Data-structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,12 +16,12 @@ Message specific functions used in this homestead version of specification.
 Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
-Require homestead.fork_types.
-Require homestead.state.
-Require homestead.vm.
-Require homestead.utils.address.
+Require ethereum.homestead.fork_types.
+Require ethereum.homestead.state.
+Require ethereum.homestead.vm.
+Require ethereum.homestead.utils.address.
 
-Definition prepare_message : M unit :=
+Definition prepare_message (caller : Address) (target : (* TODO type *)) (value : U256) (data : Bytes) (gas : Uint) (env : Environment) (code_address : (* TODO type *)) (should_transfer_value : bool) : M Message :=
   (*
       Execute a transaction against the provided environment.
 
@@ -52,4 +53,4 @@ Definition prepare_message : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

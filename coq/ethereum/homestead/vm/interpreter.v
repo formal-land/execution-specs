@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Interpreter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -17,17 +18,18 @@ Require typing.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.trace.
-Require homestead.blocks.
-Require homestead.fork_types.
-Require homestead.state.
-Require homestead.vm.
-Require homestead.vm.gas.
-Require homestead.vm.precompiled_contracts.mapping.
-Require homestead.vm.exceptions.
-Require homestead.vm.instructions.
-Require homestead.vm.runtime.
+Require ethereum.homestead.blocks.
+Require ethereum.homestead.fork_types.
+Require ethereum.homestead.state.
+Require ethereum.homestead.vm.
+Require ethereum.homestead.vm.gas.
+Require ethereum.homestead.vm.precompiled_contracts.mapping.
+Require ethereum.homestead.vm.__init__.
+Require ethereum.homestead.vm.exceptions.
+Require ethereum.homestead.vm.instructions.
+Require ethereum.homestead.vm.runtime.
 
-Definition process_message_call : M unit :=
+Definition process_message_call (message : Message) (env : Environment) : M MessageCallOutput :=
   (*
       If `message.current` is empty then it creates a smart contract
       else it executes a call from the `message.caller` to the `message.target`.
@@ -47,19 +49,21 @@ Definition process_message_call : M unit :=
       *)
   (* TODO statement *)
   (* TODO statement *)
-  let* tx_end := ethereum.trace.TransactionEnd (|
-    (* TODO expression *),
-    evm.["output"],
-    evm.["error"]
-  |) in
-  do* ethereum.trace.evm_trace (|
-    evm,
-    tx_end
-  |) in
+  do* M.assign "tx_end" [[
+    ethereum.trace.TransactionEnd ~(|
+      (* TODO expression *),
+      M.get_field ~(| M.get_local ~(| "evm" |), "output" |),
+      M.get_field ~(| M.get_local ~(| "evm" |), "error" |)
+    |) in
+  ]] in
+  do* [[ ethereum.trace.evm_trace ~(|
+    M.get_local ~(| "evm" |),
+    M.get_local ~(| "tx_end" |)
+  |) ]] in
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition process_create_message : M unit :=
+Definition process_create_message (message : Message) (env : Environment) : M Evm :=
   (*
       Executes a call to create a smart contract.
 
@@ -75,22 +79,24 @@ Definition process_create_message : M unit :=
       evm: :py:class:`~ethereum.homestead.vm.Evm`
           Items containing execution specific objects.
       *)
-  do* state.begin_transaction (|
-    env.["state"]
-  |) in
-  do* state.destroy_storage (|
-    env.["state"],
-    message.["current_target"]
-  |) in
-  let* evm := process_message (|
-    message,
-    env
-  |) in
+  do* [[ state.begin_transaction ~(|
+    M.get_field ~(| env, "state" |)
+  |) ]] in
+  do* [[ state.destroy_storage ~(|
+    M.get_field ~(| env, "state" |),
+    M.get_field ~(| message, "current_target" |)
+  |) ]] in
+  do* M.assign "evm" [[
+    M.get_local ~(| "process_message" |) ~(|
+      message,
+      env
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition process_message : M unit :=
+Definition process_message (message : Message) (env : Environment) : M Evm :=
   (*
       Executes a call to create a smart contract.
 
@@ -107,23 +113,25 @@ Definition process_message : M unit :=
           Items containing execution specific objects
       *)
   (* TODO statement *)
-  do* state.begin_transaction (|
-    env.["state"]
-  |) in
-  do* state.touch_account (|
-    env.["state"],
-    message.["current_target"]
-  |) in
+  do* [[ state.begin_transaction ~(|
+    M.get_field ~(| env, "state" |)
+  |) ]] in
+  do* [[ state.touch_account ~(|
+    M.get_field ~(| env, "state" |),
+    M.get_field ~(| message, "current_target" |)
+  |) ]] in
   (* TODO statement *)
-  let* evm := execute_code (|
-    message,
-    env
-  |) in
+  do* M.assign "evm" [[
+    M.get_local ~(| "execute_code" |) ~(|
+      message,
+      env
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
+  M.pure tt.
 
-
-Definition execute_code : M unit :=
+Definition execute_code (message : Message) (env : Environment) : M Evm :=
   (*
       Executes bytecode present in the `message`.
 
@@ -139,13 +147,19 @@ Definition execute_code : M unit :=
       evm: `ethereum.vm.EVM`
           Items containing execution specific objects
       *)
-  let* code := message.["code"] in
-  let* valid_jump_destinations := runtime.get_valid_jump_destinations (|
-    code
-  |) in
-  let* evm := Evm (|
+  do* M.assign "code" [[
+    M.get_field ~(| message, "code" |) in
+  ]] in
+  do* M.assign "valid_jump_destinations" [[
+    runtime.get_valid_jump_destinations ~(|
+      M.get_local ~(| "code" |)
+    |) in
+  ]] in
+  do* M.assign "evm" [[
+    __init__.Evm ~(|
 
-  |) in
+    |) in
+  ]] in
   (* TODO statement *)
   (* TODO statement *)
-
+  M.pure tt.

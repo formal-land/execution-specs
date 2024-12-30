@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Gray Glacier fork delays the difficulty bomb. There are no other changes
 in this fork.

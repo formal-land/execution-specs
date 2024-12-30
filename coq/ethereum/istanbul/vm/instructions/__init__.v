@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 EVM Instruction Encoding (Opcodes)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

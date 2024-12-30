@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) Memory Instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -15,11 +16,12 @@ Implementations of the EVM Memory instructions.
 Require ethereum_types.bytes.
 Require ethereum_types.numeric.
 Require ethereum.utils.numeric.
-Require cancun.vm.gas.
-Require cancun.vm.memory.
-Require cancun.vm.stack.
+Require ethereum.cancun.vm.__init__.
+Require ethereum.cancun.vm.gas.
+Require ethereum.cancun.vm.memory.
+Require ethereum.cancun.vm.stack.
 
-Definition mstore : M unit :=
+Definition mstore (evm : Evm) : M unit :=
   (*
       Stores a word to memory.
       This also expands the memory, if the memory is
@@ -31,32 +33,44 @@ Definition mstore : M unit :=
           The current EVM frame.
 
       *)
-  let* start_position := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* value := stack.pop (|
-    evm.["stack"]
-  |).["to_be_bytes32"] (|
+  do* M.assign "start_position" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "value" [[
+    M.get_field ~(| stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |), "to_be_bytes32" |) ~(|
 
-  |) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+    |) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  do* memory.memory_write (|
-    evm.["memory"],
-    start_position,
-    value
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* [[ memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "start_position" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mstore8 : M unit :=
+Definition mstore8 (evm : Evm) : M unit :=
   (*
       Stores a byte to memory.
       This also expands the memory, if the memory is
@@ -68,33 +82,47 @@ Definition mstore8 : M unit :=
           The current EVM frame.
 
       *)
-  let* start_position := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* value := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "start_position" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "value" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* normalized_bytes_value := ethereum_types.bytes.Bytes (|
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
     (* TODO expression *)
-  |) in
-  do* memory.memory_write (|
-    evm.["memory"],
-    start_position,
-    normalized_bytes_value
-  |) in
-  (* TODO statement *)
+  ]] in
+  do* M.assign "normalized_bytes_value" [[
+    ethereum_types.bytes.Bytes ~(|
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "start_position" |),
+    M.get_local ~(| "normalized_bytes_value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mload : M unit :=
+Definition mload (evm : Evm) : M unit :=
   (*
       Load word from memory.
 
@@ -104,35 +132,47 @@ Definition mload : M unit :=
           The current EVM frame.
 
       *)
-  let* start_position := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "start_position" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* value := ethereum_types.numeric.U256.["from_be_bytes"] (|
-    memory.memory_read_bytes (|
-      evm.["memory"],
-      start_position,
-      ethereum_types.numeric.U256 (|
-        (* TODO expression *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "value" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.memory_read_bytes ~(|
+        M.get_field ~(| evm, "memory" |),
+        M.get_local ~(| "start_position" |),
+        ethereum_types.numeric.U256 ~(|
+          32
+        |)
       |)
+    |) in
+  ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
     |)
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    value
-  |) in
-  (* TODO statement *)
+  ]] in
+  M.pure tt.
 
-
-Definition msize : M unit :=
+Definition msize (evm : Evm) : M unit :=
   (*
       Push the size of active memory in bytes onto the stack.
 
@@ -143,22 +183,26 @@ Definition msize : M unit :=
 
       *)
   (* TODO statement *)
-  do* gas.charge_gas (|
+  do* [[ gas.charge_gas ~(|
     evm,
     gas.GAS_BASE
-  |) in
-  do* stack.push (|
-    evm.["stack"],
-    ethereum_types.numeric.U256 (|
-      len (|
-        evm.["memory"]
+  |) ]] in
+  do* [[ stack.push ~(|
+    M.get_field ~(| evm, "stack" |),
+    ethereum_types.numeric.U256 ~(|
+      M.get_local ~(| "len" |) ~(|
+        M.get_field ~(| evm, "memory" |)
       |)
     |)
-  |) in
-  (* TODO statement *)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
 
-
-Definition mcopy : M unit :=
+Definition mcopy (evm : Evm) : M unit :=
   (*
       Copy the bytes in memory from one location to another.
 
@@ -168,35 +212,55 @@ Definition mcopy : M unit :=
           The current EVM frame.
 
       *)
-  let* destination := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* source := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* length := stack.pop (|
-    evm.["stack"]
-  |) in
-  let* words := (* TODO expression *) in
-  let* copy_gas_cost := (* TODO expression *) in
-  let* extend_memory := gas.calculate_gas_extend_memory (|
-    evm.["memory"],
-    (* TODO expression *)
-  |) in
-  do* gas.charge_gas (|
+  do* M.assign "destination" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "source" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "length" [[
+    stack.pop ~(|
+      M.get_field ~(| evm, "stack" |)
+    |) in
+  ]] in
+  do* M.assign "words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "copy_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "extend_memory" [[
+    gas.calculate_gas_extend_memory ~(|
+      M.get_field ~(| evm, "memory" |),
+      (* TODO expression *)
+    |) in
+  ]] in
+  do* [[ gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
-  (* TODO statement *)
-  let* value := memory.memory_read_bytes (|
-    evm.["memory"],
-    source,
-    length
-  |) in
-  do* memory.memory_write (|
-    evm.["memory"],
-    destination,
-    value
-  |) in
-  (* TODO statement *)
-
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "memory" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  do* M.assign "value" [[
+    memory.memory_read_bytes ~(|
+      M.get_field ~(| evm, "memory" |),
+      M.get_local ~(| "source" |),
+      M.get_local ~(| "length" |)
+    |) in
+  ]] in
+  do* [[ memory.memory_write ~(|
+    M.get_field ~(| evm, "memory" |),
+    M.get_local ~(| "destination" |),
+    M.get_local ~(| "value" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

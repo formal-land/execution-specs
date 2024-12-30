@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 The Spurious Dragon fork is the second of two forks responding to a
 denial-of-service attack on the Ethereum network. It tunes the prices of EVM

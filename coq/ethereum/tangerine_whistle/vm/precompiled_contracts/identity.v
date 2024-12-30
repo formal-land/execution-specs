@@ -1,3 +1,4 @@
+(* Generated *)
 (*
 Ethereum Virtual Machine (EVM) IDENTITY PRECOMPILED CONTRACT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -14,10 +15,10 @@ Implementation of the `IDENTITY` precompiled contract.
 
 Require ethereum_types.numeric.
 Require ethereum.utils.numeric.
-Require tangerine_whistle.vm.
-Require tangerine_whistle.vm.gas.
+Require ethereum.tangerine_whistle.vm.
+Require ethereum.tangerine_whistle.vm.gas.
 
-Definition identity : M unit :=
+Definition identity (evm : Evm) : M unit :=
   (*
       Writes the message data to output.
 
@@ -26,11 +27,15 @@ Definition identity : M unit :=
       evm :
           The current EVM frame.
       *)
-  let* data := evm.["message"].["data"] in
-  let* word_count := (* TODO expression *) in
-  do* vm.gas.charge_gas (|
+  do* M.assign "data" [[
+    M.get_field ~(| M.get_field ~(| evm, "message" |), "data" |) in
+  ]] in
+  do* M.assign "word_count" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ vm.gas.charge_gas ~(|
     evm,
     (* TODO expression *)
-  |) in
+  |) ]] in
   (* TODO assignment *)
-
+  M.pure tt.

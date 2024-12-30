@@ -1,0 +1,828 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nTool to create a new fork using the latest fork\n')),
+        Import(
+            names=[
+                alias(name='argparse')]),
+        Import(
+            names=[
+                alias(name='fnmatch')]),
+        Import(
+            names=[
+                alias(name='os')]),
+        Import(
+            names=[
+                alias(name='re')]),
+        ImportFrom(
+            module='shutil',
+            names=[
+                alias(name='copytree')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Tuple')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='DESCRIPTION', ctx=Store())],
+            value=Constant(value='\nCreates the base code for a new fork by using the existing code from a given fork.\n\n\nThe ethereum-spec-new-fork command takes 4 arguments, 2 of which are optional\n    from_fork: The fork name from which the code is to be duplicated Eg - "Tangerine Whistle"\n    to_fork: The fork name of the new fork Eg - "Spurious Dragon"\n    from_test(Optional): Name of the from fork within the test fixtures in case it is different from fork name Eg - "EIP150"\n    to_test(Optional): Name of the to fork within the test fixtures in case it is different from fork name Eg - "EIP158"\n\n\nIf one wants to create the spurious dragon fork from the tangerine whistle one\n    ethereum-spec-new-fork --from_fork="Tangerine Whistle" --to_fork="Spurious Dragon" --from_test=EIP150 --to_test=EIP158\n\nThe following will have to however, be updated manually\n    1. The fork number and MAINNET_FORK_BLOCK in __init__.py\n    2. Any absolute package imports from other forks eg. in trie.py\n    3. Package Names under setup.cfg\n    4. Add the new fork to the monkey_patch() function in src/ethereum_optimized/__init__.py\n    5. Adjust the underline in fork/__init__.py\n')),
+        Assign(
+            targets=[
+                Name(id='parser', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='argparse', ctx=Load()),
+                    attr='ArgumentParser',
+                    ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='description',
+                        value=Name(id='DESCRIPTION', ctx=Load())),
+                    keyword(
+                        arg='formatter_class',
+                        value=Attribute(
+                            value=Name(id='argparse', ctx=Load()),
+                            attr='RawDescriptionHelpFormatter',
+                            ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='--from_fork')],
+                keywords=[
+                    keyword(
+                        arg='dest',
+                        value=Constant(value='from_fork')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load())),
+                    keyword(
+                        arg='required',
+                        value=Constant(value=True))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='--to_fork')],
+                keywords=[
+                    keyword(
+                        arg='dest',
+                        value=Constant(value='to_fork')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load())),
+                    keyword(
+                        arg='required',
+                        value=Constant(value=True))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='--from_test')],
+                keywords=[
+                    keyword(
+                        arg='dest',
+                        value=Constant(value='from_test')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='--to_test')],
+                keywords=[
+                    keyword(
+                        arg='dest',
+                        value=Constant(value='to_test')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load()))])),
+        FunctionDef(
+            name='find_replace',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='dir',
+                        annotation=Name(id='str', ctx=Load())),
+                    arg(
+                        arg='find',
+                        annotation=Name(id='str', ctx=Load())),
+                    arg(
+                        arg='replace',
+                        annotation=Name(id='str', ctx=Load())),
+                    arg(
+                        arg='file_pattern',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Replace the occurrence of a certain text in files with a new text\n    ')),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='path', ctx=Store()),
+                            Name(id='_', ctx=Store()),
+                            Name(id='files', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Name(id='os', ctx=Load()),
+                            attr='walk',
+                            ctx=Load()),
+                        args=[
+                            Name(id='dir', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        For(
+                            target=Name(id='filename', ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Name(id='fnmatch', ctx=Load()),
+                                    attr='filter',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='files', ctx=Load()),
+                                    Name(id='file_pattern', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='file_path', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='os', ctx=Load()),
+                                                attr='path',
+                                                ctx=Load()),
+                                            attr='join',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='path', ctx=Load()),
+                                            Name(id='filename', ctx=Load())],
+                                        keywords=[])),
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Name(id='file_path', ctx=Load()),
+                                                    Constant(value='r+b')],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='s', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='f', ctx=Load()),
+                                                    attr='read',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Name(id='find_pattern', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=BinOp(
+                                                        left=BinOp(
+                                                            left=Constant(value='\\b'),
+                                                            op=Add(),
+                                                            right=Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='re', ctx=Load()),
+                                                                    attr='escape',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Name(id='find', ctx=Load())],
+                                                                keywords=[])),
+                                                        op=Add(),
+                                                        right=Constant(value='\\b')),
+                                                    attr='encode',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Name(id='s', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='re', ctx=Load()),
+                                                    attr='sub',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='find_pattern', ctx=Load()),
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='replace', ctx=Load()),
+                                                            attr='encode',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[]),
+                                                    Name(id='s', ctx=Load())],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='f', ctx=Load()),
+                                                    attr='seek',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='f', ctx=Load()),
+                                                    attr='write',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='s', ctx=Load())],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='f', ctx=Load()),
+                                                    attr='truncate',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))])],
+                            orelse=[])],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        ClassDef(
+            name='ForkCreator',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Object to create base code for a new fork from the previous fork.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='from_fork',
+                                annotation=Name(id='str', ctx=Load())),
+                            arg(
+                                arg='to_fork',
+                                annotation=Name(id='str', ctx=Load())),
+                            arg(
+                                arg='from_test_names',
+                                annotation=Name(id='str', ctx=Load())),
+                            arg(
+                                arg='to_test_names',
+                                annotation=Name(id='str', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='package_folder',
+                                    ctx=Store())],
+                            value=Constant(value='src/ethereum')),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='test_folder',
+                                    ctx=Store())],
+                            value=Constant(value='tests')),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='from_fork',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='from_package',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='from_path',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='from_test_path',
+                                            ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='get_fork_paths',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='from_fork', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='to_fork',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='to_package',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='to_path',
+                                            ctx=Store()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='to_test_path',
+                                            ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='get_fork_paths',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='to_fork', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='from_test_names',
+                                    ctx=Store())],
+                            value=Name(id='from_test_names', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='to_test_names',
+                                    ctx=Store())],
+                            value=Name(id='to_test_names', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='get_fork_paths',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='fork',
+                                annotation=Name(id='str', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Get the relevant paths for all folders in a particular fork.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='name', ctx=Store())],
+                            value=Name(id='fork', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='package', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='name', ctx=Load()),
+                                            attr='replace',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=' '),
+                                            Constant(value='_')],
+                                        keywords=[]),
+                                    attr='lower',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='path', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='os', ctx=Load()),
+                                        attr='path',
+                                        ctx=Load()),
+                                    attr='join',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='package_folder',
+                                        ctx=Load()),
+                                    Name(id='package', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='test_path', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='os', ctx=Load()),
+                                        attr='path',
+                                        ctx=Load()),
+                                    attr='join',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='test_folder',
+                                        ctx=Load()),
+                                    Name(id='package', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Name(id='name', ctx=Load()),
+                                    Name(id='package', ctx=Load()),
+                                    Name(id='path', ctx=Load()),
+                                    Name(id='test_path', ctx=Load())],
+                                ctx=Load()))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='str', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='duplicate_fork',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Copy the relevant files/folders from the old fork\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Name(id='copytree', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_path',
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='copytree', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_test_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_path',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='update_new_fork_contents',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Replace references to the old fork with the new ones\n        The following however, will have to be updated manually\n            1. The fork number and MAINNET_FORK_BLOCK in __init__.py\n            2. Any absolute package imports from other forks eg. in trie.py\n            3. Package Names under setup.cfg\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_fork',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_fork',
+                                        ctx=Load()),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_package',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_package',
+                                        ctx=Load()),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_path',
+                                        ctx=Load()),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='from_fork',
+                                                ctx=Load()),
+                                            attr='lower',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='to_fork',
+                                                ctx=Load()),
+                                            attr='lower',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_test_names',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_names',
+                                        ctx=Load()),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_fork',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_fork',
+                                        ctx=Load()),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_path',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='from_package',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_package',
+                                        ctx=Load()),
+                                    Constant(value='*.py')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='find_replace', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='to_test_path',
+                                        ctx=Load()),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='from_fork',
+                                                ctx=Load()),
+                                            attr='lower',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='to_fork',
+                                                ctx=Load()),
+                                            attr='lower',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Constant(value='*.py')],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        FunctionDef(
+            name='main',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Create the new fork\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='options', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='parser', ctx=Load()),
+                            attr='parse_args',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='from_fork', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='options', ctx=Load()),
+                        attr='from_fork',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='to_fork', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='options', ctx=Load()),
+                        attr='to_fork',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='from_test', ctx=Store())],
+                    value=IfExp(
+                        test=Compare(
+                            left=Attribute(
+                                value=Name(id='options', ctx=Load()),
+                                attr='from_test',
+                                ctx=Load()),
+                            ops=[
+                                Is()],
+                            comparators=[
+                                Constant(value=None)]),
+                        body=Name(id='from_fork', ctx=Load()),
+                        orelse=Attribute(
+                            value=Name(id='options', ctx=Load()),
+                            attr='from_test',
+                            ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='to_test', ctx=Store())],
+                    value=IfExp(
+                        test=Compare(
+                            left=Attribute(
+                                value=Name(id='options', ctx=Load()),
+                                attr='to_test',
+                                ctx=Load()),
+                            ops=[
+                                Is()],
+                            comparators=[
+                                Constant(value=None)]),
+                        body=Name(id='to_fork', ctx=Load()),
+                        orelse=Attribute(
+                            value=Name(id='options', ctx=Load()),
+                            attr='to_test',
+                            ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='fork_creator', ctx=Store())],
+                    value=Call(
+                        func=Name(id='ForkCreator', ctx=Load()),
+                        args=[
+                            Name(id='from_fork', ctx=Load()),
+                            Name(id='to_fork', ctx=Load()),
+                            Name(id='from_test', ctx=Load()),
+                            Name(id='to_test', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='fork_creator', ctx=Load()),
+                            attr='duplicate_fork',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='fork_creator', ctx=Load()),
+                            attr='update_new_fork_contents',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='final_help_text', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Constant(value='\nFork `{fork}` has been successfully created.\n\nPLEASE REMEMBER TO UPDATE THE FOLLOWING MANUALLY:\n    1. The fork number and MAINNET_FORK_BLOCK in __init__.py. If you are proposing a new EIP, please set MAINNET_FORK_BLOCK to None.\n    2. Any absolute package imports from other forks. Eg. in trie.py\n    3. Package Names under setup.cfg\n    4. Add the new fork to the monkey_patch() function in src/ethereum_optimized/__init__.py\n    5. Adjust the underline in src/{package}/__init__.py\n'),
+                            attr='format',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='fork',
+                                value=Attribute(
+                                    value=Name(id='fork_creator', ctx=Load()),
+                                    attr='to_fork',
+                                    ctx=Load())),
+                            keyword(
+                                arg='package',
+                                value=Attribute(
+                                    value=Name(id='fork_creator', ctx=Load()),
+                                    attr='to_package',
+                                    ctx=Load()))])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='final_help_text', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        If(
+            test=Compare(
+                left=Name(id='__name__', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='__main__')]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='main', ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])
