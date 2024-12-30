@@ -1,0 +1,498 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nDefines EVM tools for use in the Ethereum specification.\n')),
+        Import(
+            names=[
+                alias(name='argparse')]),
+        Import(
+            names=[
+                alias(name='subprocess')]),
+        Import(
+            names=[
+                alias(name='sys')]),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='Sequence'),
+                alias(name='Text'),
+                alias(name='TextIO')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='__version__')],
+            level=0),
+        ImportFrom(
+            module='b11r',
+            names=[
+                alias(name='B11R'),
+                alias(name='b11r_arguments')],
+            level=1),
+        ImportFrom(
+            module='daemon',
+            names=[
+                alias(name='Daemon'),
+                alias(name='daemon_arguments')],
+            level=1),
+        ImportFrom(
+            module='statetest',
+            names=[
+                alias(name='StateTest'),
+                alias(name='state_test_arguments')],
+            level=1),
+        ImportFrom(
+            module='t8n',
+            names=[
+                alias(name='T8N'),
+                alias(name='t8n_arguments')],
+            level=1),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='get_supported_forks')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='DESCRIPTION', ctx=Store())],
+            value=BinOp(
+                left=Constant(value='\nThis is the EVM tool for execution specs. The EVM tool\nprovides a few useful subcommands to facilitate testing\nat the EVM layer.\n\nPlease refer to the following link for more information:\nhttps://github.com/ethereum/go-ethereum/blob/master/cmd/evm/README.md\n\nYou can use this to run the following tools:\n    1. t8n: A stateless state transition utility.\n    2. b11r: The tool is used to assemble and seal full block rlps.\n\n\nThe following forks are supported:\n'),
+                op=Add(),
+                right=Call(
+                    func=Attribute(
+                        value=Constant(value='\n'),
+                        attr='join',
+                        ctx=Load()),
+                    args=[
+                        Call(
+                            func=Name(id='get_supported_forks', ctx=Load()),
+                            args=[],
+                            keywords=[])],
+                    keywords=[]))),
+        FunctionDef(
+            name='create_parser',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Create a command-line argument parser for the evm tool.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='new_parser', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='argparse', ctx=Load()),
+                            attr='ArgumentParser',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='description',
+                                value=Name(id='DESCRIPTION', ctx=Load())),
+                            keyword(
+                                arg='formatter_class',
+                                value=Attribute(
+                                    value=Name(id='argparse', ctx=Load()),
+                                    attr='RawDescriptionHelpFormatter',
+                                    ctx=Load()))])),
+                Assign(
+                    targets=[
+                        Name(id='commit_hash', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_git_commit_hash', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='new_parser', ctx=Load()),
+                            attr='add_argument',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='-v'),
+                            Constant(value='--version')],
+                        keywords=[
+                            keyword(
+                                arg='action',
+                                value=Constant(value='version')),
+                            keyword(
+                                arg='version',
+                                value=JoinedStr(
+                                    values=[
+                                        Constant(value='%(prog)s '),
+                                        FormattedValue(
+                                            value=Name(id='__version__', ctx=Load()),
+                                            conversion=-1),
+                                        Constant(value=' (Git commit: '),
+                                        FormattedValue(
+                                            value=Name(id='commit_hash', ctx=Load()),
+                                            conversion=-1),
+                                        Constant(value=')')])),
+                            keyword(
+                                arg='help',
+                                value=Constant(value='Show the version of the tool.'))])),
+                Assign(
+                    targets=[
+                        Name(id='subparsers', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='new_parser', ctx=Load()),
+                            attr='add_subparsers',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='dest',
+                                value=Constant(value='evm_tool'))])),
+                Expr(
+                    value=Call(
+                        func=Name(id='daemon_arguments', ctx=Load()),
+                        args=[
+                            Name(id='subparsers', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='t8n_arguments', ctx=Load()),
+                        args=[
+                            Name(id='subparsers', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='b11r_arguments', ctx=Load()),
+                        args=[
+                            Name(id='subparsers', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='state_test_arguments', ctx=Load()),
+                        args=[
+                            Name(id='subparsers', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Name(id='new_parser', ctx=Load()))],
+            decorator_list=[],
+            returns=Attribute(
+                value=Name(id='argparse', ctx=Load()),
+                attr='ArgumentParser',
+                ctx=Load())),
+        FunctionDef(
+            name='get_git_commit_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Run the 'git rev-parse HEAD' command to get the commit hash\n    ")),
+                Try(
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='subprocess', ctx=Load()),
+                                    attr='run',
+                                    ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value='git'),
+                                            Constant(value='rev-parse'),
+                                            Constant(value='HEAD')],
+                                        ctx=Load())],
+                                keywords=[
+                                    keyword(
+                                        arg='stdout',
+                                        value=Attribute(
+                                            value=Name(id='subprocess', ctx=Load()),
+                                            attr='PIPE',
+                                            ctx=Load())),
+                                    keyword(
+                                        arg='stderr',
+                                        value=Attribute(
+                                            value=Name(id='subprocess', ctx=Load()),
+                                            attr='PIPE',
+                                            ctx=Load())),
+                                    keyword(
+                                        arg='text',
+                                        value=Constant(value=True)),
+                                    keyword(
+                                        arg='check',
+                                        value=Constant(value=True))])),
+                        Assign(
+                            targets=[
+                                Name(id='commit_hash', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='result', ctx=Load()),
+                                        attr='stdout',
+                                        ctx=Load()),
+                                    attr='strip',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Return(
+                            value=Name(id='commit_hash', ctx=Load()))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='FileNotFoundError', ctx=Load()),
+                            name='e',
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='str', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[]))]),
+                        ExceptHandler(
+                            type=Attribute(
+                                value=Name(id='subprocess', ctx=Load()),
+                                attr='CalledProcessError',
+                                ctx=Load()),
+                            name='e',
+                            body=[
+                                Return(
+                                    value=BinOp(
+                                        left=Constant(value='Error: '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='e', ctx=Load())],
+                                            keywords=[])))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Name(id='str', ctx=Load())),
+        FunctionDef(
+            name='main',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='args',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Sequence', ctx=Load()),
+                                slice=Name(id='Text', ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='out_file',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='TextIO', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='in_file',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='TextIO', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None),
+                    Constant(value=None),
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Constant(value='Run the tools based on the given options.')),
+                Assign(
+                    targets=[
+                        Name(id='parser', ctx=Store())],
+                    value=Call(
+                        func=Name(id='create_parser', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='options', ctx=Store()),
+                                Name(id='_', ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='parser', ctx=Load()),
+                            attr='parse_known_args',
+                            ctx=Load()),
+                        args=[
+                            Name(id='args', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='out_file', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='out_file', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='sys', ctx=Load()),
+                                attr='stdout',
+                                ctx=Load()))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Name(id='in_file', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='in_file', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='sys', ctx=Load()),
+                                attr='stdin',
+                                ctx=Load()))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='options', ctx=Load()),
+                            attr='evm_tool',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='t8n')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='t8n_tool', ctx=Store())],
+                            value=Call(
+                                func=Name(id='T8N', ctx=Load()),
+                                args=[
+                                    Name(id='options', ctx=Load()),
+                                    Name(id='out_file', ctx=Load()),
+                                    Name(id='in_file', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='t8n_tool', ctx=Load()),
+                                    attr='run',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='evm_tool',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='b11r')]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='b11r_tool', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='B11R', ctx=Load()),
+                                        args=[
+                                            Name(id='options', ctx=Load()),
+                                            Name(id='out_file', ctx=Load()),
+                                            Name(id='in_file', ctx=Load())],
+                                        keywords=[])),
+                                Return(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='b11r_tool', ctx=Load()),
+                                            attr='run',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Attribute(
+                                            value=Name(id='options', ctx=Load()),
+                                            attr='evm_tool',
+                                            ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value='daemon')]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='daemon', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='Daemon', ctx=Load()),
+                                                args=[
+                                                    Name(id='options', ctx=Load())],
+                                                keywords=[])),
+                                        Return(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='daemon', ctx=Load()),
+                                                    attr='run',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Attribute(
+                                                    value=Name(id='options', ctx=Load()),
+                                                    attr='evm_tool',
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value='statetest')]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='state_test', ctx=Store())],
+                                                    value=Call(
+                                                        func=Name(id='StateTest', ctx=Load()),
+                                                        args=[
+                                                            Name(id='options', ctx=Load()),
+                                                            Name(id='out_file', ctx=Load()),
+                                                            Name(id='in_file', ctx=Load())],
+                                                        keywords=[])),
+                                                Return(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='state_test', ctx=Load()),
+                                                            attr='run',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='parser', ctx=Load()),
+                                                            attr='print_help',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[
+                                                            keyword(
+                                                                arg='file',
+                                                                value=Name(id='out_file', ctx=Load()))])),
+                                                Return(
+                                                    value=Constant(value=0))])])])])],
+            decorator_list=[],
+            returns=Name(id='int', ctx=Load()))],
+    type_ignores=[])

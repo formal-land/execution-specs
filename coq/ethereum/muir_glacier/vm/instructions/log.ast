@@ -1,0 +1,323 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Logging Instructions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementations of the EVM logging instructions.\n')),
+        ImportFrom(
+            module='functools',
+            names=[
+                alias(name='partial')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='blocks',
+            names=[
+                alias(name='Log')],
+            level=3),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=2),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='WriteInStaticContext')],
+            level=2),
+        ImportFrom(
+            module='gas',
+            names=[
+                alias(name='GAS_LOG'),
+                alias(name='GAS_LOG_DATA'),
+                alias(name='GAS_LOG_TOPIC'),
+                alias(name='calculate_gas_extend_memory'),
+                alias(name='charge_gas')],
+            level=2),
+        ImportFrom(
+            module='memory',
+            names=[
+                alias(name='memory_read_bytes')],
+            level=2),
+        ImportFrom(
+            module='stack',
+            names=[
+                alias(name='pop')],
+            level=2),
+        FunctionDef(
+            name='log_n',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load())),
+                    arg(
+                        arg='num_topics',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Appends a log entry, having `num_topics` topics, to the evm logs.\n\n    This will also expand the memory if the data (required by the log entry)\n    corresponding to the memory is not accessible.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n    num_topics :\n        The number of topics to be included in the log entry.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='memory_start_index', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='size', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='topics', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='_', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='num_topics', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='topic', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='pop', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='evm', ctx=Load()),
+                                                attr='stack',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    attr='to_be_bytes32',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='topics', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='topic', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='extend_memory', ctx=Store())],
+                    value=Call(
+                        func=Name(id='calculate_gas_extend_memory', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='memory',
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='memory_start_index', ctx=Load()),
+                                            Name(id='size', ctx=Load())],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Name(id='GAS_LOG', ctx=Load()),
+                                        op=Add(),
+                                        right=BinOp(
+                                            left=Name(id='GAS_LOG_DATA', ctx=Load()),
+                                            op=Mult(),
+                                            right=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Name(id='size', ctx=Load())],
+                                                keywords=[]))),
+                                    op=Add(),
+                                    right=BinOp(
+                                        left=Name(id='GAS_LOG_TOPIC', ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Name(id='num_topics', ctx=Load())],
+                                            keywords=[]))),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='extend_memory', ctx=Load()),
+                                    attr='cost',
+                                    ctx=Load()))],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='memory',
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Constant(value=b'\x00'),
+                        op=Mult(),
+                        right=Attribute(
+                            value=Name(id='extend_memory', ctx=Load()),
+                            attr='expand_by',
+                            ctx=Load()))),
+                If(
+                    test=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='is_static',
+                        ctx=Load()),
+                    body=[
+                        Raise(
+                            exc=Name(id='WriteInStaticContext', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='log_entry', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Log', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='address',
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='message',
+                                        ctx=Load()),
+                                    attr='current_target',
+                                    ctx=Load())),
+                            keyword(
+                                arg='topics',
+                                value=Call(
+                                    func=Name(id='tuple', ctx=Load()),
+                                    args=[
+                                        Name(id='topics', ctx=Load())],
+                                    keywords=[])),
+                            keyword(
+                                arg='data',
+                                value=Call(
+                                    func=Name(id='memory_read_bytes', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='memory',
+                                            ctx=Load()),
+                                        Name(id='memory_start_index', ctx=Load()),
+                                        Name(id='size', ctx=Load())],
+                                    keywords=[]))])),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='logs',
+                            ctx=Store())],
+                    value=BinOp(
+                        left=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='logs',
+                            ctx=Load()),
+                        op=Add(),
+                        right=Tuple(
+                            elts=[
+                                Name(id='log_entry', ctx=Load())],
+                            ctx=Load()))),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        Assign(
+            targets=[
+                Name(id='log0', ctx=Store())],
+            value=Call(
+                func=Name(id='partial', ctx=Load()),
+                args=[
+                    Name(id='log_n', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='num_topics',
+                        value=Constant(value=0))])),
+        Assign(
+            targets=[
+                Name(id='log1', ctx=Store())],
+            value=Call(
+                func=Name(id='partial', ctx=Load()),
+                args=[
+                    Name(id='log_n', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='num_topics',
+                        value=Constant(value=1))])),
+        Assign(
+            targets=[
+                Name(id='log2', ctx=Store())],
+            value=Call(
+                func=Name(id='partial', ctx=Load()),
+                args=[
+                    Name(id='log_n', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='num_topics',
+                        value=Constant(value=2))])),
+        Assign(
+            targets=[
+                Name(id='log3', ctx=Store())],
+            value=Call(
+                func=Name(id='partial', ctx=Load()),
+                args=[
+                    Name(id='log_n', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='num_topics',
+                        value=Constant(value=3))])),
+        Assign(
+            targets=[
+                Name(id='log4', ctx=Store())],
+            value=Call(
+                func=Name(id='partial', ctx=Load()),
+                args=[
+                    Name(id='log_n', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='num_topics',
+                        value=Constant(value=4))]))],
+    type_ignores=[])

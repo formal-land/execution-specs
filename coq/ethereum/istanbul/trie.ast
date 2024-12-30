@@ -1,0 +1,1618 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nState Trie\n^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThe state trie is the structure responsible for storing\n`.fork_types.Account` objects.\n')),
+        Import(
+            names=[
+                alias(name='copy')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass'),
+                alias(name='field')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Callable'),
+                alias(name='Dict'),
+                alias(name='Generic'),
+                alias(name='List'),
+                alias(name='Mapping'),
+                alias(name='MutableMapping'),
+                alias(name='Optional'),
+                alias(name='Sequence'),
+                alias(name='TypeVar'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='slotted_freezable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.constantinople',
+            names=[
+                alias(name='trie', asname='previous_trie')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='rlp')],
+            level=2),
+        ImportFrom(
+            module='blocks',
+            names=[
+                alias(name='Receipt')],
+            level=1),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Account'),
+                alias(name='Address'),
+                alias(name='Root'),
+                alias(name='encode_account')],
+            level=1),
+        ImportFrom(
+            module='transactions',
+            names=[
+                alias(name='Transaction')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='EMPTY_TRIE_ROOT', ctx=Store())],
+            value=Call(
+                func=Name(id='Root', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hex_to_bytes', ctx=Load()),
+                        args=[
+                            Constant(value='56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421')],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='Node', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Account', ctx=Load()),
+                        Name(id='Bytes', ctx=Load()),
+                        Name(id='Transaction', ctx=Load()),
+                        Name(id='Receipt', ctx=Load()),
+                        Name(id='Uint', ctx=Load()),
+                        Name(id='U256', ctx=Load()),
+                        Constant(value=None)],
+                    ctx=Load()),
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='K', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='K')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Name(id='Bytes', ctx=Load()))])),
+        Assign(
+            targets=[
+                Name(id='V', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='V'),
+                    Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Account', ctx=Load()),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Bytes', ctx=Load()),
+                        ctx=Load()),
+                    Name(id='Bytes', ctx=Load()),
+                    Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Transaction', ctx=Load()),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Receipt', ctx=Load()),
+                        ctx=Load()),
+                    Name(id='Uint', ctx=Load()),
+                    Name(id='U256', ctx=Load())],
+                keywords=[])),
+        ClassDef(
+            name='LeafNode',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Leaf node in the Merkle Trie')),
+                AnnAssign(
+                    target=Name(id='rest_of_key', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='value', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='ExtensionNode',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Extension node in the Merkle Trie')),
+                AnnAssign(
+                    target=Name(id='key_segment', ctx=Store()),
+                    annotation=Name(id='Bytes', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='subnode', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='BranchNode',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Branch node in the Merkle Trie')),
+                AnnAssign(
+                    target=Name(id='subnodes', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Attribute(
+                            value=Name(id='rlp', ctx=Load()),
+                            attr='Extended',
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='value', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        Assign(
+            targets=[
+                Name(id='InternalNode', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='LeafNode', ctx=Load()),
+                        Name(id='ExtensionNode', ctx=Load()),
+                        Name(id='BranchNode', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='encode_internal_node',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='node',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='InternalNode', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encodes a Merkle Trie node into its RLP form. The RLP will then be\n    serialized into a `Bytes` and hashed unless it is less that 32 bytes\n    when serialized.\n\n    This function also accepts `None`, representing the absence of a node,\n    which is encoded to `b""`.\n\n    Parameters\n    ----------\n    node : Optional[InternalNode]\n        The node to encode.\n\n    Returns\n    -------\n    encoded : `rlp.RLP`\n        The node encoded as RLP.\n    ')),
+                AnnAssign(
+                    target=Name(id='unencoded', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='rlp', ctx=Load()),
+                        attr='Extended',
+                        ctx=Load()),
+                    simple=1),
+                If(
+                    test=Compare(
+                        left=Name(id='node', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='unencoded', ctx=Store())],
+                            value=Constant(value=b''))],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='node', ctx=Load()),
+                                    Name(id='LeafNode', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='unencoded', ctx=Store())],
+                                    value=Tuple(
+                                        elts=[
+                                            Call(
+                                                func=Name(id='nibble_list_to_compact', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='node', ctx=Load()),
+                                                        attr='rest_of_key',
+                                                        ctx=Load()),
+                                                    Constant(value=True)],
+                                                keywords=[]),
+                                            Attribute(
+                                                value=Name(id='node', ctx=Load()),
+                                                attr='value',
+                                                ctx=Load())],
+                                        ctx=Load()))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='node', ctx=Load()),
+                                            Name(id='ExtensionNode', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='unencoded', ctx=Store())],
+                                            value=Tuple(
+                                                elts=[
+                                                    Call(
+                                                        func=Name(id='nibble_list_to_compact', ctx=Load()),
+                                                        args=[
+                                                            Attribute(
+                                                                value=Name(id='node', ctx=Load()),
+                                                                attr='key_segment',
+                                                                ctx=Load()),
+                                                            Constant(value=False)],
+                                                        keywords=[]),
+                                                    Attribute(
+                                                        value=Name(id='node', ctx=Load()),
+                                                        attr='subnode',
+                                                        ctx=Load())],
+                                                ctx=Load()))],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='node', ctx=Load()),
+                                                    Name(id='BranchNode', ctx=Load())],
+                                                keywords=[]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='unencoded', ctx=Store())],
+                                                    value=BinOp(
+                                                        left=Attribute(
+                                                            value=Name(id='node', ctx=Load()),
+                                                            attr='subnodes',
+                                                            ctx=Load()),
+                                                        op=Add(),
+                                                        right=List(
+                                                            elts=[
+                                                                Attribute(
+                                                                    value=Name(id='node', ctx=Load()),
+                                                                    attr='value',
+                                                                    ctx=Load())],
+                                                            ctx=Load())))],
+                                            orelse=[
+                                                Raise(
+                                                    exc=Call(
+                                                        func=Name(id='AssertionError', ctx=Load()),
+                                                        args=[
+                                                            JoinedStr(
+                                                                values=[
+                                                                    Constant(value='Invalid internal node type '),
+                                                                    FormattedValue(
+                                                                        value=Call(
+                                                                            func=Name(id='type', ctx=Load()),
+                                                                            args=[
+                                                                                Name(id='node', ctx=Load())],
+                                                                            keywords=[]),
+                                                                        conversion=-1),
+                                                                    Constant(value='!')])],
+                                                        keywords=[]))])])])]),
+                Assign(
+                    targets=[
+                        Name(id='encoded', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='rlp', ctx=Load()),
+                            attr='encode',
+                            ctx=Load()),
+                        args=[
+                            Name(id='unencoded', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='encoded', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=32)]),
+                    body=[
+                        Return(
+                            value=Name(id='unencoded', ctx=Load()))],
+                    orelse=[
+                        Return(
+                            value=Call(
+                                func=Name(id='keccak256', ctx=Load()),
+                                args=[
+                                    Name(id='encoded', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Attribute(
+                value=Name(id='rlp', ctx=Load()),
+                attr='Extended',
+                ctx=Load())),
+        FunctionDef(
+            name='encode_node',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='node',
+                        annotation=Name(id='Node', ctx=Load())),
+                    arg(
+                        arg='storage_root',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='Bytes', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encode a Node for storage in the Merkle Trie.\n\n    Currently mostly an unimplemented stub.\n    ')),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='node', ctx=Load()),
+                            Name(id='Account', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assert(
+                            test=Compare(
+                                left=Name(id='storage_root', ctx=Load()),
+                                ops=[
+                                    IsNot()],
+                                comparators=[
+                                    Constant(value=None)])),
+                        Return(
+                            value=Call(
+                                func=Name(id='encode_account', ctx=Load()),
+                                args=[
+                                    Name(id='node', ctx=Load()),
+                                    Name(id='storage_root', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='node', ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='Transaction', ctx=Load()),
+                                            Name(id='Receipt', ctx=Load()),
+                                            Name(id='U256', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='rlp', ctx=Load()),
+                                            attr='encode',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='node', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='node', ctx=Load()),
+                                            Name(id='Bytes', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Return(
+                                            value=Name(id='node', ctx=Load()))],
+                                    orelse=[
+                                        Return(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='previous_trie', ctx=Load()),
+                                                    attr='encode_node',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='node', ctx=Load()),
+                                                    Name(id='storage_root', ctx=Load())],
+                                                keywords=[]))])])])],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        ClassDef(
+            name='Trie',
+            bases=[
+                Subscript(
+                    value=Name(id='Generic', ctx=Load()),
+                    slice=Tuple(
+                        elts=[
+                            Name(id='K', ctx=Load()),
+                            Name(id='V', ctx=Load())],
+                        ctx=Load()),
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The Merkle Trie.\n    ')),
+                AnnAssign(
+                    target=Name(id='secured', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='default', ctx=Store()),
+                    annotation=Name(id='V', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='_data', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='K', ctx=Load()),
+                                Name(id='V', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Call(
+                        func=Name(id='field', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='default_factory',
+                                value=Name(id='dict', ctx=Load()))]),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='copy_trie',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trie',
+                        annotation=Subscript(
+                            value=Name(id='Trie', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='K', ctx=Load()),
+                                    Name(id='V', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Create a copy of `trie`. Since only frozen objects may be stored in tries,\n    the contents are reused.\n\n    Parameters\n    ----------\n    trie: `Trie`\n        Trie to copy.\n\n    Returns\n    -------\n    new_trie : `Trie[K, V]`\n        A copy of the trie.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Trie', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='secured',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='default',
+                                ctx=Load()),
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='copy', ctx=Load()),
+                                    attr='copy',
+                                    ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='trie', ctx=Load()),
+                                        attr='_data',
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Trie', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='K', ctx=Load()),
+                        Name(id='V', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='trie_set',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trie',
+                        annotation=Subscript(
+                            value=Name(id='Trie', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='K', ctx=Load()),
+                                    Name(id='V', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='key',
+                        annotation=Name(id='K', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='V', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Stores an item in a Merkle Trie.\n\n    This method deletes the key if `value == trie.default`, because the Merkle\n    Trie represents the default value by omitting it from the trie.\n\n    Parameters\n    ----------\n    trie: `Trie`\n        Trie to store in.\n    key : `Bytes`\n        Key to lookup.\n    value : `V`\n        Node to insert at `key`.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='value', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='default',
+                                ctx=Load())]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='key', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='trie', ctx=Load()),
+                                        attr='_data',
+                                        ctx=Load())]),
+                            body=[
+                                Delete(
+                                    targets=[
+                                        Subscript(
+                                            value=Attribute(
+                                                value=Name(id='trie', ctx=Load()),
+                                                attr='_data',
+                                                ctx=Load()),
+                                            slice=Name(id='key', ctx=Load()),
+                                            ctx=Del())])],
+                            orelse=[])],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='trie', ctx=Load()),
+                                        attr='_data',
+                                        ctx=Load()),
+                                    slice=Name(id='key', ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='value', ctx=Load()))])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='trie_get',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trie',
+                        annotation=Subscript(
+                            value=Name(id='Trie', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='K', ctx=Load()),
+                                    Name(id='V', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='key',
+                        annotation=Name(id='K', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Gets an item from the Merkle Trie.\n\n    This method returns `trie.default` if the key is missing.\n\n    Parameters\n    ----------\n    trie:\n        Trie to lookup in.\n    key :\n        Key to lookup.\n\n    Returns\n    -------\n    node : `V`\n        Node at `key` in the trie.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='_data',
+                                ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Name(id='key', ctx=Load()),
+                            Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='default',
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='V', ctx=Load())),
+        FunctionDef(
+            name='common_prefix_length',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='a',
+                        annotation=Name(id='Sequence', ctx=Load())),
+                    arg(
+                        arg='b',
+                        annotation=Name(id='Sequence', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Find the longest common prefix of two sequences.\n    ')),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='a', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Compare(
+                                        left=Name(id='i', ctx=Load()),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='len', ctx=Load()),
+                                                args=[
+                                                    Name(id='b', ctx=Load())],
+                                                keywords=[])]),
+                                    Compare(
+                                        left=Subscript(
+                                            value=Name(id='a', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        ops=[
+                                            NotEq()],
+                                        comparators=[
+                                            Subscript(
+                                                value=Name(id='b', ctx=Load()),
+                                                slice=Name(id='i', ctx=Load()),
+                                                ctx=Load())])]),
+                            body=[
+                                Return(
+                                    value=Name(id='i', ctx=Load()))],
+                            orelse=[])],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='int', ctx=Load())),
+        FunctionDef(
+            name='nibble_list_to_compact',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='x',
+                        annotation=Name(id='Bytes', ctx=Load())),
+                    arg(
+                        arg='is_leaf',
+                        annotation=Name(id='bool', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Compresses nibble-list into a standard byte array with a flag.\n\n    A nibble-list is a list of byte values no greater than `15`. The flag is\n    encoded in high nibble of the highest byte. The flag nibble can be broken\n    down into two two-bit flags.\n\n    Highest nibble::\n\n        +---+---+----------+--------+\n        | _ | _ | is_leaf | parity |\n        +---+---+----------+--------+\n          3   2      1         0\n\n\n    The lowest bit of the nibble encodes the parity of the length of the\n    remaining nibbles -- `0` when even and `1` when odd. The second lowest bit\n    is used to distinguish leaf and extension nodes. The other two bits are not\n    used.\n\n    Parameters\n    ----------\n    x :\n        Array of nibbles.\n    is_leaf :\n        True if this is part of a leaf node, or false if it is an extension\n        node.\n\n    Returns\n    -------\n    compressed : `bytearray`\n        Compact byte array.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='compact', ctx=Store())],
+                    value=Call(
+                        func=Name(id='bytearray', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=BinOp(
+                            left=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load())],
+                                keywords=[]),
+                            op=Mod(),
+                            right=Constant(value=2)),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='compact', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=16),
+                                        op=Mult(),
+                                        right=BinOp(
+                                            left=Constant(value=2),
+                                            op=Mult(),
+                                            right=Name(id='is_leaf', ctx=Load())))],
+                                keywords=[])),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=0),
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value=2)],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='compact', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=BinOp(
+                                                    left=Constant(value=16),
+                                                    op=Mult(),
+                                                    right=Subscript(
+                                                        value=Name(id='x', ctx=Load()),
+                                                        slice=Name(id='i', ctx=Load()),
+                                                        ctx=Load())),
+                                                op=Add(),
+                                                right=Subscript(
+                                                    value=Name(id='x', ctx=Load()),
+                                                    slice=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Constant(value=1)),
+                                                    ctx=Load()))],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='compact', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value=16),
+                                            op=Mult(),
+                                            right=BinOp(
+                                                left=BinOp(
+                                                    left=Constant(value=2),
+                                                    op=Mult(),
+                                                    right=Name(id='is_leaf', ctx=Load())),
+                                                op=Add(),
+                                                right=Constant(value=1))),
+                                        op=Add(),
+                                        right=Subscript(
+                                            value=Name(id='x', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Load()))],
+                                keywords=[])),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=1),
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value=2)],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='compact', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=BinOp(
+                                                    left=Constant(value=16),
+                                                    op=Mult(),
+                                                    right=Subscript(
+                                                        value=Name(id='x', ctx=Load()),
+                                                        slice=Name(id='i', ctx=Load()),
+                                                        ctx=Load())),
+                                                op=Add(),
+                                                right=Subscript(
+                                                    value=Name(id='x', ctx=Load()),
+                                                    slice=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Constant(value=1)),
+                                                    ctx=Load()))],
+                                        keywords=[]))],
+                            orelse=[])]),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes', ctx=Load()),
+                        args=[
+                            Name(id='compact', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='bytes_to_nibble_list',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='bytes_',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Converts a `Bytes` into to a sequence of nibbles (bytes with value < 16).\n\n    Parameters\n    ----------\n    bytes_:\n        The `Bytes` to convert.\n\n    Returns\n    -------\n    nibble_list : `Bytes`\n        The `Bytes` in nibble-list format.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='nibble_list', ctx=Store())],
+                    value=Call(
+                        func=Name(id='bytearray', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=2),
+                                op=Mult(),
+                                right=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='bytes_', ctx=Load())],
+                                    keywords=[]))],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='byte_index', ctx=Store()),
+                            Name(id='byte', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Name(id='enumerate', ctx=Load()),
+                        args=[
+                            Name(id='bytes_', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='nibble_list', ctx=Load()),
+                                    slice=BinOp(
+                                        left=Name(id='byte_index', ctx=Load()),
+                                        op=Mult(),
+                                        right=Constant(value=2)),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='byte', ctx=Load()),
+                                    op=BitAnd(),
+                                    right=Constant(value=240)),
+                                op=RShift(),
+                                right=Constant(value=4))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='nibble_list', ctx=Load()),
+                                    slice=BinOp(
+                                        left=BinOp(
+                                            left=Name(id='byte_index', ctx=Load()),
+                                            op=Mult(),
+                                            right=Constant(value=2)),
+                                        op=Add(),
+                                        right=Constant(value=1)),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='byte', ctx=Load()),
+                                op=BitAnd(),
+                                right=Constant(value=15)))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes', ctx=Load()),
+                        args=[
+                            Name(id='nibble_list', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='_prepare_trie',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trie',
+                        annotation=Subscript(
+                            value=Name(id='Trie', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='K', ctx=Load()),
+                                    Name(id='V', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='get_storage_root',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Callable', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        List(
+                                            elts=[
+                                                Name(id='Address', ctx=Load())],
+                                            ctx=Load()),
+                                        Name(id='Root', ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Prepares the trie for root calculation. Removes values that are empty,\n    hashes the keys (if `secured == True`) and encodes all the nodes.\n\n    Parameters\n    ----------\n    trie :\n        The `Trie` to prepare.\n    get_storage_root :\n        Function to get the storage root of an account. Needed to encode\n        `Account` objects.\n\n    Returns\n    -------\n    out : `Mapping[ethereum.base_types.Bytes, Node]`\n        Object with keys mapped to nibble-byte form.\n    ')),
+                AnnAssign(
+                    target=Name(id='mapped', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='MutableMapping', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Bytes', ctx=Load()),
+                                Name(id='Bytes', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Dict(keys=[], values=[]),
+                    simple=1),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='preimage', ctx=Store()),
+                            Name(id='value', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='_data',
+                                ctx=Load()),
+                            attr='items',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='value', ctx=Load()),
+                                    Name(id='Account', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='get_storage_root', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='address', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Address', ctx=Load()),
+                                        args=[
+                                            Name(id='preimage', ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='encoded_value', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='encode_node', ctx=Load()),
+                                        args=[
+                                            Name(id='value', ctx=Load()),
+                                            Call(
+                                                func=Name(id='get_storage_root', ctx=Load()),
+                                                args=[
+                                                    Name(id='address', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='encoded_value', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='encode_node', ctx=Load()),
+                                        args=[
+                                            Name(id='value', ctx=Load())],
+                                        keywords=[]))]),
+                        If(
+                            test=Compare(
+                                left=Name(id='encoded_value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=b'')]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='AssertionError', ctx=Load()))],
+                            orelse=[]),
+                        AnnAssign(
+                            target=Name(id='key', ctx=Store()),
+                            annotation=Name(id='Bytes', ctx=Load()),
+                            simple=1),
+                        If(
+                            test=Attribute(
+                                value=Name(id='trie', ctx=Load()),
+                                attr='secured',
+                                ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='key', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='keccak256', ctx=Load()),
+                                        args=[
+                                            Name(id='preimage', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='key', ctx=Store())],
+                                    value=Name(id='preimage', ctx=Load()))]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='mapped', ctx=Load()),
+                                    slice=Call(
+                                        func=Name(id='bytes_to_nibble_list', ctx=Load()),
+                                        args=[
+                                            Name(id='key', ctx=Load())],
+                                        keywords=[]),
+                                    ctx=Store())],
+                            value=Name(id='encoded_value', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='mapped', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Mapping', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='Bytes', ctx=Load()),
+                        Name(id='Bytes', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='root',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='trie',
+                        annotation=Subscript(
+                            value=Name(id='Trie', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='K', ctx=Load()),
+                                    Name(id='V', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='get_storage_root',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Callable', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        List(
+                                            elts=[
+                                                Name(id='Address', ctx=Load())],
+                                            ctx=Load()),
+                                        Name(id='Root', ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Computes the root of a modified merkle patricia trie (MPT).\n\n    Parameters\n    ----------\n    trie :\n        `Trie` to get the root of.\n    get_storage_root :\n        Function to get the storage root of an account. Needed to encode\n        `Account` objects.\n\n\n    Returns\n    -------\n    root : `.fork_types.Root`\n        MPT root of the underlying key-value pairs.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='obj', ctx=Store())],
+                    value=Call(
+                        func=Name(id='_prepare_trie', ctx=Load()),
+                        args=[
+                            Name(id='trie', ctx=Load()),
+                            Name(id='get_storage_root', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='root_node', ctx=Store())],
+                    value=Call(
+                        func=Name(id='encode_internal_node', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='patricialize', ctx=Load()),
+                                args=[
+                                    Name(id='obj', ctx=Load()),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='rlp', ctx=Load()),
+                                        attr='encode',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='root_node', ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=32)]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='keccak256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='rlp', ctx=Load()),
+                                            attr='encode',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='root_node', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[
+                        Assert(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='root_node', ctx=Load()),
+                                    Name(id='Bytes', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Name(id='Root', ctx=Load()),
+                                args=[
+                                    Name(id='root_node', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[],
+            returns=Name(id='Root', ctx=Load())),
+        FunctionDef(
+            name='patricialize',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='obj',
+                        annotation=Subscript(
+                            value=Name(id='Mapping', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Bytes', ctx=Load()),
+                                    Name(id='Bytes', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='level',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Structural composition function.\n\n    Used to recursively patricialize and merkleize a dictionary. Includes\n    memoization of the tree structure and hashes.\n\n    Parameters\n    ----------\n    obj :\n        Underlying trie key-value pairs, with keys in nibble-list format.\n    level :\n        Current trie level.\n\n    Returns\n    -------\n    node : `ethereum.base_types.Bytes`\n        Root node of `obj`.\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='obj', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Return(
+                            value=Constant(value=None))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='arbitrary_key', ctx=Store())],
+                    value=Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='iter', ctx=Load()),
+                                args=[
+                                    Name(id='obj', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='obj', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='leaf', ctx=Store())],
+                            value=Call(
+                                func=Name(id='LeafNode', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='arbitrary_key', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Name(id='level', ctx=Load())),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='obj', ctx=Load()),
+                                        slice=Name(id='arbitrary_key', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Name(id='leaf', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='substring', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='arbitrary_key', ctx=Load()),
+                        slice=Slice(
+                            lower=Name(id='level', ctx=Load())),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='prefix_length', ctx=Store())],
+                    value=Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='substring', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Name(id='key', ctx=Store()),
+                    iter=Name(id='obj', ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='prefix_length', ctx=Store())],
+                            value=Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='prefix_length', ctx=Load()),
+                                    Call(
+                                        func=Name(id='common_prefix_length', ctx=Load()),
+                                        args=[
+                                            Name(id='substring', ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='key', ctx=Load()),
+                                                slice=Slice(
+                                                    lower=Name(id='level', ctx=Load())),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='prefix_length', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Break()],
+                            orelse=[])],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Name(id='prefix_length', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='prefix', ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='arbitrary_key', ctx=Load()),
+                                slice=Slice(
+                                    lower=Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='level', ctx=Load())],
+                                        keywords=[]),
+                                    upper=BinOp(
+                                        left=Call(
+                                            func=Name(id='int', ctx=Load()),
+                                            args=[
+                                                Name(id='level', ctx=Load())],
+                                            keywords=[]),
+                                        op=Add(),
+                                        right=Name(id='prefix_length', ctx=Load()))),
+                                ctx=Load())),
+                        Return(
+                            value=Call(
+                                func=Name(id='ExtensionNode', ctx=Load()),
+                                args=[
+                                    Name(id='prefix', ctx=Load()),
+                                    Call(
+                                        func=Name(id='encode_internal_node', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='patricialize', ctx=Load()),
+                                                args=[
+                                                    Name(id='obj', ctx=Load()),
+                                                    BinOp(
+                                                        left=Name(id='level', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Call(
+                                                            func=Name(id='Uint', ctx=Load()),
+                                                            args=[
+                                                                Name(id='prefix_length', ctx=Load())],
+                                                            keywords=[]))],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                AnnAssign(
+                    target=Name(id='branches', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='MutableMapping', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Bytes', ctx=Load()),
+                                    Name(id='Bytes', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=List(elts=[], ctx=Load()),
+                    simple=1),
+                For(
+                    target=Name(id='_', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='branches', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Dict(keys=[], values=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Constant(value=b'')),
+                For(
+                    target=Name(id='key', ctx=Store()),
+                    iter=Name(id='obj', ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='key', ctx=Load())],
+                                    keywords=[]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Name(id='level', ctx=Load())]),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='obj', ctx=Load()),
+                                                slice=Name(id='key', ctx=Load()),
+                                                ctx=Load()),
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='Account', ctx=Load()),
+                                                    Name(id='Receipt', ctx=Load()),
+                                                    Name(id='Uint', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='AssertionError', ctx=Load()))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='value', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='obj', ctx=Load()),
+                                        slice=Name(id='key', ctx=Load()),
+                                        ctx=Load()))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Subscript(
+                                                value=Name(id='branches', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='key', ctx=Load()),
+                                                    slice=Name(id='level', ctx=Load()),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            slice=Name(id='key', ctx=Load()),
+                                            ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='obj', ctx=Load()),
+                                        slice=Name(id='key', ctx=Load()),
+                                        ctx=Load()))])],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='BranchNode', ctx=Load()),
+                        args=[
+                            ListComp(
+                                elt=Call(
+                                    func=Name(id='encode_internal_node', ctx=Load()),
+                                    args=[
+                                        Call(
+                                            func=Name(id='patricialize', ctx=Load()),
+                                            args=[
+                                                Subscript(
+                                                    value=Name(id='branches', ctx=Load()),
+                                                    slice=Name(id='k', ctx=Load()),
+                                                    ctx=Load()),
+                                                BinOp(
+                                                    left=Name(id='level', ctx=Load()),
+                                                    op=Add(),
+                                                    right=Call(
+                                                        func=Name(id='Uint', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=1)],
+                                                        keywords=[]))],
+                                            keywords=[])],
+                                    keywords=[]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='k', ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='range', ctx=Load()),
+                                            args=[
+                                                Constant(value=16)],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)]),
+                            Name(id='value', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Optional', ctx=Load()),
+                slice=Name(id='InternalNode', ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])

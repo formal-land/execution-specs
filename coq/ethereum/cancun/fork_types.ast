@@ -1,0 +1,150 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Types\n^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nTypes re-used throughout the specification, which are specific to Ethereum.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes20'),
+                alias(name='Bytes256')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='slotted_freezable')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='rlp')],
+            level=2),
+        ImportFrom(
+            module='crypto.hash',
+            names=[
+                alias(name='Hash32'),
+                alias(name='keccak256')],
+            level=2),
+        Assign(
+            targets=[
+                Name(id='Address', ctx=Store())],
+            value=Name(id='Bytes20', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='Root', ctx=Store())],
+            value=Name(id='Hash32', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='VersionedHash', ctx=Store())],
+            value=Name(id='Hash32', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='Bloom', ctx=Store())],
+            value=Name(id='Bytes256', ctx=Load())),
+        ClassDef(
+            name='Account',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    State associated with an address.\n    ')),
+                AnnAssign(
+                    target=Name(id='nonce', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='balance', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='code', ctx=Store()),
+                    annotation=Name(id='bytes', ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='slotted_freezable', ctx=Load()),
+                Name(id='dataclass', ctx=Load())]),
+        Assign(
+            targets=[
+                Name(id='EMPTY_ACCOUNT', ctx=Store())],
+            value=Call(
+                func=Name(id='Account', ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='nonce',
+                        value=Call(
+                            func=Name(id='Uint', ctx=Load()),
+                            args=[
+                                Constant(value=0)],
+                            keywords=[])),
+                    keyword(
+                        arg='balance',
+                        value=Call(
+                            func=Name(id='U256', ctx=Load()),
+                            args=[
+                                Constant(value=0)],
+                            keywords=[])),
+                    keyword(
+                        arg='code',
+                        value=Call(
+                            func=Name(id='bytearray', ctx=Load()),
+                            args=[],
+                            keywords=[]))])),
+        FunctionDef(
+            name='encode_account',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='raw_account_data',
+                        annotation=Name(id='Account', ctx=Load())),
+                    arg(
+                        arg='storage_root',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Encode `Account` dataclass.\n\n    Storage is not stored in the `Account` dataclass, so `Accounts` cannot be\n    encoded without providing a storage root.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='rlp', ctx=Load()),
+                            attr='encode',
+                            ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='raw_account_data', ctx=Load()),
+                                        attr='nonce',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='raw_account_data', ctx=Load()),
+                                        attr='balance',
+                                        ctx=Load()),
+                                    Name(id='storage_root', ctx=Load()),
+                                    Call(
+                                        func=Name(id='keccak256', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='raw_account_data', ctx=Load()),
+                                                attr='code',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load()))],
+    type_ignores=[])

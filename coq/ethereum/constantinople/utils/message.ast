@@ -1,0 +1,241 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nHardfork Utility Functions For The Message Data-structure\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nMessage specific functions used in this constantinople version of\nspecification.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes0')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=2),
+        ImportFrom(
+            module='state',
+            names=[
+                alias(name='get_account')],
+            level=2),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Environment'),
+                alias(name='Message')],
+            level=2),
+        ImportFrom(
+            module='address',
+            names=[
+                alias(name='compute_contract_address')],
+            level=1),
+        FunctionDef(
+            name='prepare_message',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='caller',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='target',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Bytes0', ctx=Load()),
+                                    Name(id='Address', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='data',
+                        annotation=Name(id='Bytes', ctx=Load())),
+                    arg(
+                        arg='gas',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='env',
+                        annotation=Name(id='Environment', ctx=Load())),
+                    arg(
+                        arg='code_address',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='Address', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='should_transfer_value',
+                        annotation=Name(id='bool', ctx=Load())),
+                    arg(
+                        arg='is_static',
+                        annotation=Name(id='bool', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None),
+                    Constant(value=True),
+                    Constant(value=False)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Execute a transaction against the provided environment.\n\n    Parameters\n    ----------\n    caller :\n        Address which initiated the transaction\n    target :\n        Address whose code will be executed\n    value :\n        Value to be transferred.\n    data :\n        Array of bytes provided to the code in `target`.\n    gas :\n        Gas provided for the code in `target`.\n    env :\n        Environment for the Ethereum Virtual Machine.\n    code_address :\n        This is usually same as the `target` address except when an alternative\n        accounts code needs to be executed.\n        eg. `CALLCODE` calling a precompile.\n    should_transfer_value :\n        if True ETH should be transferred while executing a message call.\n    is_static:\n        if True then it prevents all state-changing operations from being\n        executed.\n\n    Returns\n    -------\n    message: `ethereum.constantinople.vm.Message`\n        Items containing contract creation or message call specific data.\n    ')),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='target', ctx=Load()),
+                            Name(id='Bytes0', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='current_target', ctx=Store())],
+                            value=Call(
+                                func=Name(id='compute_contract_address', ctx=Load()),
+                                args=[
+                                    Name(id='caller', ctx=Load()),
+                                    BinOp(
+                                        left=Attribute(
+                                            value=Call(
+                                                func=Name(id='get_account', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='env', ctx=Load()),
+                                                        attr='state',
+                                                        ctx=Load()),
+                                                    Name(id='caller', ctx=Load())],
+                                                keywords=[]),
+                                            attr='nonce',
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Constant(value=1)],
+                                            keywords=[]))],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='msg_data', ctx=Store())],
+                            value=Call(
+                                func=Name(id='Bytes', ctx=Load()),
+                                args=[
+                                    Constant(value=b'')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='code', ctx=Store())],
+                            value=Name(id='data', ctx=Load()))],
+                    orelse=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='target', ctx=Load()),
+                                    Name(id='Address', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='current_target', ctx=Store())],
+                                    value=Name(id='target', ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Name(id='msg_data', ctx=Store())],
+                                    value=Name(id='data', ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Name(id='code', ctx=Store())],
+                                    value=Attribute(
+                                        value=Call(
+                                            func=Name(id='get_account', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='env', ctx=Load()),
+                                                    attr='state',
+                                                    ctx=Load()),
+                                                Name(id='target', ctx=Load())],
+                                            keywords=[]),
+                                        attr='code',
+                                        ctx=Load())),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='code_address', ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='code_address', ctx=Store())],
+                                            value=Name(id='target', ctx=Load()))],
+                                    orelse=[])],
+                            orelse=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='AssertionError', ctx=Load()),
+                                        args=[
+                                            Constant(value='Target must be address or empty bytes')],
+                                        keywords=[]))])]),
+                Return(
+                    value=Call(
+                        func=Name(id='Message', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='caller',
+                                value=Name(id='caller', ctx=Load())),
+                            keyword(
+                                arg='target',
+                                value=Name(id='target', ctx=Load())),
+                            keyword(
+                                arg='gas',
+                                value=Name(id='gas', ctx=Load())),
+                            keyword(
+                                arg='value',
+                                value=Name(id='value', ctx=Load())),
+                            keyword(
+                                arg='data',
+                                value=Name(id='msg_data', ctx=Load())),
+                            keyword(
+                                arg='code',
+                                value=Name(id='code', ctx=Load())),
+                            keyword(
+                                arg='depth',
+                                value=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=0)],
+                                    keywords=[])),
+                            keyword(
+                                arg='current_target',
+                                value=Name(id='current_target', ctx=Load())),
+                            keyword(
+                                arg='code_address',
+                                value=Name(id='code_address', ctx=Load())),
+                            keyword(
+                                arg='should_transfer_value',
+                                value=Name(id='should_transfer_value', ctx=Load())),
+                            keyword(
+                                arg='is_static',
+                                value=Name(id='is_static', ctx=Load())),
+                            keyword(
+                                arg='parent_evm',
+                                value=Constant(value=None))]))],
+            decorator_list=[],
+            returns=Name(id='Message', ctx=Load()))],
+    type_ignores=[])

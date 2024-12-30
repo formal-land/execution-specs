@@ -1,0 +1,106 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nPrecompiled Contract Addresses\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nAddresses of precompiled contracts and mappings to their\nimplementations.\n')),
+        ImportFrom(
+            module='utils.hexadecimal',
+            names=[
+                alias(name='hex_to_address')],
+            level=3),
+        Assign(
+            targets=[
+                Name(id='__all__', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value='ECRECOVER_ADDRESS'),
+                    Constant(value='SHA256_ADDRESS'),
+                    Constant(value='RIPEMD160_ADDRESS'),
+                    Constant(value='IDENTITY_ADDRESS'),
+                    Constant(value='MODEXP_ADDRESS'),
+                    Constant(value='ALT_BN128_ADD_ADDRESS'),
+                    Constant(value='ALT_BN128_MUL_ADDRESS'),
+                    Constant(value='ALT_BN128_PAIRING_CHECK_ADDRESS'),
+                    Constant(value='BLAKE2F_ADDRESS'),
+                    Constant(value='POINT_EVALUATION_ADDRESS')],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='ECRECOVER_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x01')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='SHA256_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x02')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='RIPEMD160_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x03')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='IDENTITY_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x04')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='MODEXP_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x05')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='ALT_BN128_ADD_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x06')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='ALT_BN128_MUL_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x07')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='ALT_BN128_PAIRING_CHECK_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x08')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='BLAKE2F_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x09')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='POINT_EVALUATION_ADDRESS', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_address', ctx=Load()),
+                args=[
+                    Constant(value='0x0a')],
+                keywords=[]))],
+    type_ignores=[])

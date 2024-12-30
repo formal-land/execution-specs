@@ -1,0 +1,18 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe Berlin fork adjusts the gas costs of the `ModExp` precompile and several\nstate access EVM instructions, introduces typed transaction envelopes along\nwith the first new transaction type—optional access lists.\n')),
+        ImportFrom(
+            module='ethereum.fork_criteria',
+            names=[
+                alias(name='ByBlockNumber')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='FORK_CRITERIA', ctx=Store())],
+            value=Call(
+                func=Name(id='ByBlockNumber', ctx=Load()),
+                args=[
+                    Constant(value=12244000)],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,1292 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nState\n^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThe state contains all information that is preserved between transactions.\n\nIt consists of a main account trie and storage tries for each contract.\n\nThere is a distinction between an account that does not exist and\n`EMPTY_ACCOUNT`.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass'),
+                alias(name='field')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Callable'),
+                alias(name='Dict'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.frozen',
+            names=[
+                alias(name='modify')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='EMPTY_ACCOUNT'),
+                alias(name='Account'),
+                alias(name='Address'),
+                alias(name='Root')],
+            level=1),
+        ImportFrom(
+            module='trie',
+            names=[
+                alias(name='EMPTY_TRIE_ROOT'),
+                alias(name='Trie'),
+                alias(name='copy_trie'),
+                alias(name='root'),
+                alias(name='trie_get'),
+                alias(name='trie_set')],
+            level=1),
+        ClassDef(
+            name='State',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Contains all information that is preserved between transactions.\n    ')),
+                AnnAssign(
+                    target=Name(id='_main_trie', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Trie', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Address', ctx=Load()),
+                                Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='Account', ctx=Load()),
+                                    ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Call(
+                        func=Name(id='field', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='default_factory',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Call(
+                                        func=Name(id='Trie', ctx=Load()),
+                                        args=[],
+                                        keywords=[
+                                            keyword(
+                                                arg='secured',
+                                                value=Constant(value=True)),
+                                            keyword(
+                                                arg='default',
+                                                value=Constant(value=None))])))]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='_storage_tries', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Address', ctx=Load()),
+                                Subscript(
+                                    value=Name(id='Trie', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='Bytes', ctx=Load()),
+                                            Name(id='U256', ctx=Load())],
+                                        ctx=Load()),
+                                    ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Call(
+                        func=Name(id='field', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='default_factory',
+                                value=Name(id='dict', ctx=Load()))]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='_snapshots', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Trie', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='Address', ctx=Load()),
+                                                Subscript(
+                                                    value=Name(id='Optional', ctx=Load()),
+                                                    slice=Name(id='Account', ctx=Load()),
+                                                    ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='Dict', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='Address', ctx=Load()),
+                                                Subscript(
+                                                    value=Name(id='Trie', ctx=Load()),
+                                                    slice=Tuple(
+                                                        elts=[
+                                                            Name(id='Bytes', ctx=Load()),
+                                                            Name(id='U256', ctx=Load())],
+                                                        ctx=Load()),
+                                                    ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Call(
+                        func=Name(id='field', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='default_factory',
+                                value=Name(id='list', ctx=Load()))]),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='close_state',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Free resources held by the state. Used by optimized implementations to\n    release file descriptors.\n    ')),
+                Delete(
+                    targets=[
+                        Attribute(
+                            value=Name(id='state', ctx=Load()),
+                            attr='_main_trie',
+                            ctx=Del())]),
+                Delete(
+                    targets=[
+                        Attribute(
+                            value=Name(id='state', ctx=Load()),
+                            attr='_storage_tries',
+                            ctx=Del())]),
+                Delete(
+                    targets=[
+                        Attribute(
+                            value=Name(id='state', ctx=Load()),
+                            attr='_snapshots',
+                            ctx=Del())])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='begin_transaction',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Start a state transaction.\n\n    Transactions are entirely implicit and can be nested. It is not possible to\n    calculate the state root during a transaction.\n\n    Parameters\n    ----------\n    state : State\n        The state.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_snapshots',
+                                ctx=Load()),
+                            attr='append',
+                            ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='copy_trie', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='_main_trie',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    DictComp(
+                                        key=Name(id='k', ctx=Load()),
+                                        value=Call(
+                                            func=Name(id='copy_trie', ctx=Load()),
+                                            args=[
+                                                Name(id='t', ctx=Load())],
+                                            keywords=[]),
+                                        generators=[
+                                            comprehension(
+                                                target=Tuple(
+                                                    elts=[
+                                                        Name(id='k', ctx=Store()),
+                                                        Name(id='t', ctx=Store())],
+                                                    ctx=Store()),
+                                                iter=Call(
+                                                    func=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='state', ctx=Load()),
+                                                            attr='_storage_tries',
+                                                            ctx=Load()),
+                                                        attr='items',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[]),
+                                                ifs=[],
+                                                is_async=0)])],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='commit_transaction',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Commit a state transaction.\n\n    Parameters\n    ----------\n    state : State\n        The state.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_snapshots',
+                                ctx=Load()),
+                            attr='pop',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='rollback_transaction',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Rollback a state transaction, resetting the state to the point when the\n    corresponding `start_transaction()` call was made.\n\n    Parameters\n    ----------\n    state : State\n        The state.\n    ')),
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='_main_trie',
+                                    ctx=Store()),
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='_storage_tries',
+                                    ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_snapshots',
+                                ctx=Load()),
+                            attr='pop',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='get_account',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get the `Account` object at an address. Returns `EMPTY_ACCOUNT` if there\n    is no account at the address.\n\n    Use `get_account_optional()` if you care about the difference between a\n    non-existent account and `EMPTY_ACCOUNT`.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address to lookup.\n\n    Returns\n    -------\n    account : `Account`\n        Account at address.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='account', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_account_optional', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='account', ctx=Load()),
+                            Name(id='Account', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Return(
+                            value=Name(id='account', ctx=Load()))],
+                    orelse=[
+                        Return(
+                            value=Name(id='EMPTY_ACCOUNT', ctx=Load()))])],
+            decorator_list=[],
+            returns=Name(id='Account', ctx=Load())),
+        FunctionDef(
+            name='get_account_optional',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get the `Account` object at an address. Returns `None` (rather than\n    `EMPTY_ACCOUNT`) if there is no account at the address.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address to lookup.\n\n    Returns\n    -------\n    account : `Account`\n        Account at address.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='account', ctx=Store())],
+                    value=Call(
+                        func=Name(id='trie_get', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_main_trie',
+                                ctx=Load()),
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Name(id='account', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Optional', ctx=Load()),
+                slice=Name(id='Account', ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='set_account',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='account',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='Account', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Set the `Account` object at an address. Setting to `None` deletes\n    the account (but not its storage, see `destroy_account()`).\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address to set.\n    account : `Account`\n        Account to set at address.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='trie_set', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_main_trie',
+                                ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Name(id='account', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='destroy_account',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Completely remove the account at `address` and all of its storage.\n\n    This function is made available exclusively for the `SELFDESTRUCT`\n    opcode. It is expected that `SELFDESTRUCT` will be disabled in a future\n    hardfork and this function will be removed.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address of account to destroy.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='destroy_storage', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='set_account', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Constant(value=None)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='destroy_storage',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Completely remove the storage at `address`.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address of account whose storage is to be deleted.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='address', ctx=Load()),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_storage_tries',
+                                ctx=Load())]),
+                    body=[
+                        Delete(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='_storage_tries',
+                                        ctx=Load()),
+                                    slice=Name(id='address', ctx=Load()),
+                                    ctx=Del())])],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='get_storage',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='key',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get a value at a storage key on an account. Returns `U256(0)` if the\n    storage key has not been set previously.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address of the account.\n    key : `Bytes`\n        Key to lookup.\n\n    Returns\n    -------\n    value : `U256`\n        Value at the key.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='trie', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_storage_tries',
+                                ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='trie', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='trie_get', ctx=Load()),
+                        args=[
+                            Name(id='trie', ctx=Load()),
+                            Name(id='key', ctx=Load())],
+                        keywords=[])),
+                Assert(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='value', ctx=Load()),
+                            Name(id='U256', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Name(id='value', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load())),
+        FunctionDef(
+            name='set_storage',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='key',
+                        annotation=Name(id='Bytes', ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Set a value at a storage key on an account. Setting to `U256(0)` deletes\n    the key.\n\n    Parameters\n    ----------\n    state: `State`\n        The state\n    address : `Address`\n        Address of the account.\n    key : `Bytes`\n        Key to set.\n    value : `U256`\n        Value to set at the key.\n    ')),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='trie_get', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='_main_trie',
+                                    ctx=Load()),
+                                Name(id='address', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            IsNot()],
+                        comparators=[
+                            Constant(value=None)])),
+                Assign(
+                    targets=[
+                        Name(id='trie', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_storage_tries',
+                                ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='trie', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='trie', ctx=Store())],
+                            value=Call(
+                                func=Name(id='Trie', ctx=Load()),
+                                args=[],
+                                keywords=[
+                                    keyword(
+                                        arg='secured',
+                                        value=Constant(value=True)),
+                                    keyword(
+                                        arg='default',
+                                        value=Call(
+                                            func=Name(id='U256', ctx=Load()),
+                                            args=[
+                                                Constant(value=0)],
+                                            keywords=[]))])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='_storage_tries',
+                                        ctx=Load()),
+                                    slice=Name(id='address', ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='trie', ctx=Load()))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='trie_set', ctx=Load()),
+                        args=[
+                            Name(id='trie', ctx=Load()),
+                            Name(id='key', ctx=Load()),
+                            Name(id='value', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='trie', ctx=Load()),
+                            attr='_data',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Dict(keys=[], values=[])]),
+                    body=[
+                        Delete(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='_storage_tries',
+                                        ctx=Load()),
+                                    slice=Name(id='address', ctx=Load()),
+                                    ctx=Del())])],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='storage_root',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculate the storage root of an account.\n\n    Parameters\n    ----------\n    state:\n        The state\n    address :\n        Address of the account.\n\n    Returns\n    -------\n    root : `Root`\n        Storage root of the account.\n    ')),
+                Assert(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Attribute(
+                            value=Name(id='state', ctx=Load()),
+                            attr='_snapshots',
+                            ctx=Load()))),
+                If(
+                    test=Compare(
+                        left=Name(id='address', ctx=Load()),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_storage_tries',
+                                ctx=Load())]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='root', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Attribute(
+                                            value=Name(id='state', ctx=Load()),
+                                            attr='_storage_tries',
+                                            ctx=Load()),
+                                        slice=Name(id='address', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        Return(
+                            value=Name(id='EMPTY_TRIE_ROOT', ctx=Load()))])],
+            decorator_list=[],
+            returns=Name(id='Root', ctx=Load())),
+        FunctionDef(
+            name='state_root',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Calculate the state root.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n\n    Returns\n    -------\n    root : `Root`\n        The state root.\n    ')),
+                Assert(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Attribute(
+                            value=Name(id='state', ctx=Load()),
+                            attr='_snapshots',
+                            ctx=Load()))),
+                FunctionDef(
+                    name='get_storage_root',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='storage_root', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load()),
+                                    Name(id='address', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='Root', ctx=Load())),
+                Return(
+                    value=Call(
+                        func=Name(id='root', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='_main_trie',
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='get_storage_root',
+                                value=Name(id='get_storage_root', ctx=Load()))]))],
+            decorator_list=[],
+            returns=Name(id='Root', ctx=Load())),
+        FunctionDef(
+            name='account_exists',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Checks if an account exists in the state trie\n\n    Parameters\n    ----------\n    state:\n        The state\n    address:\n        Address of the account that needs to be checked.\n\n    Returns\n    -------\n    account_exists : `bool`\n        True if account exists in the state trie, False otherwise\n    ')),
+                Return(
+                    value=Compare(
+                        left=Call(
+                            func=Name(id='get_account_optional', ctx=Load()),
+                            args=[
+                                Name(id='state', ctx=Load()),
+                                Name(id='address', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            IsNot()],
+                        comparators=[
+                            Constant(value=None)]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='account_has_code_or_nonce',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Checks if an account has non zero nonce or non empty code\n\n    Parameters\n    ----------\n    state:\n        The state\n    address:\n        Address of the account that needs to be checked.\n\n    Returns\n    -------\n    has_code_or_nonce : `bool`\n        True if if an account has non zero nonce or non empty code,\n        False otherwise.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='account', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_account', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=BoolOp(
+                        op=Or(),
+                        values=[
+                            Compare(
+                                left=Attribute(
+                                    value=Name(id='account', ctx=Load()),
+                                    attr='nonce',
+                                    ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[])]),
+                            Compare(
+                                left=Attribute(
+                                    value=Name(id='account', ctx=Load()),
+                                    attr='code',
+                                    ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=b'')])]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='modify_state',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='f',
+                        annotation=Subscript(
+                            value=Name(id='Callable', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    List(
+                                        elts=[
+                                            Name(id='Account', ctx=Load())],
+                                        ctx=Load()),
+                                    Constant(value=None)],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Modify an `Account` in the `State`.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='set_account', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Call(
+                                func=Name(id='modify', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='get_account', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load()),
+                                            Name(id='address', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='f', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='move_ether',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='sender_address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='recipient_address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='amount',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Move funds between accounts.\n    ')),
+                FunctionDef(
+                    name='reduce_sender_balance',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='sender',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='sender', ctx=Load()),
+                                    attr='balance',
+                                    ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Name(id='amount', ctx=Load())]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='AssertionError', ctx=Load()))],
+                            orelse=[]),
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='sender', ctx=Load()),
+                                attr='balance',
+                                ctx=Store()),
+                            op=Sub(),
+                            value=Name(id='amount', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='increase_recipient_balance',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='recipient',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='recipient', ctx=Load()),
+                                attr='balance',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Name(id='amount', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='sender_address', ctx=Load()),
+                            Name(id='reduce_sender_balance', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='recipient_address', ctx=Load()),
+                            Name(id='increase_recipient_balance', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='set_account_balance',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='amount',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Sets the balance of an account.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n\n    address:\n        Address of the account whose nonce needs to be incremented.\n\n    amount:\n        The amount that needs to set in balance.\n    ')),
+                FunctionDef(
+                    name='set_balance',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='account',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='account', ctx=Load()),
+                                    attr='balance',
+                                    ctx=Store())],
+                            value=Name(id='amount', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Name(id='set_balance', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='touch_account',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Initializes an account to state.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n\n    address:\n        The address of the account that need to initialised.\n    ')),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                            func=Name(id='account_exists', ctx=Load()),
+                            args=[
+                                Name(id='state', ctx=Load()),
+                                Name(id='address', ctx=Load())],
+                            keywords=[])),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='set_account', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load()),
+                                    Name(id='address', ctx=Load()),
+                                    Name(id='EMPTY_ACCOUNT', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='increment_nonce',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Increments the nonce of an account.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n\n    address:\n        Address of the account whose nonce needs to be incremented.\n    ')),
+                FunctionDef(
+                    name='increase_nonce',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='sender',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='sender', ctx=Load()),
+                                attr='nonce',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Name(id='increase_nonce', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='set_code',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='code',
+                        annotation=Name(id='Bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Sets Account code.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n\n    address:\n        Address of the account whose code needs to be update.\n\n    code:\n        The bytecode that needs to be set.\n    ')),
+                FunctionDef(
+                    name='write_code',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='sender',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='sender', ctx=Load()),
+                                    attr='code',
+                                    ctx=Store())],
+                            value=Name(id='code', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Name(id='write_code', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='create_ether',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state',
+                        annotation=Name(id='State', ctx=Load())),
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='amount',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Add newly created ether to an account.\n\n    Parameters\n    ----------\n    state:\n        The current state.\n    address:\n        Address of the account to which ether is added.\n    amount:\n        The amount of ether to be added to the account of interest.\n    ')),
+                FunctionDef(
+                    name='increase_balance',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='account',
+                                annotation=Name(id='Account', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='account', ctx=Load()),
+                                attr='balance',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Name(id='amount', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                Expr(
+                    value=Call(
+                        func=Name(id='modify_state', ctx=Load()),
+                        args=[
+                            Name(id='state', ctx=Load()),
+                            Name(id='address', ctx=Load()),
+                            Name(id='increase_balance', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

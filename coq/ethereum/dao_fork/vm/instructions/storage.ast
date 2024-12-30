@@ -1,0 +1,278 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Storage Instructions\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementations of the EVM storage related instructions.\n')),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='state',
+            names=[
+                alias(name='get_storage'),
+                alias(name='set_storage')],
+            level=3),
+        ImportFrom(
+            names=[
+                alias(name='Evm')],
+            level=2),
+        ImportFrom(
+            module='gas',
+            names=[
+                alias(name='GAS_SLOAD'),
+                alias(name='GAS_STORAGE_CLEAR_REFUND'),
+                alias(name='GAS_STORAGE_SET'),
+                alias(name='GAS_STORAGE_UPDATE'),
+                alias(name='charge_gas')],
+            level=2),
+        ImportFrom(
+            module='stack',
+            names=[
+                alias(name='pop'),
+                alias(name='push')],
+            level=2),
+        FunctionDef(
+            name='sload',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Loads to the stack, the value corresponding to a certain key from the\n    storage of the current account.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='key', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[]),
+                            attr='to_be_bytes32',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_SLOAD', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_storage', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='env',
+                                    ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='message',
+                                    ctx=Load()),
+                                attr='current_target',
+                                ctx=Load()),
+                            Name(id='key', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='push', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load()),
+                            Name(id='value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='sstore',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Stores a value at a certain key in the current context's storage.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ")),
+                Assign(
+                    targets=[
+                        Name(id='key', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Call(
+                                func=Name(id='pop', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='stack',
+                                        ctx=Load())],
+                                keywords=[]),
+                            attr='to_be_bytes32',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='new_value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='pop', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='stack',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='current_value', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_storage', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='env',
+                                    ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='message',
+                                    ctx=Load()),
+                                attr='current_target',
+                                ctx=Load()),
+                            Name(id='key', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Name(id='new_value', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            Compare(
+                                left=Name(id='current_value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='gas_cost', ctx=Store())],
+                            value=Name(id='GAS_STORAGE_SET', ctx=Load()))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='gas_cost', ctx=Store())],
+                            value=Name(id='GAS_STORAGE_UPDATE', ctx=Load()))]),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Name(id='new_value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            Compare(
+                                left=Name(id='current_value', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)])]),
+                    body=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='refund_counter',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Name(id='GAS_STORAGE_CLEAR_REFUND', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='gas_cost', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='set_storage', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='env',
+                                    ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='message',
+                                    ctx=Load()),
+                                attr='current_target',
+                                ctx=Load()),
+                            Name(id='key', ctx=Load()),
+                            Name(id='new_value', ctx=Load())],
+                        keywords=[])),
+                AugAssign(
+                    target=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='pc',
+                        ctx=Store()),
+                    op=Add(),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

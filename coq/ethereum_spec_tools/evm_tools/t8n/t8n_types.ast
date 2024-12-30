@@ -1,0 +1,2378 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nDefine the types used by the t8n tool.\n')),
+        Import(
+            names=[
+                alias(name='json')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='TYPE_CHECKING'),
+                alias(name='Any'),
+                alias(name='Dict'),
+                alias(name='Iterator'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum',
+            names=[
+                alias(name='rlp')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes'),
+                alias(name='hex_to_u256'),
+                alias(name='hex_to_uint')],
+            level=0),
+        ImportFrom(
+            module='loaders.transaction_loader',
+            names=[
+                alias(name='TransactionLoad'),
+                alias(name='UnsupportedTx')],
+            level=2),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='FatalException'),
+                alias(name='secp256k1_sign')],
+            level=2),
+        If(
+            test=Name(id='TYPE_CHECKING', ctx=Load()),
+            body=[
+                ImportFrom(
+                    names=[
+                        alias(name='T8N')],
+                    level=1)],
+            orelse=[]),
+        ClassDef(
+            name='Alloc',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The alloc (state) type for the t8n tool.\n    ')),
+                AnnAssign(
+                    target=Name(id='state', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state_backup', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='t8n',
+                                annotation=Constant(value='T8N')),
+                            arg(
+                                arg='stdin',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='Dict', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Read the alloc file and return the state.')),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='options',
+                                        ctx=Load()),
+                                    attr='input_alloc',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='stdin', ctx=Load()),
+                                        slice=Constant(value='alloc'),
+                                        ctx=Load()))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='t8n', ctx=Load()),
+                                                            attr='options',
+                                                            ctx=Load()),
+                                                        attr='input_alloc',
+                                                        ctx=Load()),
+                                                    Constant(value='r')],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='address', ctx=Store()),
+                                    Name(id='account', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Name(id='data', ctx=Load()),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                For(
+                                    target=Tuple(
+                                        elts=[
+                                            Name(id='key', ctx=Store()),
+                                            Name(id='value', ctx=Store())],
+                                        ctx=Store()),
+                                    iter=Call(
+                                        func=Attribute(
+                                            value=Name(id='account', ctx=Load()),
+                                            attr='items',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    body=[
+                                        If(
+                                            test=BoolOp(
+                                                op=Or(),
+                                                values=[
+                                                    Compare(
+                                                        left=Name(id='key', ctx=Load()),
+                                                        ops=[
+                                                            Eq()],
+                                                        comparators=[
+                                                            Constant(value='storage')]),
+                                                    UnaryOp(
+                                                        op=Not(),
+                                                        operand=Name(id='value', ctx=Load()))]),
+                                            body=[
+                                                Continue()],
+                                            orelse=[
+                                                If(
+                                                    test=UnaryOp(
+                                                        op=Not(),
+                                                        operand=Call(
+                                                            func=Attribute(
+                                                                value=Name(id='value', ctx=Load()),
+                                                                attr='startswith',
+                                                                ctx=Load()),
+                                                            args=[
+                                                                Constant(value='0x')],
+                                                            keywords=[])),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Subscript(
+                                                                    value=Subscript(
+                                                                        value=Name(id='data', ctx=Load()),
+                                                                        slice=Name(id='address', ctx=Load()),
+                                                                        ctx=Load()),
+                                                                    slice=Name(id='key', ctx=Load()),
+                                                                    ctx=Store())],
+                                                            value=BinOp(
+                                                                left=Constant(value='0x'),
+                                                                op=Add(),
+                                                                right=Call(
+                                                                    func=Name(id='hex', ctx=Load()),
+                                                                    args=[
+                                                                        Call(
+                                                                            func=Name(id='int', ctx=Load()),
+                                                                            args=[
+                                                                                Name(id='value', ctx=Load())],
+                                                                            keywords=[])],
+                                                                    keywords=[])))],
+                                                    orelse=[])])],
+                                    orelse=[])],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='state', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='t8n', ctx=Load()),
+                                    attr='json_to_state',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='fork_module',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='dao_fork')]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load()),
+                                            attr='apply_dao',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='state',
+                                    ctx=Store())],
+                            value=Name(id='state', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='to_json',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Encode the state to JSON')),
+                        Assign(
+                            targets=[
+                                Name(id='data', ctx=Store())],
+                            value=Dict(keys=[], values=[])),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='address', ctx=Store()),
+                                    Name(id='account', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='state',
+                                                ctx=Load()),
+                                            attr='_main_trie',
+                                            ctx=Load()),
+                                        attr='_data',
+                                        ctx=Load()),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                AnnAssign(
+                                    target=Name(id='account_data', ctx=Store()),
+                                    annotation=Subscript(
+                                        value=Name(id='Dict', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='str', ctx=Load()),
+                                                Name(id='Any', ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    value=Dict(keys=[], values=[]),
+                                    simple=1),
+                                If(
+                                    test=Attribute(
+                                        value=Name(id='account', ctx=Load()),
+                                        attr='balance',
+                                        ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='account_data', ctx=Load()),
+                                                    slice=Constant(value='balance'),
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='hex', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='account', ctx=Load()),
+                                                        attr='balance',
+                                                        ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[]),
+                                If(
+                                    test=Attribute(
+                                        value=Name(id='account', ctx=Load()),
+                                        attr='nonce',
+                                        ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='account_data', ctx=Load()),
+                                                    slice=Constant(value='nonce'),
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='hex', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='account', ctx=Load()),
+                                                        attr='nonce',
+                                                        ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[]),
+                                If(
+                                    test=Attribute(
+                                        value=Name(id='account', ctx=Load()),
+                                        attr='code',
+                                        ctx=Load()),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='account_data', ctx=Load()),
+                                                    slice=Constant(value='code'),
+                                                    ctx=Store())],
+                                            value=BinOp(
+                                                left=Constant(value='0x'),
+                                                op=Add(),
+                                                right=Call(
+                                                    func=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='account', ctx=Load()),
+                                                            attr='code',
+                                                            ctx=Load()),
+                                                        attr='hex',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[])))],
+                                    orelse=[]),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='address', ctx=Load()),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='state',
+                                                    ctx=Load()),
+                                                attr='_storage_tries',
+                                                ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='account_data', ctx=Load()),
+                                                    slice=Constant(value='storage'),
+                                                    ctx=Store())],
+                                            value=DictComp(
+                                                key=BinOp(
+                                                    left=Constant(value='0x'),
+                                                    op=Add(),
+                                                    right=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='k', ctx=Load()),
+                                                            attr='hex',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])),
+                                                value=Call(
+                                                    func=Name(id='hex', ctx=Load()),
+                                                    args=[
+                                                        Name(id='v', ctx=Load())],
+                                                    keywords=[]),
+                                                generators=[
+                                                    comprehension(
+                                                        target=Tuple(
+                                                            elts=[
+                                                                Name(id='k', ctx=Store()),
+                                                                Name(id='v', ctx=Store())],
+                                                            ctx=Store()),
+                                                        iter=Call(
+                                                            func=Attribute(
+                                                                value=Attribute(
+                                                                    value=Subscript(
+                                                                        value=Attribute(
+                                                                            value=Attribute(
+                                                                                value=Name(id='self', ctx=Load()),
+                                                                                attr='state',
+                                                                                ctx=Load()),
+                                                                            attr='_storage_tries',
+                                                                            ctx=Load()),
+                                                                        slice=Name(id='address', ctx=Load()),
+                                                                        ctx=Load()),
+                                                                    attr='_data',
+                                                                    ctx=Load()),
+                                                                attr='items',
+                                                                ctx=Load()),
+                                                            args=[],
+                                                            keywords=[]),
+                                                        ifs=[],
+                                                        is_async=0)]))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=BinOp(
+                                                left=Constant(value='0x'),
+                                                op=Add(),
+                                                right=Call(
+                                                    func=Attribute(
+                                                        value=Name(id='address', ctx=Load()),
+                                                        attr='hex',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[])),
+                                            ctx=Store())],
+                                    value=Name(id='account_data', ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='data', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load()))],
+            decorator_list=[]),
+        ClassDef(
+            name='Txs',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Read the transactions file, sort out the valid transactions and\n    return a list of transactions.\n    ')),
+                AnnAssign(
+                    target=Name(id='rejected_txs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='int', ctx=Load()),
+                                Name(id='str', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='successful_txs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='Any', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='successful_receipts', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='Any', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='all_txs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='List', ctx=Load()),
+                        slice=Name(id='Any', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='t8n', ctx=Store()),
+                    annotation=Constant(value='T8N'),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='data', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='rlp_input', ctx=Store()),
+                    annotation=Name(id='bool', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='t8n',
+                                annotation=Constant(value='T8N')),
+                            arg(
+                                arg='stdin',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='Dict', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='t8n',
+                                    ctx=Store())],
+                            value=Name(id='t8n', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='rejected_txs',
+                                    ctx=Store())],
+                            value=Dict(keys=[], values=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='successful_txs',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='successful_receipts',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='rlp_input',
+                                    ctx=Store())],
+                            value=Constant(value=False)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='all_txs',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='options',
+                                        ctx=Load()),
+                                    attr='input_txs',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='stdin')]),
+                            body=[
+                                Assert(
+                                    test=Compare(
+                                        left=Name(id='stdin', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)])),
+                                Assign(
+                                    targets=[
+                                        Name(id='data', ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='stdin', ctx=Load()),
+                                        slice=Constant(value='txs'),
+                                        ctx=Load()))],
+                            orelse=[
+                                With(
+                                    items=[
+                                        withitem(
+                                            context_expr=Call(
+                                                func=Name(id='open', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='t8n', ctx=Load()),
+                                                            attr='options',
+                                                            ctx=Load()),
+                                                        attr='input_txs',
+                                                        ctx=Load()),
+                                                    Constant(value='r')],
+                                                keywords=[]),
+                                            optional_vars=Name(id='f', ctx=Store()))],
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='data', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='json', ctx=Load()),
+                                                    attr='load',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='f', ctx=Load())],
+                                                keywords=[]))])]),
+                        If(
+                            test=Compare(
+                                left=Name(id='data', ctx=Load()),
+                                ops=[
+                                    Is()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='data',
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load()))],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='data', ctx=Load()),
+                                            Name(id='str', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='rlp_input',
+                                                    ctx=Store())],
+                                            value=Constant(value=True)),
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='data',
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='rlp', ctx=Load()),
+                                                    attr='decode',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='hex_to_bytes', ctx=Load()),
+                                                        args=[
+                                                            Name(id='data', ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='data',
+                                                    ctx=Store())],
+                                            value=Name(id='data', ctx=Load()))])])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='transactions',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Read the transactions file and return a list of transactions.\n        Can read from JSON or RLP.\n        ')),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='idx', ctx=Store()),
+                                    Name(id='raw_tx', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Name(id='enumerate', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='data',
+                                        ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Try(
+                                    body=[
+                                        If(
+                                            test=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='rlp_input',
+                                                ctx=Load()),
+                                            body=[
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Tuple(
+                                                            elts=[
+                                                                Name(id='idx', ctx=Load()),
+                                                                Call(
+                                                                    func=Attribute(
+                                                                        value=Name(id='self', ctx=Load()),
+                                                                        attr='parse_rlp_tx',
+                                                                        ctx=Load()),
+                                                                    args=[
+                                                                        Name(id='raw_tx', ctx=Load())],
+                                                                    keywords=[])],
+                                                            ctx=Load())))],
+                                            orelse=[
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Tuple(
+                                                            elts=[
+                                                                Name(id='idx', ctx=Load()),
+                                                                Call(
+                                                                    func=Attribute(
+                                                                        value=Name(id='self', ctx=Load()),
+                                                                        attr='parse_json_tx',
+                                                                        ctx=Load()),
+                                                                    args=[
+                                                                        Name(id='raw_tx', ctx=Load())],
+                                                                    keywords=[])],
+                                                            ctx=Load())))])],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='UnsupportedTx', ctx=Load()),
+                                            name='e',
+                                            body=[
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='t8n',
+                                                                    ctx=Load()),
+                                                                attr='logger',
+                                                                ctx=Load()),
+                                                            attr='warning',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            JoinedStr(
+                                                                values=[
+                                                                    Constant(value='Unsupported transaction type '),
+                                                                    FormattedValue(
+                                                                        value=Name(id='idx', ctx=Load()),
+                                                                        conversion=-1),
+                                                                    Constant(value=': '),
+                                                                    FormattedValue(
+                                                                        value=Attribute(
+                                                                            value=Name(id='e', ctx=Load()),
+                                                                            attr='error_message',
+                                                                            ctx=Load()),
+                                                                        conversion=-1)])],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='rejected_txs',
+                                                                ctx=Load()),
+                                                            slice=Name(id='idx', ctx=Load()),
+                                                            ctx=Store())],
+                                                    value=JoinedStr(
+                                                        values=[
+                                                            Constant(value='Unsupported transaction type: '),
+                                                            FormattedValue(
+                                                                value=Attribute(
+                                                                    value=Name(id='e', ctx=Load()),
+                                                                    attr='error_message',
+                                                                    ctx=Load()),
+                                                                conversion=-1)])),
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='all_txs',
+                                                                ctx=Load()),
+                                                            attr='append',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Attribute(
+                                                                value=Name(id='e', ctx=Load()),
+                                                                attr='encoded_params',
+                                                                ctx=Load())],
+                                                        keywords=[]))]),
+                                        ExceptHandler(
+                                            type=Name(id='Exception', ctx=Load()),
+                                            name='e',
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='msg', ctx=Store())],
+                                                    value=JoinedStr(
+                                                        values=[
+                                                            Constant(value='Failed to parse transaction '),
+                                                            FormattedValue(
+                                                                value=Name(id='idx', ctx=Load()),
+                                                                conversion=-1),
+                                                            Constant(value=': '),
+                                                            FormattedValue(
+                                                                value=Call(
+                                                                    func=Name(id='str', ctx=Load()),
+                                                                    args=[
+                                                                        Name(id='e', ctx=Load())],
+                                                                    keywords=[]),
+                                                                conversion=-1)])),
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='self', ctx=Load()),
+                                                                    attr='t8n',
+                                                                    ctx=Load()),
+                                                                attr='logger',
+                                                                ctx=Load()),
+                                                            attr='warning',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Name(id='msg', ctx=Load())],
+                                                        keywords=[
+                                                            keyword(
+                                                                arg='exc_info',
+                                                                value=Name(id='e', ctx=Load()))])),
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='rejected_txs',
+                                                                ctx=Load()),
+                                                            slice=Name(id='idx', ctx=Load()),
+                                                            ctx=Store())],
+                                                    value=Name(id='msg', ctx=Load()))])],
+                                    orelse=[],
+                                    finalbody=[])],
+                            orelse=[])],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Subscript(
+                        value=Name(id='Iterator', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='int', ctx=Load()),
+                                    Name(id='Any', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='parse_rlp_tx',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='raw_tx',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Read transactions from RLP.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='t8n', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='t8n',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='tx_rlp', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='encode',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='raw_tx', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='is_after_fork',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='ethereum.berlin')],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='raw_tx', ctx=Load()),
+                                            Name(id='Bytes', ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='transaction', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='t8n', ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='decode_transaction',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='raw_tx', ctx=Load())],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='all_txs',
+                                                        ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='raw_tx', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='transaction', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='rlp', ctx=Load()),
+                                                    attr='decode_to',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='t8n', ctx=Load()),
+                                                            attr='fork',
+                                                            ctx=Load()),
+                                                        attr='LegacyTransaction',
+                                                        ctx=Load()),
+                                                    Name(id='tx_rlp', ctx=Load())],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='all_txs',
+                                                        ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='transaction', ctx=Load())],
+                                                keywords=[]))])],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='transaction', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='rlp', ctx=Load()),
+                                            attr='decode_to',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='t8n', ctx=Load()),
+                                                    attr='fork',
+                                                    ctx=Load()),
+                                                attr='Transaction',
+                                                ctx=Load()),
+                                            Name(id='tx_rlp', ctx=Load())],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='all_txs',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='transaction', ctx=Load())],
+                                        keywords=[]))]),
+                        Return(
+                            value=Name(id='transaction', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load())),
+                FunctionDef(
+                    name='parse_json_tx',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='raw_tx',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Read the transactions from json.\n        If a transaction is unsigned but has a `secretKey` field, the\n        transaction will be signed.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='t8n', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='t8n',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='raw_tx', ctx=Load()),
+                                    slice=Constant(value='gasLimit'),
+                                    ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='raw_tx', ctx=Load()),
+                                slice=Constant(value='gas'),
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='raw_tx', ctx=Load()),
+                                    slice=Constant(value='data'),
+                                    ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='raw_tx', ctx=Load()),
+                                slice=Constant(value='input'),
+                                ctx=Load())),
+                        If(
+                            test=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Compare(
+                                        left=Constant(value='to'),
+                                        ops=[
+                                            NotIn()],
+                                        comparators=[
+                                            Name(id='raw_tx', ctx=Load())]),
+                                    Compare(
+                                        left=Subscript(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            slice=Constant(value='to'),
+                                            ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)])]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            slice=Constant(value='to'),
+                                            ctx=Store())],
+                                    value=Constant(value=''))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='raw_tx', ctx=Load()),
+                                    slice=Constant(value='v'),
+                                    ctx=Store())],
+                            value=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='v')],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='y_parity')],
+                                        keywords=[]),
+                                    Constant(value='0x00')])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='raw_tx', ctx=Load()),
+                                    slice=Constant(value='r'),
+                                    ctx=Store())],
+                            value=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='r')],
+                                        keywords=[]),
+                                    Constant(value='0x00')])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='raw_tx', ctx=Load()),
+                                    slice=Constant(value='s'),
+                                    ctx=Store())],
+                            value=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='raw_tx', ctx=Load()),
+                                            attr='get',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='s')],
+                                        keywords=[]),
+                                    Constant(value='0x00')])),
+                        Assign(
+                            targets=[
+                                Name(id='v', ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='raw_tx', ctx=Load()),
+                                        slice=Constant(value='v'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='r', ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='raw_tx', ctx=Load()),
+                                        slice=Constant(value='r'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='s', ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_u256', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='raw_tx', ctx=Load()),
+                                        slice=Constant(value='s'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Constant(value='secretKey'),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Name(id='raw_tx', ctx=Load())]),
+                                    Compare(
+                                        left=Name(id='v', ctx=Load()),
+                                        ops=[
+                                            Eq(),
+                                            Eq(),
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='r', ctx=Load()),
+                                            Name(id='s', ctx=Load()),
+                                            Constant(value=0)])]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='sign_transaction',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='raw_tx', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='tx', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='TransactionLoad', ctx=Load()),
+                                        args=[
+                                            Name(id='raw_tx', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    attr='read',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='all_txs',
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='tx', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='is_after_fork',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='ethereum.berlin')],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='transaction', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load()),
+                                            attr='decode_transaction',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='tx', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='transaction', ctx=Store())],
+                                    value=Name(id='tx', ctx=Load()))]),
+                        Return(
+                            value=Name(id='transaction', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load())),
+                FunctionDef(
+                    name='add_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='tx',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Add a transaction to the list of successful transactions.\n        ')),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='t8n',
+                                            ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='is_after_fork',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='ethereum.berlin')],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='successful_txs',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='t8n',
+                                                            ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='encode_transaction',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='tx', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='successful_txs',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='tx', ctx=Load())],
+                                        keywords=[]))])],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='get_tx_hash',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='tx',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Get the transaction hash of a transaction.\n        ')),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='t8n',
+                                                    ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load()),
+                                            attr='is_after_fork',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='ethereum.berlin')],
+                                        keywords=[]),
+                                    UnaryOp(
+                                        op=Not(),
+                                        operand=Call(
+                                            func=Name(id='isinstance', ctx=Load()),
+                                            args=[
+                                                Name(id='tx', ctx=Load()),
+                                                Attribute(
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='t8n',
+                                                            ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='LegacyTransaction',
+                                                    ctx=Load())],
+                                            keywords=[]))]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='keccak256', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='self', ctx=Load()),
+                                                            attr='t8n',
+                                                            ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='encode_transaction',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='tx', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='keccak256', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='rlp', ctx=Load()),
+                                                    attr='encode',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='tx', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))])],
+                    decorator_list=[],
+                    returns=Name(id='bytes', ctx=Load())),
+                FunctionDef(
+                    name='add_receipt',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='tx',
+                                annotation=Name(id='Any', ctx=Load())),
+                            arg(
+                                arg='gas_consumed',
+                                annotation=Name(id='Uint', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Add t8n receipt info for valid tx\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='tx_hash', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='get_tx_hash',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='tx', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='data', ctx=Store())],
+                            value=Dict(
+                                keys=[
+                                    Constant(value='transactionHash'),
+                                    Constant(value='gasUsed')],
+                                values=[
+                                    BinOp(
+                                        left=Constant(value='0x'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Name(id='tx_hash', ctx=Load()),
+                                                attr='hex',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[])),
+                                    Call(
+                                        func=Name(id='hex', ctx=Load()),
+                                        args=[
+                                            Name(id='gas_consumed', ctx=Load())],
+                                        keywords=[])])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='successful_receipts',
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='sign_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='json_tx',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Sign a transaction. This function will be invoked if a `secretKey`\n        is provided in the transaction.\n        Post spurious dragon, the transaction is signed according to EIP-155\n        if the protected flag is missing or set to true.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='t8n', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='t8n',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='protected', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='json_tx', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='protected'),
+                                    Constant(value=True)],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='tx', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Call(
+                                        func=Name(id='TransactionLoad', ctx=Load()),
+                                        args=[
+                                            Name(id='json_tx', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    attr='read',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='tx', ctx=Load()),
+                                    Name(id='bytes', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='tx_decoded', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load()),
+                                            attr='decode_transaction',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='tx', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='tx_decoded', ctx=Store())],
+                                    value=Name(id='tx', ctx=Load()))]),
+                        Assign(
+                            targets=[
+                                Name(id='secret_key', ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex_to_uint', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Subscript(
+                                            value=Name(id='json_tx', ctx=Load()),
+                                            slice=Constant(value='secretKey'),
+                                            ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=2)),
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='t8n', ctx=Load()),
+                                        attr='fork',
+                                        ctx=Load()),
+                                    attr='is_after_fork',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='ethereum.berlin')],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='Transaction', ctx=Store())],
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='t8n', ctx=Load()),
+                                            attr='fork',
+                                            ctx=Load()),
+                                        attr='LegacyTransaction',
+                                        ctx=Load()))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='Transaction', ctx=Store())],
+                                    value=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='t8n', ctx=Load()),
+                                            attr='fork',
+                                            ctx=Load()),
+                                        attr='Transaction',
+                                        ctx=Load()))]),
+                        AnnAssign(
+                            target=Name(id='v_addend', ctx=Store()),
+                            annotation=Name(id='U256', ctx=Load()),
+                            simple=1),
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='tx_decoded', ctx=Load()),
+                                    Name(id='Transaction', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='t8n', ctx=Load()),
+                                                attr='fork',
+                                                ctx=Load()),
+                                            attr='is_after_fork',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='ethereum.spurious_dragon')],
+                                        keywords=[]),
+                                    body=[
+                                        If(
+                                            test=Name(id='protected', ctx=Load()),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='signing_hash', ctx=Store())],
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='t8n', ctx=Load()),
+                                                                attr='fork',
+                                                                ctx=Load()),
+                                                            attr='signing_hash_155',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Name(id='tx_decoded', ctx=Load()),
+                                                            Call(
+                                                                func=Name(id='U64', ctx=Load()),
+                                                                args=[
+                                                                    Constant(value=1)],
+                                                                keywords=[])],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='v_addend', ctx=Store())],
+                                                    value=Call(
+                                                        func=Name(id='U256', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=37)],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='signing_hash', ctx=Store())],
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='t8n', ctx=Load()),
+                                                                attr='fork',
+                                                                ctx=Load()),
+                                                            attr='signing_hash_pre155',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Name(id='tx_decoded', ctx=Load())],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='v_addend', ctx=Store())],
+                                                    value=Call(
+                                                        func=Name(id='U256', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=27)],
+                                                        keywords=[]))])],
+                                    orelse=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='signing_hash', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='t8n', ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='signing_hash',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='tx_decoded', ctx=Load())],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Name(id='v_addend', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=27)],
+                                                keywords=[]))])],
+                            orelse=[
+                                If(
+                                    test=Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='tx_decoded', ctx=Load()),
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='t8n', ctx=Load()),
+                                                    attr='fork',
+                                                    ctx=Load()),
+                                                attr='AccessListTransaction',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='signing_hash', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='t8n', ctx=Load()),
+                                                        attr='fork',
+                                                        ctx=Load()),
+                                                    attr='signing_hash_2930',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='tx_decoded', ctx=Load())],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Name(id='v_addend', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[]))],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='tx_decoded', ctx=Load()),
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='t8n', ctx=Load()),
+                                                            attr='fork',
+                                                            ctx=Load()),
+                                                        attr='FeeMarketTransaction',
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            body=[
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='signing_hash', ctx=Store())],
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='t8n', ctx=Load()),
+                                                                attr='fork',
+                                                                ctx=Load()),
+                                                            attr='signing_hash_1559',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Name(id='tx_decoded', ctx=Load())],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Name(id='v_addend', ctx=Store())],
+                                                    value=Call(
+                                                        func=Name(id='U256', ctx=Load()),
+                                                        args=[
+                                                            Constant(value=0)],
+                                                        keywords=[]))],
+                                            orelse=[
+                                                If(
+                                                    test=Call(
+                                                        func=Name(id='isinstance', ctx=Load()),
+                                                        args=[
+                                                            Name(id='tx_decoded', ctx=Load()),
+                                                            Attribute(
+                                                                value=Attribute(
+                                                                    value=Name(id='t8n', ctx=Load()),
+                                                                    attr='fork',
+                                                                    ctx=Load()),
+                                                                attr='BlobTransaction',
+                                                                ctx=Load())],
+                                                        keywords=[]),
+                                                    body=[
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='signing_hash', ctx=Store())],
+                                                            value=Call(
+                                                                func=Attribute(
+                                                                    value=Attribute(
+                                                                        value=Name(id='t8n', ctx=Load()),
+                                                                        attr='fork',
+                                                                        ctx=Load()),
+                                                                    attr='signing_hash_4844',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Name(id='tx_decoded', ctx=Load())],
+                                                                keywords=[])),
+                                                        Assign(
+                                                            targets=[
+                                                                Name(id='v_addend', ctx=Store())],
+                                                            value=Call(
+                                                                func=Name(id='U256', ctx=Load()),
+                                                                args=[
+                                                                    Constant(value=0)],
+                                                                keywords=[]))],
+                                                    orelse=[
+                                                        Raise(
+                                                            exc=Call(
+                                                                func=Name(id='FatalException', ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='Unknown transaction type')],
+                                                                keywords=[]))])])])]),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='r', ctx=Store()),
+                                        Name(id='s', ctx=Store()),
+                                        Name(id='y', ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='secp256k1_sign', ctx=Load()),
+                                args=[
+                                    Name(id='signing_hash', ctx=Load()),
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='secret_key', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='json_tx', ctx=Load()),
+                                    slice=Constant(value='r'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex', ctx=Load()),
+                                args=[
+                                    Name(id='r', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='json_tx', ctx=Load()),
+                                    slice=Constant(value='s'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex', ctx=Load()),
+                                args=[
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='json_tx', ctx=Load()),
+                                    slice=Constant(value='v'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Name(id='y', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='v_addend', ctx=Load()))],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='v_addend', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='json_tx', ctx=Load()),
+                                            slice=Constant(value='y_parity'),
+                                            ctx=Store())],
+                                    value=Subscript(
+                                        value=Name(id='json_tx', ctx=Load()),
+                                        slice=Constant(value='v'),
+                                        ctx=Load()))],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        ClassDef(
+            name='Result',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='Type that represents the result of a transition execution')),
+                AnnAssign(
+                    target=Name(id='difficulty', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='base_fee', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='state_root', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='tx_root', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='receipt_root', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='withdrawals_root', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='logs_hash', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='bloom', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='receipts', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='rejected', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='gas_used', ctx=Store()),
+                    annotation=Name(id='Any', ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='excess_blob_gas', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='U64', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='blob_gas_used', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Uint', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=None),
+                    simple=1),
+                FunctionDef(
+                    name='to_json',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Encode the result to JSON')),
+                        Assign(
+                            targets=[
+                                Name(id='data', ctx=Store())],
+                            value=Dict(keys=[], values=[])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='stateRoot'),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='state_root',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='txRoot'),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='tx_root',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='receiptsRoot'),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='receipt_root',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))),
+                        If(
+                            test=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='withdrawals_root',
+                                ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='withdrawalsRoot'),
+                                            ctx=Store())],
+                                    value=BinOp(
+                                        left=Constant(value='0x'),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='withdrawals_root',
+                                                    ctx=Load()),
+                                                attr='hex',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[])))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='logsHash'),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='logs_hash',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='logsBloom'),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Constant(value='0x'),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='bloom',
+                                            ctx=Load()),
+                                        attr='hex',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='gasUsed'),
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='hex', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='gas_used',
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='difficulty',
+                                ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='currentDifficulty'),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='hex', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='difficulty',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='currentDifficulty'),
+                                            ctx=Store())],
+                                    value=Constant(value=None))]),
+                        If(
+                            test=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='base_fee',
+                                ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='currentBaseFee'),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='hex', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='base_fee',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='currentBaseFee'),
+                                            ctx=Store())],
+                                    value=Constant(value=None))]),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='excess_blob_gas',
+                                    ctx=Load()),
+                                ops=[
+                                    IsNot()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='currentExcessBlobGas'),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='hex', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='excess_blob_gas',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='blob_gas_used',
+                                    ctx=Load()),
+                                ops=[
+                                    IsNot()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='data', ctx=Load()),
+                                            slice=Constant(value='blobGasUsed'),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='hex', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='blob_gas_used',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='rejected'),
+                                    ctx=Store())],
+                            value=ListComp(
+                                elt=Dict(
+                                    keys=[
+                                        Constant(value='index'),
+                                        Constant(value='error')],
+                                    values=[
+                                        Name(id='idx', ctx=Load()),
+                                        Name(id='error', ctx=Load())]),
+                                generators=[
+                                    comprehension(
+                                        target=Tuple(
+                                            elts=[
+                                                Name(id='idx', ctx=Store()),
+                                                Name(id='error', ctx=Store())],
+                                            ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='rejected',
+                                                    ctx=Load()),
+                                                attr='items',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='data', ctx=Load()),
+                                    slice=Constant(value='receipts'),
+                                    ctx=Store())],
+                            value=ListComp(
+                                elt=Dict(
+                                    keys=[
+                                        Constant(value='transactionHash'),
+                                        Constant(value='gasUsed')],
+                                    values=[
+                                        Subscript(
+                                            value=Name(id='item', ctx=Load()),
+                                            slice=Constant(value='transactionHash'),
+                                            ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='item', ctx=Load()),
+                                            slice=Constant(value='gasUsed'),
+                                            ctx=Load())]),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='item', ctx=Store()),
+                                        iter=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='receipts',
+                                            ctx=Load()),
+                                        ifs=[],
+                                        is_async=0)])),
+                        Return(
+                            value=Name(id='data', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load()))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())])],
+    type_ignores=[])

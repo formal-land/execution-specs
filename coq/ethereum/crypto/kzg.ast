@@ -1,0 +1,696 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe KZG Implementation\n^^^^^^^^^^^^^^^^^^^^^^\n')),
+        ImportFrom(
+            module='hashlib',
+            names=[
+                alias(name='sha256')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='eth_typing.bls',
+            names=[
+                alias(name='BLSPubkey'),
+                alias(name='BLSSignature')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes32'),
+                alias(name='Bytes48'),
+                alias(name='Bytes96')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.bls',
+            names=[
+                alias(name='G2ProofOfPossession')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.bls.g2_primitives',
+            names=[
+                alias(name='pubkey_to_G1'),
+                alias(name='signature_to_G2')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.fields',
+            names=[
+                alias(name='optimized_bls12_381_FQ'),
+                alias(name='optimized_bls12_381_FQ2')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.fields',
+            names=[
+                alias(name='optimized_bls12_381_FQ12', asname='FQ12')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.optimized_bls12_381',
+            names=[
+                alias(name='add'),
+                alias(name='multiply'),
+                alias(name='neg')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.optimized_bls12_381.optimized_curve',
+            names=[
+                alias(name='G1'),
+                alias(name='G2')],
+            level=0),
+        ImportFrom(
+            module='py_ecc.optimized_bls12_381.optimized_pairing',
+            names=[
+                alias(name='final_exponentiate'),
+                alias(name='pairing')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.hexadecimal',
+            names=[
+                alias(name='hex_to_bytes')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='FQ', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='optimized_bls12_381_FQ', ctx=Load()),
+                        Name(id='optimized_bls12_381_FQ', ctx=Load()),
+                        Name(id='optimized_bls12_381_FQ', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='FQ2', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='optimized_bls12_381_FQ2', ctx=Load()),
+                        Name(id='optimized_bls12_381_FQ2', ctx=Load()),
+                        Name(id='optimized_bls12_381_FQ2', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        ClassDef(
+            name='KZGCommitment',
+            bases=[
+                Name(id='Bytes48', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='KZG commitment to a polynomial.')),
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='KZGProof',
+            bases=[
+                Name(id='Bytes48', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='KZG proof')),
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='BLSFieldElement',
+            bases=[
+                Name(id='U256', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='A field element in the BLS12-381 field.')),
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='VersionedHash',
+            bases=[
+                Name(id='Bytes32', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='A versioned hash.')),
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='G2Point',
+            bases=[
+                Name(id='Bytes96', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='A point in G2.')),
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='VERSIONED_HASH_VERSION_KZG', ctx=Store())],
+            value=Call(
+                func=Name(id='hex_to_bytes', ctx=Load()),
+                args=[
+                    Constant(value='0x01')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='BYTES_PER_COMMITMENT', ctx=Store())],
+            value=Constant(value=48)),
+        Assign(
+            targets=[
+                Name(id='BYTES_PER_PROOF', ctx=Store())],
+            value=Constant(value=48)),
+        Assign(
+            targets=[
+                Name(id='BYTES_PER_FIELD_ELEMENT', ctx=Store())],
+            value=Constant(value=32)),
+        Assign(
+            targets=[
+                Name(id='G1_POINT_AT_INFINITY', ctx=Store())],
+            value=BinOp(
+                left=Constant(value=b'\xc0'),
+                op=Add(),
+                right=BinOp(
+                    left=Constant(value=b'\x00'),
+                    op=Mult(),
+                    right=Constant(value=47)))),
+        Assign(
+            targets=[
+                Name(id='BLS_MODULUS', ctx=Store())],
+            value=Call(
+                func=Name(id='BLSFieldElement', ctx=Load()),
+                args=[
+                    Constant(value=52435875175126190479447740508185965837690552500527637822603658699938581184513)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='KZG_SETUP_G2_LENGTH', ctx=Store())],
+            value=Constant(value=65)),
+        Assign(
+            targets=[
+                Name(id='KZG_SETUP_G2_MONOMIAL_1', ctx=Store())],
+            value=Constant(value='0xb5bfd7dd8cdeb128843bc287230af38926187075cbfbefa81009a2ce615ac53d2914e5870cb452d2afaaab24f3499f72185cbfee53492714734429b7b38608e23926c911cceceac9a36851477ba4c60b087041de621000edc98edada20c1def2')),
+        FunctionDef(
+            name='kzg_commitment_to_versioned_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='kzg_commitment',
+                        annotation=Name(id='KZGCommitment', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert a KZG commitment to a versioned hash.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='VersionedHash', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='VERSIONED_HASH_VERSION_KZG', ctx=Load()),
+                                op=Add(),
+                                right=Subscript(
+                                    value=Call(
+                                        func=Name(id='Bytes32', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Call(
+                                                        func=Name(id='sha256', ctx=Load()),
+                                                        args=[
+                                                            Name(id='kzg_commitment', ctx=Load())],
+                                                        keywords=[]),
+                                                    attr='digest',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[]),
+                                    slice=Slice(
+                                        lower=Constant(value=1)),
+                                    ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='VersionedHash', ctx=Load())),
+        FunctionDef(
+            name='validate_kzg_g1',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='b',
+                        annotation=Name(id='Bytes48', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Perform BLS validation required by the types `KZGProof`\n    and `KZGCommitment`.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='b', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='G1_POINT_AT_INFINITY', ctx=Load())]),
+                    body=[
+                        Return()],
+                    orelse=[]),
+                Assert(
+                    test=Call(
+                        func=Attribute(
+                            value=Name(id='G2ProofOfPossession', ctx=Load()),
+                            attr='KeyValidate',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='BLSPubkey', ctx=Load()),
+                                args=[
+                                    Name(id='b', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='bytes_to_kzg_commitment',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='b',
+                        annotation=Name(id='Bytes48', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert untrusted bytes into a trusted and validated KZGCommitment.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='validate_kzg_g1', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='KZGCommitment', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='KZGCommitment', ctx=Load())),
+        FunctionDef(
+            name='bytes_to_bls_field',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='b',
+                        annotation=Name(id='Bytes32', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert untrusted bytes to a trusted and validated BLS scalar\n    field element. This function does not accept inputs greater than\n    the BLS modulus.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='field_element', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='int', ctx=Load()),
+                            attr='from_bytes',
+                            ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load()),
+                            Constant(value='big')],
+                        keywords=[])),
+                Assert(
+                    test=Compare(
+                        left=Name(id='field_element', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Name(id='BLS_MODULUS', ctx=Load())],
+                                keywords=[])])),
+                Return(
+                    value=Call(
+                        func=Name(id='BLSFieldElement', ctx=Load()),
+                        args=[
+                            Name(id='field_element', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='BLSFieldElement', ctx=Load())),
+        FunctionDef(
+            name='bytes_to_kzg_proof',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='b',
+                        annotation=Name(id='Bytes48', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert untrusted bytes into a trusted and validated KZGProof.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='validate_kzg_g1', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='KZGProof', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='KZGProof', ctx=Load())),
+        FunctionDef(
+            name='pairing_check',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='values',
+                        annotation=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='FQ', ctx=Load()),
+                                                Name(id='FQ2', ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='FQ', ctx=Load()),
+                                                Name(id='FQ2', ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Check if the pairings are valid.\n    ')),
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='p_q_1', ctx=Store()),
+                                Name(id='p_q_2', ctx=Store())],
+                            ctx=Store())],
+                    value=Name(id='values', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='final_exponentiation', ctx=Store())],
+                    value=Call(
+                        func=Name(id='final_exponentiate', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='pairing', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='p_q_1', ctx=Load()),
+                                            slice=Constant(value=1),
+                                            ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='p_q_1', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Load())],
+                                    keywords=[
+                                        keyword(
+                                            arg='final_exponentiate',
+                                            value=Constant(value=False))]),
+                                op=Mult(),
+                                right=Call(
+                                    func=Name(id='pairing', ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='p_q_2', ctx=Load()),
+                                            slice=Constant(value=1),
+                                            ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='p_q_2', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Load())],
+                                    keywords=[
+                                        keyword(
+                                            arg='final_exponentiate',
+                                            value=Constant(value=False))]))],
+                        keywords=[])),
+                Return(
+                    value=Compare(
+                        left=Name(id='final_exponentiation', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='FQ12', ctx=Load()),
+                                    attr='one',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='verify_kzg_proof',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='commitment_bytes',
+                        annotation=Name(id='Bytes48', ctx=Load())),
+                    arg(
+                        arg='z_bytes',
+                        annotation=Name(id='Bytes32', ctx=Load())),
+                    arg(
+                        arg='y_bytes',
+                        annotation=Name(id='Bytes32', ctx=Load())),
+                    arg(
+                        arg='proof_bytes',
+                        annotation=Name(id='Bytes48', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Verify KZG proof that ``p(z) == y`` where ``p(z)``\n    is the polynomial represented by ``polynomial_kzg``.\n    Receives inputs as bytes.\n    Public method.\n    ')),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='commitment_bytes', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='BYTES_PER_COMMITMENT', ctx=Load())])),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='z_bytes', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='BYTES_PER_FIELD_ELEMENT', ctx=Load())])),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='y_bytes', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='BYTES_PER_FIELD_ELEMENT', ctx=Load())])),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='proof_bytes', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='BYTES_PER_PROOF', ctx=Load())])),
+                Return(
+                    value=Call(
+                        func=Name(id='verify_kzg_proof_impl', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='bytes_to_kzg_commitment', ctx=Load()),
+                                args=[
+                                    Name(id='commitment_bytes', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='bytes_to_bls_field', ctx=Load()),
+                                args=[
+                                    Name(id='z_bytes', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='bytes_to_bls_field', ctx=Load()),
+                                args=[
+                                    Name(id='y_bytes', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='bytes_to_kzg_proof', ctx=Load()),
+                                args=[
+                                    Name(id='proof_bytes', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='verify_kzg_proof_impl',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='commitment',
+                        annotation=Name(id='KZGCommitment', ctx=Load())),
+                    arg(
+                        arg='z',
+                        annotation=Name(id='BLSFieldElement', ctx=Load())),
+                    arg(
+                        arg='y',
+                        annotation=Name(id='BLSFieldElement', ctx=Load())),
+                    arg(
+                        arg='proof',
+                        annotation=Name(id='KZGProof', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Verify KZG proof that ``p(z) == y`` where ``p(z)``\n    is the polynomial represented by ``polynomial_kzg``.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='X_minus_z', ctx=Store())],
+                    value=Call(
+                        func=Name(id='add', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='signature_to_G2', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='BLSSignature', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='hex_to_bytes', ctx=Load()),
+                                                args=[
+                                                    Name(id='KZG_SETUP_G2_MONOMIAL_1', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='multiply', ctx=Load()),
+                                args=[
+                                    Name(id='G2', ctx=Load()),
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='BLS_MODULUS', ctx=Load()),
+                                                    op=Sub(),
+                                                    right=Name(id='z', ctx=Load())),
+                                                op=Mod(),
+                                                right=Name(id='BLS_MODULUS', ctx=Load()))],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='P_minus_y', ctx=Store())],
+                    value=Call(
+                        func=Name(id='add', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pubkey_to_G1', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='BLSPubkey', ctx=Load()),
+                                        args=[
+                                            Name(id='commitment', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='multiply', ctx=Load()),
+                                args=[
+                                    Name(id='G1', ctx=Load()),
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=BinOp(
+                                                    left=Name(id='BLS_MODULUS', ctx=Load()),
+                                                    op=Sub(),
+                                                    right=Name(id='y', ctx=Load())),
+                                                op=Mod(),
+                                                right=Name(id='BLS_MODULUS', ctx=Load()))],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='pairing_check', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='P_minus_y', ctx=Load()),
+                                            Call(
+                                                func=Name(id='neg', ctx=Load()),
+                                                args=[
+                                                    Name(id='G2', ctx=Load())],
+                                                keywords=[])],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Call(
+                                                func=Name(id='pubkey_to_G1', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Name(id='BLSPubkey', ctx=Load()),
+                                                        args=[
+                                                            Name(id='proof', ctx=Load())],
+                                                        keywords=[])],
+                                                keywords=[]),
+                                            Name(id='X_minus_z', ctx=Load())],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load()))],
+    type_ignores=[])

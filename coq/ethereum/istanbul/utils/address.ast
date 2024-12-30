@@ -1,0 +1,216 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nHardfork Utility Functions For Addresses\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nAddress specific functions used in this istanbul version of\nspecification.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes32')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='keccak256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.utils.byte',
+            names=[
+                alias(name='left_pad_zero_bytes')],
+            level=0),
+        ImportFrom(
+            names=[
+                alias(name='rlp')],
+            level=3),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=2),
+        FunctionDef(
+            name='to_address',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='data',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='Uint', ctx=Load()),
+                                    Name(id='U256', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert a Uint or U256 value to a valid address (20 bytes).\n\n    Parameters\n    ----------\n    data :\n        The string to be converted to bytes.\n\n    Returns\n    -------\n    address : `Address`\n        The obtained address.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Address', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='data', ctx=Load()),
+                                        attr='to_be_bytes32',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                slice=Slice(
+                                    lower=UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=20))),
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Address', ctx=Load())),
+        FunctionDef(
+            name='compute_contract_address',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='nonce',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Computes address of the new account that needs to be created.\n\n    Parameters\n    ----------\n    address :\n        The address of the account that wants to create the new account.\n    nonce :\n        The transaction count of the account that wants to create the new\n        account.\n\n    Returns\n    -------\n    address: `Address`\n        The computed address of the new account.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='computed_address', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak256', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='rlp', ctx=Load()),
+                                    attr='encode',
+                                    ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Name(id='address', ctx=Load()),
+                                            Name(id='nonce', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='canonical_address', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='computed_address', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=20))),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='padded_address', ctx=Store())],
+                    value=Call(
+                        func=Name(id='left_pad_zero_bytes', ctx=Load()),
+                        args=[
+                            Name(id='canonical_address', ctx=Load()),
+                            Constant(value=20)],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='Address', ctx=Load()),
+                        args=[
+                            Name(id='padded_address', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Address', ctx=Load())),
+        FunctionDef(
+            name='compute_create2_contract_address',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='address',
+                        annotation=Name(id='Address', ctx=Load())),
+                    arg(
+                        arg='salt',
+                        annotation=Name(id='Bytes32', ctx=Load())),
+                    arg(
+                        arg='call_data',
+                        annotation=Name(id='bytearray', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Computes address of the new account that needs to be created, which is\n    based on the sender address, salt and the call data as well.\n\n    Parameters\n    ----------\n    address :\n        The address of the account that wants to create the new account.\n    salt :\n        Address generation salt.\n    call_data :\n        The code of the new account which is to be created.\n\n    Returns\n    -------\n    address: `ethereum.istanbul.fork_types.Address`\n        The computed address of the new account.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='preimage', ctx=Store())],
+                    value=BinOp(
+                        left=BinOp(
+                            left=BinOp(
+                                left=Constant(value=b'\xff'),
+                                op=Add(),
+                                right=Name(id='address', ctx=Load())),
+                            op=Add(),
+                            right=Name(id='salt', ctx=Load())),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='keccak256', ctx=Load()),
+                            args=[
+                                Name(id='call_data', ctx=Load())],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='computed_address', ctx=Store())],
+                    value=Call(
+                        func=Name(id='keccak256', ctx=Load()),
+                        args=[
+                            Name(id='preimage', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='canonical_address', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='computed_address', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=20))),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='padded_address', ctx=Store())],
+                    value=Call(
+                        func=Name(id='left_pad_zero_bytes', ctx=Load()),
+                        args=[
+                            Name(id='canonical_address', ctx=Load()),
+                            Constant(value=20)],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='Address', ctx=Load()),
+                        args=[
+                            Name(id='padded_address', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Address', ctx=Load()))],
+    type_ignores=[])

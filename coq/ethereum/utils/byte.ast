@@ -1,0 +1,103 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nUtility Functions For Byte Strings\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nByte specific utility functions used in this specification.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='FixedUnsigned'),
+                alias(name='Uint')],
+            level=0),
+        FunctionDef(
+            name='left_pad_zero_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Bytes', ctx=Load())),
+                    arg(
+                        arg='size',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='int', ctx=Load()),
+                                    Name(id='FixedUnsigned', ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Left pad zeroes to `value` if its length is less than the given `size`.\n\n    Parameters\n    ----------\n    value :\n        The byte string that needs to be padded.\n    size :\n        The number of bytes that need that need to be padded.\n\n    Returns\n    -------\n    left_padded_value: `ethereum.base_types.Bytes`\n        left padded byte string of given `size`.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='value', ctx=Load()),
+                            attr='rjust',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Name(id='size', ctx=Load())],
+                                keywords=[]),
+                            Constant(value=b'\x00')],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='right_pad_zero_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Bytes', ctx=Load())),
+                    arg(
+                        arg='size',
+                        annotation=Subscript(
+                            value=Name(id='Union', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='int', ctx=Load()),
+                                    Name(id='FixedUnsigned', ctx=Load()),
+                                    Name(id='Uint', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Right pad zeroes to `value` if its length is less than the given `size`.\n\n    Parameters\n    ----------\n    value :\n        The byte string that needs to be padded.\n    size :\n        The number of bytes that need that need to be padded.\n\n    Returns\n    -------\n    right_padded_value: `ethereum.base_types.Bytes`\n        right padded byte string of given `size`.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='value', ctx=Load()),
+                            attr='ljust',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Name(id='size', ctx=Load())],
+                                keywords=[]),
+                            Constant(value=b'\x00')],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load()))],
+    type_ignores=[])

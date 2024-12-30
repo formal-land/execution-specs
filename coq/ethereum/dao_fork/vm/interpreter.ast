@@ -1,0 +1,975 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Interpreter\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nA straightforward interpreter that executes EVM code.\n')),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='Set'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes0')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint'),
+                alias(name='ulen')],
+            level=0),
+        ImportFrom(
+            module='ethereum.trace',
+            names=[
+                alias(name='EvmStop'),
+                alias(name='OpEnd'),
+                alias(name='OpException'),
+                alias(name='OpStart'),
+                alias(name='PrecompileEnd'),
+                alias(name='PrecompileStart'),
+                alias(name='TransactionEnd'),
+                alias(name='evm_trace')],
+            level=0),
+        ImportFrom(
+            module='blocks',
+            names=[
+                alias(name='Log')],
+            level=2),
+        ImportFrom(
+            module='fork_types',
+            names=[
+                alias(name='Address')],
+            level=2),
+        ImportFrom(
+            module='state',
+            names=[
+                alias(name='account_has_code_or_nonce'),
+                alias(name='begin_transaction'),
+                alias(name='commit_transaction'),
+                alias(name='destroy_storage'),
+                alias(name='move_ether'),
+                alias(name='rollback_transaction'),
+                alias(name='set_code'),
+                alias(name='touch_account')],
+            level=2),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Message')],
+            level=2),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_CODE_DEPOSIT'),
+                alias(name='charge_gas')],
+            level=2),
+        ImportFrom(
+            module='vm.precompiled_contracts.mapping',
+            names=[
+                alias(name='PRE_COMPILED_CONTRACTS')],
+            level=2),
+        ImportFrom(
+            names=[
+                alias(name='Environment'),
+                alias(name='Evm')],
+            level=1),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='AddressCollision'),
+                alias(name='ExceptionalHalt'),
+                alias(name='InvalidOpcode'),
+                alias(name='StackDepthLimitError')],
+            level=1),
+        ImportFrom(
+            module='instructions',
+            names=[
+                alias(name='Ops'),
+                alias(name='op_implementation')],
+            level=1),
+        ImportFrom(
+            module='runtime',
+            names=[
+                alias(name='get_valid_jump_destinations')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='STACK_DEPTH_LIMIT', ctx=Store())],
+            value=Call(
+                func=Name(id='Uint', ctx=Load()),
+                args=[
+                    Constant(value=1024)],
+                keywords=[])),
+        ClassDef(
+            name='MessageCallOutput',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Output of a particular message call\n\n    Contains the following:\n\n          1. `gas_left`: remaining gas after execution.\n          2. `refund_counter`: gas to refund after execution.\n          3. `logs`: list of `Log` generated during execution.\n          4. `accounts_to_delete`: Contracts which have self-destructed.\n          5. `error`: The error from the execution if any.\n    ')),
+                AnnAssign(
+                    target=Name(id='gas_left', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='refund_counter', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='logs', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Log', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='accounts_to_delete', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Set', ctx=Load()),
+                        slice=Name(id='Address', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Exception', ctx=Load()),
+                        ctx=Load()),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        FunctionDef(
+            name='process_message_call',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='message',
+                        annotation=Name(id='Message', ctx=Load())),
+                    arg(
+                        arg='env',
+                        annotation=Name(id='Environment', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    If `message.current` is empty then it creates a smart contract\n    else it executes a call from the `message.caller` to the `message.target`.\n\n    Parameters\n    ----------\n    message :\n        Transaction specific items.\n\n    env :\n        External items required for EVM execution.\n\n    Returns\n    -------\n    output : `MessageCallOutput`\n        Output of the message call\n    ')),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='message', ctx=Load()),
+                            attr='target',
+                            ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='Bytes0', ctx=Load()),
+                                args=[
+                                    Constant(value=b'')],
+                                keywords=[])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='is_collision', ctx=Store())],
+                            value=Call(
+                                func=Name(id='account_has_code_or_nonce', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='env', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='message', ctx=Load()),
+                                        attr='current_target',
+                                        ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Name(id='is_collision', ctx=Load()),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='MessageCallOutput', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='tuple', ctx=Load()),
+                                                args=[],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='set', ctx=Load()),
+                                                args=[],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='AddressCollision', ctx=Load()),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='evm', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='process_create_message', ctx=Load()),
+                                        args=[
+                                            Name(id='message', ctx=Load()),
+                                            Name(id='env', ctx=Load())],
+                                        keywords=[]))])],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='evm', ctx=Store())],
+                            value=Call(
+                                func=Name(id='process_message', ctx=Load()),
+                                args=[
+                                    Name(id='message', ctx=Load()),
+                                    Name(id='env', ctx=Load())],
+                                keywords=[]))]),
+                If(
+                    test=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='error',
+                        ctx=Load()),
+                    body=[
+                        AnnAssign(
+                            target=Name(id='logs', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Tuple', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='Log', ctx=Load()),
+                                        Constant(value=Ellipsis)],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            value=Tuple(elts=[], ctx=Load()),
+                            simple=1),
+                        Assign(
+                            targets=[
+                                Name(id='accounts_to_delete', ctx=Store())],
+                            value=Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='refund_counter', ctx=Store())],
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[]))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='logs', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='logs',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='accounts_to_delete', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='accounts_to_delete',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='refund_counter', ctx=Store())],
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='refund_counter',
+                                        ctx=Load())],
+                                keywords=[]))]),
+                Assign(
+                    targets=[
+                        Name(id='tx_end', ctx=Store())],
+                    value=Call(
+                        func=Name(id='TransactionEnd', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='message', ctx=Load()),
+                                            attr='gas',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                op=Sub(),
+                                right=Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='gas_left',
+                                            ctx=Load())],
+                                    keywords=[])),
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='output',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='error',
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='evm_trace', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='tx_end', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Name(id='MessageCallOutput', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='gas_left',
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='gas_left',
+                                    ctx=Load())),
+                            keyword(
+                                arg='refund_counter',
+                                value=Name(id='refund_counter', ctx=Load())),
+                            keyword(
+                                arg='logs',
+                                value=Name(id='logs', ctx=Load())),
+                            keyword(
+                                arg='accounts_to_delete',
+                                value=Name(id='accounts_to_delete', ctx=Load())),
+                            keyword(
+                                arg='error',
+                                value=Attribute(
+                                    value=Name(id='evm', ctx=Load()),
+                                    attr='error',
+                                    ctx=Load()))]))],
+            decorator_list=[],
+            returns=Name(id='MessageCallOutput', ctx=Load())),
+        FunctionDef(
+            name='process_create_message',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='message',
+                        annotation=Name(id='Message', ctx=Load())),
+                    arg(
+                        arg='env',
+                        annotation=Name(id='Environment', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Executes a call to create a smart contract.\n\n    Parameters\n    ----------\n    message :\n        Transaction specific items.\n    env :\n        External items required for EVM execution.\n\n    Returns\n    -------\n    evm: :py:class:`~ethereum.dao_fork.vm.Evm`\n        Items containing execution specific objects.\n    ')),
+                Expr(
+                    value=Call(
+                        func=Name(id='begin_transaction', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='env', ctx=Load()),
+                                attr='state',
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='destroy_storage', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='env', ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='message', ctx=Load()),
+                                attr='current_target',
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='evm', ctx=Store())],
+                    value=Call(
+                        func=Name(id='process_message', ctx=Load()),
+                        args=[
+                            Name(id='message', ctx=Load()),
+                            Name(id='env', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='error',
+                            ctx=Load())),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='contract_code', ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='evm', ctx=Load()),
+                                attr='output',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='contract_code_gas', ctx=Store())],
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Name(id='contract_code', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[]),
+                                op=Mult(),
+                                right=Name(id='GAS_CODE_DEPOSIT', ctx=Load()))),
+                        Try(
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='charge_gas', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Name(id='contract_code_gas', ctx=Load())],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='ExceptionalHalt', ctx=Load()),
+                                    name='error',
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='rollback_transaction', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='env', ctx=Load()),
+                                                        attr='state',
+                                                        ctx=Load())],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='evm', ctx=Load()),
+                                                    attr='gas_left',
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Constant(value=0)],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='evm', ctx=Load()),
+                                                    attr='error',
+                                                    ctx=Store())],
+                                            value=Name(id='error', ctx=Load()))])],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='set_code', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='env', ctx=Load()),
+                                                attr='state',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='message', ctx=Load()),
+                                                attr='current_target',
+                                                ctx=Load()),
+                                            Name(id='contract_code', ctx=Load())],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='commit_transaction', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='env', ctx=Load()),
+                                                attr='state',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            finalbody=[])],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='rollback_transaction', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='env', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load())],
+                                keywords=[]))]),
+                Return(
+                    value=Name(id='evm', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Evm', ctx=Load())),
+        FunctionDef(
+            name='process_message',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='message',
+                        annotation=Name(id='Message', ctx=Load())),
+                    arg(
+                        arg='env',
+                        annotation=Name(id='Environment', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Executes a call to create a smart contract.\n\n    Parameters\n    ----------\n    message :\n        Transaction specific items.\n    env :\n        External items required for EVM execution.\n\n    Returns\n    -------\n    evm: :py:class:`~ethereum.dao_fork.vm.Evm`\n        Items containing execution specific objects\n    ')),
+                If(
+                    test=Compare(
+                        left=Attribute(
+                            value=Name(id='message', ctx=Load()),
+                            attr='depth',
+                            ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='STACK_DEPTH_LIMIT', ctx=Load())]),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='StackDepthLimitError', ctx=Load()),
+                                args=[
+                                    Constant(value='Stack depth limit reached')],
+                                keywords=[]))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='begin_transaction', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='env', ctx=Load()),
+                                attr='state',
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='touch_account', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Name(id='env', ctx=Load()),
+                                attr='state',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='message', ctx=Load()),
+                                attr='current_target',
+                                ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Attribute(
+                                value=Name(id='message', ctx=Load()),
+                                attr='should_transfer_value',
+                                ctx=Load()),
+                            Compare(
+                                left=Attribute(
+                                    value=Name(id='message', ctx=Load()),
+                                    attr='value',
+                                    ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)])]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='move_ether', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='env', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='message', ctx=Load()),
+                                        attr='caller',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='message', ctx=Load()),
+                                        attr='current_target',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='message', ctx=Load()),
+                                        attr='value',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='evm', ctx=Store())],
+                    value=Call(
+                        func=Name(id='execute_code', ctx=Load()),
+                        args=[
+                            Name(id='message', ctx=Load()),
+                            Name(id='env', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Attribute(
+                        value=Name(id='evm', ctx=Load()),
+                        attr='error',
+                        ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='rollback_transaction', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='env', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='commit_transaction', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='env', ctx=Load()),
+                                        attr='state',
+                                        ctx=Load())],
+                                keywords=[]))]),
+                Return(
+                    value=Name(id='evm', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Evm', ctx=Load())),
+        FunctionDef(
+            name='execute_code',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='message',
+                        annotation=Name(id='Message', ctx=Load())),
+                    arg(
+                        arg='env',
+                        annotation=Name(id='Environment', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Executes bytecode present in the `message`.\n\n    Parameters\n    ----------\n    message :\n        Transaction specific items.\n    env :\n        External items required for EVM execution.\n\n    Returns\n    -------\n    evm: `ethereum.vm.EVM`\n        Items containing execution specific objects\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='code', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='message', ctx=Load()),
+                        attr='code',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='valid_jump_destinations', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_valid_jump_destinations', ctx=Load()),
+                        args=[
+                            Name(id='code', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='evm', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Evm', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='pc',
+                                value=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=0)],
+                                    keywords=[])),
+                            keyword(
+                                arg='stack',
+                                value=List(elts=[], ctx=Load())),
+                            keyword(
+                                arg='memory',
+                                value=Call(
+                                    func=Name(id='bytearray', ctx=Load()),
+                                    args=[],
+                                    keywords=[])),
+                            keyword(
+                                arg='code',
+                                value=Name(id='code', ctx=Load())),
+                            keyword(
+                                arg='gas_left',
+                                value=Attribute(
+                                    value=Name(id='message', ctx=Load()),
+                                    attr='gas',
+                                    ctx=Load())),
+                            keyword(
+                                arg='env',
+                                value=Name(id='env', ctx=Load())),
+                            keyword(
+                                arg='valid_jump_destinations',
+                                value=Name(id='valid_jump_destinations', ctx=Load())),
+                            keyword(
+                                arg='logs',
+                                value=Tuple(elts=[], ctx=Load())),
+                            keyword(
+                                arg='refund_counter',
+                                value=Constant(value=0)),
+                            keyword(
+                                arg='running',
+                                value=Constant(value=True)),
+                            keyword(
+                                arg='message',
+                                value=Name(id='message', ctx=Load())),
+                            keyword(
+                                arg='output',
+                                value=Constant(value=b'')),
+                            keyword(
+                                arg='accounts_to_delete',
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[],
+                                    keywords=[])),
+                            keyword(
+                                arg='error',
+                                value=Constant(value=None))])),
+                Try(
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='message',
+                                        ctx=Load()),
+                                    attr='code_address',
+                                    ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Name(id='PRE_COMPILED_CONTRACTS', ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='evm_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Call(
+                                                func=Name(id='PrecompileStart', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Attribute(
+                                                            value=Name(id='evm', ctx=Load()),
+                                                            attr='message',
+                                                            ctx=Load()),
+                                                        attr='code_address',
+                                                        ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Subscript(
+                                            value=Name(id='PRE_COMPILED_CONTRACTS', ctx=Load()),
+                                            slice=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='evm', ctx=Load()),
+                                                    attr='message',
+                                                    ctx=Load()),
+                                                attr='code_address',
+                                                ctx=Load()),
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load())],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='evm_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Call(
+                                                func=Name(id='PrecompileEnd', ctx=Load()),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[])),
+                                Return(
+                                    value=Name(id='evm', ctx=Load()))],
+                            orelse=[]),
+                        While(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Attribute(
+                                        value=Name(id='evm', ctx=Load()),
+                                        attr='running',
+                                        ctx=Load()),
+                                    Compare(
+                                        left=Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='pc',
+                                            ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='ulen', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='evm', ctx=Load()),
+                                                        attr='code',
+                                                        ctx=Load())],
+                                                keywords=[])])]),
+                            body=[
+                                Try(
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='op', ctx=Store())],
+                                            value=Call(
+                                                func=Name(id='Ops', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Attribute(
+                                                            value=Name(id='evm', ctx=Load()),
+                                                            attr='code',
+                                                            ctx=Load()),
+                                                        slice=Attribute(
+                                                            value=Name(id='evm', ctx=Load()),
+                                                            attr='pc',
+                                                            ctx=Load()),
+                                                        ctx=Load())],
+                                                keywords=[]))],
+                                    handlers=[
+                                        ExceptHandler(
+                                            type=Name(id='ValueError', ctx=Load()),
+                                            body=[
+                                                Raise(
+                                                    exc=Call(
+                                                        func=Name(id='InvalidOpcode', ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Attribute(
+                                                                    value=Name(id='evm', ctx=Load()),
+                                                                    attr='code',
+                                                                    ctx=Load()),
+                                                                slice=Attribute(
+                                                                    value=Name(id='evm', ctx=Load()),
+                                                                    attr='pc',
+                                                                    ctx=Load()),
+                                                                ctx=Load())],
+                                                        keywords=[]))])],
+                                    orelse=[],
+                                    finalbody=[]),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='evm_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Call(
+                                                func=Name(id='OpStart', ctx=Load()),
+                                                args=[
+                                                    Name(id='op', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Subscript(
+                                            value=Name(id='op_implementation', ctx=Load()),
+                                            slice=Name(id='op', ctx=Load()),
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load())],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='evm_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Call(
+                                                func=Name(id='OpEnd', ctx=Load()),
+                                                args=[],
+                                                keywords=[])],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='evm_trace', ctx=Load()),
+                                args=[
+                                    Name(id='evm', ctx=Load()),
+                                    Call(
+                                        func=Name(id='EvmStop', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='Ops', ctx=Load()),
+                                                attr='STOP',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ExceptionalHalt', ctx=Load()),
+                            name='error',
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='evm_trace', ctx=Load()),
+                                        args=[
+                                            Name(id='evm', ctx=Load()),
+                                            Call(
+                                                func=Name(id='OpException', ctx=Load()),
+                                                args=[
+                                                    Name(id='error', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='gas_left',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='evm', ctx=Load()),
+                                            attr='error',
+                                            ctx=Store())],
+                                    value=Name(id='error', ctx=Load()))])],
+                    orelse=[],
+                    finalbody=[]),
+                Return(
+                    value=Name(id='evm', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Evm', ctx=Load()))],
+    type_ignores=[])

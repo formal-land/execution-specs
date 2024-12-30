@@ -1,0 +1,240 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) POINT EVALUATION PRECOMPILED CONTRACT\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the POINT EVALUATION precompiled contract.\n')),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes32'),
+                alias(name='Bytes48')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.kzg',
+            names=[
+                alias(name='KZGCommitment'),
+                alias(name='kzg_commitment_to_versioned_hash'),
+                alias(name='verify_kzg_proof')],
+            level=0),
+        ImportFrom(
+            module='vm',
+            names=[
+                alias(name='Evm')],
+            level=3),
+        ImportFrom(
+            module='vm.exceptions',
+            names=[
+                alias(name='KZGProofError')],
+            level=3),
+        ImportFrom(
+            module='vm.gas',
+            names=[
+                alias(name='GAS_POINT_EVALUATION'),
+                alias(name='charge_gas')],
+            level=3),
+        Assign(
+            targets=[
+                Name(id='FIELD_ELEMENTS_PER_BLOB', ctx=Store())],
+            value=Constant(value=4096)),
+        Assign(
+            targets=[
+                Name(id='BLS_MODULUS', ctx=Store())],
+            value=Constant(value=52435875175126190479447740508185965837690552500527637822603658699938581184513)),
+        Assign(
+            targets=[
+                Name(id='VERSIONED_HASH_VERSION_KZG', ctx=Store())],
+            value=Constant(value=b'\x01')),
+        FunctionDef(
+            name='point_evaluation',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='Evm', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    A pre-compile that verifies a KZG proof which claims that a blob\n    (represented by a commitment) evaluates to a given value at a given point.\n\n    Parameters\n    ----------\n    evm :\n        The current EVM frame.\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='data', ctx=Store())],
+                    value=Attribute(
+                        value=Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='message',
+                            ctx=Load()),
+                        attr='data',
+                        ctx=Load())),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='data', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Constant(value=192)]),
+                    body=[
+                        Raise(
+                            exc=Name(id='KZGProofError', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='versioned_hash', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='data', ctx=Load()),
+                        slice=Slice(
+                            upper=Constant(value=32)),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='z', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Bytes32', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='data', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=32),
+                                    upper=Constant(value=64)),
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='y', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Bytes32', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='data', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=64),
+                                    upper=Constant(value=96)),
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='commitment', ctx=Store())],
+                    value=Call(
+                        func=Name(id='KZGCommitment', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='data', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=96),
+                                    upper=Constant(value=144)),
+                                ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='proof', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Bytes48', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='data', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=144),
+                                    upper=Constant(value=192)),
+                                ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='charge_gas', ctx=Load()),
+                        args=[
+                            Name(id='evm', ctx=Load()),
+                            Name(id='GAS_POINT_EVALUATION', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='kzg_commitment_to_versioned_hash', ctx=Load()),
+                            args=[
+                                Name(id='commitment', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='versioned_hash', ctx=Load())]),
+                    body=[
+                        Raise(
+                            exc=Name(id='KZGProofError', ctx=Load()))],
+                    orelse=[]),
+                Try(
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='kzg_proof_verification', ctx=Store())],
+                            value=Call(
+                                func=Name(id='verify_kzg_proof', ctx=Load()),
+                                args=[
+                                    Name(id='commitment', ctx=Load()),
+                                    Name(id='z', ctx=Load()),
+                                    Name(id='y', ctx=Load()),
+                                    Name(id='proof', ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='Exception', ctx=Load()),
+                            name='e',
+                            body=[
+                                Raise(
+                                    exc=Name(id='KZGProofError', ctx=Load()),
+                                    cause=Name(id='e', ctx=Load()))])],
+                    orelse=[],
+                    finalbody=[]),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Name(id='kzg_proof_verification', ctx=Load())),
+                    body=[
+                        Raise(
+                            exc=Name(id='KZGProofError', ctx=Load()))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Attribute(
+                            value=Name(id='evm', ctx=Load()),
+                            attr='output',
+                            ctx=Store())],
+                    value=Call(
+                        func=Name(id='Bytes', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Attribute(
+                                        value=Call(
+                                            func=Name(id='U256', ctx=Load()),
+                                            args=[
+                                                Name(id='FIELD_ELEMENTS_PER_BLOB', ctx=Load())],
+                                            keywords=[]),
+                                        attr='to_be_bytes32',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                op=Add(),
+                                right=Call(
+                                    func=Attribute(
+                                        value=Call(
+                                            func=Name(id='U256', ctx=Load()),
+                                            args=[
+                                                Name(id='BLS_MODULUS', ctx=Load())],
+                                            keywords=[]),
+                                        attr='to_be_bytes32',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]))],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

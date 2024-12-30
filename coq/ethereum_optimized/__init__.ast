@@ -1,0 +1,250 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nOptimized Implementations\n^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThis module contains alternative implementations of routines in the spec that\nhave been optimized for speed rather than clarity.\n\nThey can be monkey patched in during start up by calling the `monkey_patch()`\nfunction. This must be done before those modules are imported anywhere.\n')),
+        ImportFrom(
+            module='importlib',
+            names=[
+                alias(name='import_module')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Optional'),
+                alias(name='cast')],
+            level=0),
+        ImportFrom(
+            module='ethereum_spec_tools.forks',
+            names=[
+                alias(name='Hardfork')],
+            level=0),
+        ImportFrom(
+            module='fork',
+            names=[
+                alias(name='get_optimized_pow_patches')],
+            level=1),
+        ImportFrom(
+            module='state_db',
+            names=[
+                alias(name='get_optimized_state_patches')],
+            level=1),
+        FunctionDef(
+            name='monkey_patch_optimized_state_db',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='fork_name',
+                        annotation=Name(id='str', ctx=Load())),
+                    arg(
+                        arg='state_path',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='str', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Replace the state interface with one that supports high performance\n    updates and storing state in a database.\n\n    This function must be called before the state interface is imported\n    anywhere.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='slow_state', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cast', ctx=Load()),
+                        args=[
+                            Name(id='Any', ctx=Load()),
+                            Call(
+                                func=Name(id='import_module', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='ethereum.'),
+                                            op=Add(),
+                                            right=Name(id='fork_name', ctx=Load())),
+                                        op=Add(),
+                                        right=Constant(value='.state'))],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='optimized_state_db_patches', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_optimized_state_patches', ctx=Load()),
+                        args=[
+                            Name(id='fork_name', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='name', ctx=Store()),
+                            Name(id='value', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Name(id='optimized_state_db_patches', ctx=Load()),
+                            attr='items',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='setattr', ctx=Load()),
+                                args=[
+                                    Name(id='slow_state', ctx=Load()),
+                                    Name(id='name', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Name(id='state_path', ctx=Load()),
+                        ops=[
+                            IsNot()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Attribute(
+                                        value=Name(id='slow_state', ctx=Load()),
+                                        attr='State',
+                                        ctx=Load()),
+                                    attr='default_path',
+                                    ctx=Store())],
+                            value=Name(id='state_path', ctx=Load()))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='monkey_patch_optimized_spec',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='fork_name',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Replace the ethash implementation with one that supports higher\n    performance.\n\n    This function must be called before the spec interface is imported\n    anywhere.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='slow_spec', ctx=Store())],
+                    value=Call(
+                        func=Name(id='import_module', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=BinOp(
+                                    left=Constant(value='ethereum.'),
+                                    op=Add(),
+                                    right=Name(id='fork_name', ctx=Load())),
+                                op=Add(),
+                                right=Constant(value='.fork'))],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='optimized_pow_patches', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_optimized_pow_patches', ctx=Load()),
+                        args=[
+                            Name(id='fork_name', ctx=Load())],
+                        keywords=[])),
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='name', ctx=Store()),
+                            Name(id='value', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Attribute(
+                            value=Name(id='optimized_pow_patches', ctx=Load()),
+                            attr='items',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='setattr', ctx=Load()),
+                                args=[
+                                    Name(id='slow_spec', ctx=Load()),
+                                    Name(id='name', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        FunctionDef(
+            name='monkey_patch',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='state_path',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Name(id='str', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Apply all monkey patches to the specification.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='forks', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Hardfork', ctx=Load()),
+                            attr='discover',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                For(
+                    target=Name(id='fork', ctx=Store()),
+                    iter=Name(id='forks', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='monkey_patch_optimized_state_db', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='fork', ctx=Load()),
+                                        attr='short_name',
+                                        ctx=Load()),
+                                    Name(id='state_path', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='fork', ctx=Load()),
+                                        attr='consensus',
+                                        ctx=Load()),
+                                    attr='is_pow',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='monkey_patch_optimized_spec', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='fork', ctx=Load()),
+                                                attr='short_name',
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

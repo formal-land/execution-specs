@@ -1,0 +1,62 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nOptimized Implementation Utilities\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nUtility functions for optimized implementations.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='Dict')],
+            level=0),
+        FunctionDef(
+            name='add_item',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='patches',
+                        annotation=Subscript(
+                            value=Name(id='Dict', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Name(id='str', ctx=Load()),
+                                    Name(id='Any', ctx=Load())],
+                                ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Decorator to add a function to a patches dictionary.\n    ')),
+                FunctionDef(
+                    name='inner',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='f',
+                                annotation=Name(id='Any', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='patches', ctx=Load()),
+                                    slice=Attribute(
+                                        value=Name(id='f', ctx=Load()),
+                                        attr='__name__',
+                                        ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='f', ctx=Load())),
+                        Return(
+                            value=Name(id='f', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Any', ctx=Load())),
+                Return(
+                    value=Name(id='inner', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Any', ctx=Load()))],
+    type_ignores=[])

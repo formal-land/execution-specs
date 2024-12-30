@@ -1,0 +1,109 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nEthereum Virtual Machine (EVM) Stack\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nImplementation of the stack operators for the EVM.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='List')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256')],
+            level=0),
+        ImportFrom(
+            module='exceptions',
+            names=[
+                alias(name='StackOverflowError'),
+                alias(name='StackUnderflowError')],
+            level=1),
+        FunctionDef(
+            name='pop',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='stack',
+                        annotation=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Name(id='U256', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Pops the top item off of `stack`.\n\n    Parameters\n    ----------\n    stack :\n        EVM stack.\n\n    Returns\n    -------\n    value : `U256`\n        The top element on the stack.\n\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='stack', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Raise(
+                            exc=Name(id='StackUnderflowError', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stack', ctx=Load()),
+                            attr='pop',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load())),
+        FunctionDef(
+            name='push',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='stack',
+                        annotation=Subscript(
+                            value=Name(id='List', ctx=Load()),
+                            slice=Name(id='U256', ctx=Load()),
+                            ctx=Load())),
+                    arg(
+                        arg='value',
+                        annotation=Name(id='U256', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Pushes `value` onto `stack`.\n\n    Parameters\n    ----------\n    stack :\n        EVM stack.\n\n    value :\n        Item to be pushed onto `stack`.\n\n    ')),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='stack', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1024)]),
+                    body=[
+                        Raise(
+                            exc=Name(id='StackOverflowError', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stack', ctx=Load()),
+                            attr='append',
+                            ctx=Load()),
+                        args=[
+                            Name(id='value', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

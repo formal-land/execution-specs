@@ -1,0 +1,175 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nSafe Arithmetic for U256 Integer Type\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nSafe arithmetic utility functions for U256 integer type.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='Type'),
+                alias(name='Union')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        FunctionDef(
+            name='u256_safe_add',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                vararg=arg(
+                    arg='numbers',
+                    annotation=Subscript(
+                        value=Name(id='Union', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='U256', ctx=Load()),
+                                Name(id='Uint', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load())),
+                kwonlyargs=[
+                    arg(
+                        arg='exception_type',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Type', ctx=Load()),
+                                slice=Name(id='BaseException', ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()))],
+                kw_defaults=[
+                    Constant(value=None)],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Adds together the given sequence of numbers. If the total sum of the\n    numbers exceeds `U256.MAX_VALUE` then an exception is raised.\n    If `exception_type` = None then the exception raised defaults to the one\n    raised by `U256` when `U256.value > U256.MAX_VALUE`\n    else `exception_type` is raised.\n\n    Parameters\n    ----------\n    numbers :\n        The sequence of numbers that need to be added together.\n\n    exception_type:\n        The exception that needs to be raised if the sum of the `numbers`\n        exceeds `U256.MAX_VALUE`.\n\n    Returns\n    -------\n    result : `ethereum.base_types.U256`\n        The sum of the given sequence of numbers if the total is less than\n        `U256.MAX_VALUE` else an exception is raised.\n        If `exception_type` = None then the exception raised defaults to the\n        one raised by `U256` when `U256.value > U256.MAX_VALUE`\n        else `exception_type` is raised.\n    ')),
+                Try(
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='sum', ctx=Load()),
+                                        args=[
+                                            GeneratorExp(
+                                                elt=Call(
+                                                    func=Name(id='int', ctx=Load()),
+                                                    args=[
+                                                        Name(id='n', ctx=Load())],
+                                                    keywords=[]),
+                                                generators=[
+                                                    comprehension(
+                                                        target=Name(id='n', ctx=Store()),
+                                                        iter=Name(id='numbers', ctx=Load()),
+                                                        ifs=[],
+                                                        is_async=0)])],
+                                        keywords=[])],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            name='e',
+                            body=[
+                                If(
+                                    test=Name(id='exception_type', ctx=Load()),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='exception_type', ctx=Load()),
+                                            cause=Name(id='e', ctx=Load()))],
+                                    orelse=[
+                                        Raise(
+                                            exc=Name(id='e', ctx=Load()))])])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load())),
+        FunctionDef(
+            name='u256_safe_multiply',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                vararg=arg(
+                    arg='numbers',
+                    annotation=Subscript(
+                        value=Name(id='Union', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='U256', ctx=Load()),
+                                Name(id='Uint', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load())),
+                kwonlyargs=[
+                    arg(
+                        arg='exception_type',
+                        annotation=Subscript(
+                            value=Name(id='Optional', ctx=Load()),
+                            slice=Subscript(
+                                value=Name(id='Type', ctx=Load()),
+                                slice=Name(id='BaseException', ctx=Load()),
+                                ctx=Load()),
+                            ctx=Load()))],
+                kw_defaults=[
+                    Constant(value=None)],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Multiplies together the given sequence of numbers. If the net product of\n    the numbers exceeds `U256.MAX_VALUE` then an exception is raised.\n    If `exception_type` = None then the exception raised defaults to the one\n    raised by `U256` when `U256.value > U256.MAX_VALUE` else\n    `exception_type` is raised.\n\n    Parameters\n    ----------\n    numbers :\n        The sequence of numbers that need to be multiplies together.\n\n    exception_type:\n        The exception that needs to be raised if the sum of the `numbers`\n        exceeds `U256.MAX_VALUE`.\n\n    Returns\n    -------\n    result : `ethereum.base_types.U256`\n        The multiplication product of the given sequence of numbers if the\n        net product  is less than `U256.MAX_VALUE` else an exception is raised.\n        If `exception_type` = None then the exception raised defaults to the\n        one raised by `U256` when `U256.value > U256.MAX_VALUE`\n        else `exception_type` is raised.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='numbers', ctx=Load()),
+                                slice=Constant(value=0),
+                                ctx=Load())],
+                        keywords=[])),
+                Try(
+                    body=[
+                        For(
+                            target=Name(id='number', ctx=Store()),
+                            iter=Subscript(
+                                value=Name(id='numbers', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=1)),
+                                ctx=Load()),
+                            body=[
+                                AugAssign(
+                                    target=Name(id='result', ctx=Store()),
+                                    op=Mult(),
+                                    value=Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Name(id='number', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Return(
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Name(id='result', ctx=Load())],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            name='e',
+                            body=[
+                                If(
+                                    test=Name(id='exception_type', ctx=Load()),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='exception_type', ctx=Load()),
+                                            cause=Name(id='e', ctx=Load()))],
+                                    orelse=[
+                                        Raise(
+                                            exc=Name(id='e', ctx=Load()))])])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load()))],
+    type_ignores=[])

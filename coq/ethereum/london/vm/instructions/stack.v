@@ -1,0 +1,153 @@
+(* Generated *)
+(*
+Ethereum Virtual Machine (EVM) Stack Instructions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. contents:: Table of Contents
+    :backlinks: none
+    :local:
+
+Introduction
+------------
+
+Implementations of the EVM stack related instructions.
+*)
+
+Require functools.
+Require ethereum_types.numeric.
+Require ethereum.london.vm.__init__.
+Require ethereum.london.vm.exceptions.
+Require ethereum.london.vm.gas.
+Require ethereum.london.vm.memory.
+
+Definition pop (evm : Evm) : M unit :=
+  (*
+      Remove item from stack.
+
+      Parameters
+      ----------
+      evm :
+          The current EVM frame.
+
+      *)
+  do* [[ M.get_field ~(| __init__.stack, "pop" |) ~(|
+    M.get_field ~(| evm, "stack" |)
+  |) ]] in
+  do* [[ gas.charge_gas ~(|
+    evm,
+    gas.GAS_BASE
+  |) ]] in
+  (* TODO statement *)
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
+
+Definition push_n (evm : Evm) (num_bytes : int) : M unit :=
+  (*
+      Pushes a N-byte immediate onto the stack.
+
+      Parameters
+      ----------
+      evm :
+          The current EVM frame.
+
+      num_bytes :
+          The number of immediate bytes to be read from the code and pushed to
+          the stack.
+
+      *)
+  (* TODO statement *)
+  do* [[ gas.charge_gas ~(|
+    evm,
+    gas.GAS_VERY_LOW
+  |) ]] in
+  do* M.assign "data_to_push" [[
+    M.get_field ~(| ethereum_types.numeric.U256, "from_be_bytes" |) ~(|
+      memory.buffer_read ~(|
+        M.get_field ~(| evm, "code" |),
+        ethereum_types.numeric.U256 ~(|
+          (* TODO expression *)
+        |),
+        ethereum_types.numeric.U256 ~(|
+          num_bytes
+        |)
+      |)
+    |) in
+  ]] in
+  do* [[ M.get_field ~(| __init__.stack, "push" |) ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "data_to_push" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    (* TODO expression *)
+  ]] in
+  M.pure tt.
+
+Definition dup_n (evm : Evm) (item_number : int) : M unit :=
+  (*
+      Duplicate the Nth stack item (from top of the stack) to the top of stack.
+
+      Parameters
+      ----------
+      evm :
+          The current EVM frame.
+
+      item_number :
+          The stack item number (0-indexed from top of stack) to be duplicated
+          to the top of stack.
+
+      *)
+  (* TODO statement *)
+  do* [[ gas.charge_gas ~(|
+    evm,
+    gas.GAS_VERY_LOW
+  |) ]] in
+  (* TODO statement *)
+  do* M.assign "data_to_duplicate" [[
+    (* TODO expression *) in
+  ]] in
+  do* [[ M.get_field ~(| __init__.stack, "push" |) ~(|
+    M.get_field ~(| evm, "stack" |),
+    M.get_local ~(| "data_to_duplicate" |)
+  |) ]] in
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.
+
+Definition swap_n (evm : Evm) (item_number : int) : M unit :=
+  (*
+      Swap the top and the `item_number` element of the stack, where
+      the top of the stack is position zero.
+
+      If `item_number` is zero, this function does nothing (which should not be
+      possible, since there is no `SWAP0` instruction).
+
+      Parameters
+      ----------
+      evm :
+          The current EVM frame.
+
+      item_number :
+          The stack item number (0-indexed from top of stack) to be swapped
+          with the top of stack element.
+
+      *)
+  (* TODO statement *)
+  do* [[ gas.charge_gas ~(|
+    evm,
+    gas.GAS_VERY_LOW
+  |) ]] in
+  (* TODO statement *)
+  (* TODO assignment *)
+  do* M.aug_assign [[ M.get_field ~(| evm, "pc" |) ]] [[
+    ethereum_types.numeric.Uint ~(|
+      1
+    |)
+  ]] in
+  M.pure tt.

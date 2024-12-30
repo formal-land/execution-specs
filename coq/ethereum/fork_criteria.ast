@@ -1,0 +1,539 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nActivation criteria for forks.\n\nMost generally, a _fork_ is a divergence in a blockchain resulting in multiple\ntips. Most forks are short lived, and can be caused by networking issues or the\nbehavior of block creators. These short-lived forks resolve themselves\naccording to the rules of the protocol, eventually settling back to a single\ntip of the chain.\n\nA second class of forks are intentionally created by changing the rules of the\nprotocol, and never resolve back to a single tip. Older software will continue\nto follow the original fork, while updated software will create and follow a\nnew fork.\n\nFor these intentional forks to succeed, all participants need to agree on\nexactly when to switch rules. The agreed upon criteria are represented by\nsubclasses of [`ForkCriteria`], like [`ByBlockNumber`] and [`ByTimestamp`]. The\nspecial type of [`Unscheduled`] is used for forks in active development that do\nnot yet have a scheduled deployment.\n\n[`ForkCriteria`]: ref:ethereum.fork_criteria.ForkCriteria\n[`ByBlockNumber`]: ref:ethereum.fork_criteria.ByBlockNumber\n[`ByTimestamp`]: ref:ethereum.fork_criteria.ByTimestamp\n[`Unscheduled`]: ref:ethereum.fork_criteria.Unscheduled\n')),
+        Import(
+            names=[
+                alias(name='functools')]),
+        ImportFrom(
+            module='abc',
+            names=[
+                alias(name='ABC'),
+                alias(name='abstractmethod')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Final'),
+                alias(name='Literal'),
+                alias(name='SupportsInt'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ClassDef(
+            name='ForkCriteria',
+            bases=[
+                Name(id='ABC', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Abstract base class for conditions specifying when a fork activates.\n\n    Subclasses override the comparison methods ([`__eq__`] and [`__lt__`]) to\n    provide an ordering for forks, and override [`check`] to determine whether\n    a particular block meets the activation criteria.\n\n    [`__eq__`]: ref:ethereum.fork_criteria.ForkCriteria.__eq__\n    [`__lt__`]: ref:ethereum.fork_criteria.ForkCriteria.__lt__\n    [`check`]: ref:ethereum.fork_criteria.ForkCriteria.check\n    ')),
+                AnnAssign(
+                    target=Name(id='BLOCK_NUMBER', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Final', ctx=Load()),
+                        slice=Name(id='int', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=0),
+                    simple=1),
+                Expr(
+                    value=Constant(value="\n    Value representing a fork criteria based on the block's number.\n\n    Used for pre-merge blocks.\n    ")),
+                AnnAssign(
+                    target=Name(id='TIMESTAMP', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Final', ctx=Load()),
+                        slice=Name(id='int', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=1),
+                    simple=1),
+                Expr(
+                    value=Constant(value="\n    Value representing a fork criteria based on the block's timestamp.\n\n    Used for post-merge blocks.\n    ")),
+                AnnAssign(
+                    target=Name(id='UNSCHEDULED', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Final', ctx=Load()),
+                        slice=Name(id='int', ctx=Load()),
+                        ctx=Load()),
+                    value=Constant(value=2),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Value representing a fork criteria that will never be satisfied.\n\n    Used for in-development forks.\n    ')),
+                AnnAssign(
+                    target=Name(id='_internal', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='int', ctx=Load()),
+                                Name(id='int', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__eq__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='other',
+                                annotation=Name(id='object', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Equality for fork criteria.\n        ')),
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='other', ctx=Load()),
+                                    Name(id='ForkCriteria', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='_internal',
+                                            ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='other', ctx=Load()),
+                                                attr='_internal',
+                                                ctx=Load())]))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='NotImplemented', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__lt__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='other',
+                                annotation=Name(id='object', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Less-than comparison function, with earlier forks being less than later\n        forks.\n\n        All [`BLOCK_NUMBER`] forks come before [`TIMESTAMP`] forks, and all\n        scheduled forks come before [`UNSCHEDULED`] forks.\n\n        [`BLOCK_NUMBER`]: ref:ethereum.fork_criteria.ForkCriteria.BLOCK_NUMBER\n        [`TIMESTAMP`]: ref:ethereum.fork_criteria.ForkCriteria.TIMESTAMP\n        [`UNSCHEDULED`]: ref:ethereum.fork_criteria.ForkCriteria.UNSCHEDULED\n        ')),
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='other', ctx=Load()),
+                                    Name(id='ForkCriteria', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Return(
+                                    value=Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='_internal',
+                                            ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='other', ctx=Load()),
+                                                attr='_internal',
+                                                ctx=Load())]))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='NotImplemented', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__hash__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Compute a hash for this instance, so it can be stored in dictionaries.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='_internal',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='int', ctx=Load())),
+                FunctionDef(
+                    name='check',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='block_number',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='timestamp',
+                                annotation=Name(id='U256', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Check whether fork criteria have been met.\n\n        Returns `True` when the current block meets or exceeds the criteria,\n        and `False` otherwise.\n        ')),
+                        Raise(
+                            exc=Call(
+                                func=Name(id='NotImplementedError', ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='abstractmethod', ctx=Load())],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        String representation of this object.\n        ')),
+                        Raise(
+                            exc=Call(
+                                func=Name(id='NotImplementedError', ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='abstractmethod', ctx=Load())],
+                    returns=Name(id='str', ctx=Load()))],
+            decorator_list=[
+                Attribute(
+                    value=Name(id='functools', ctx=Load()),
+                    attr='total_ordering',
+                    ctx=Load())]),
+        ClassDef(
+            name='ByBlockNumber',
+            bases=[
+                Name(id='ForkCriteria', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Forks that occur when a specific block number has been reached.\n    ')),
+                AnnAssign(
+                    target=Name(id='block_number', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Number of the first block in this fork.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='block_number',
+                                annotation=Name(id='SupportsInt', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='_internal',
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='ForkCriteria', ctx=Load()),
+                                        attr='BLOCK_NUMBER',
+                                        ctx=Load()),
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='block_number', ctx=Load())],
+                                        keywords=[])],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='block_number',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='block_number', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='check',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='block_number',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='timestamp',
+                                annotation=Name(id='U256', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Check whether the block number has been reached.\n\n        Returns `True` when the given `block_number` is equal to or greater\n        than [`block_number`], and `False` otherwise.\n\n        [`block_number`]: ref:ethereum.fork_criteria.ByBlockNumber.block_number\n        ')),
+                        Return(
+                            value=Compare(
+                                left=Name(id='block_number', ctx=Load()),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='block_number',
+                                        ctx=Load())]))],
+                    decorator_list=[],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        String representation of this object.\n        ')),
+                        Return(
+                            value=JoinedStr(
+                                values=[
+                                    Constant(value='ByBlockNumber('),
+                                    FormattedValue(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='block_number',
+                                            ctx=Load()),
+                                        conversion=-1),
+                                    Constant(value=')')]))],
+                    decorator_list=[],
+                    returns=Name(id='str', ctx=Load()))],
+            decorator_list=[]),
+        ClassDef(
+            name='ByTimestamp',
+            bases=[
+                Name(id='ForkCriteria', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Forks that occur when a specific timestamp has been reached.\n    ')),
+                AnnAssign(
+                    target=Name(id='timestamp', ctx=Store()),
+                    annotation=Name(id='U256', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    First instance of time that is part of this fork.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='timestamp',
+                                annotation=Name(id='SupportsInt', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='_internal',
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='ForkCriteria', ctx=Load()),
+                                        attr='TIMESTAMP',
+                                        ctx=Load()),
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='timestamp', ctx=Load())],
+                                        keywords=[])],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='timestamp',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='U256', ctx=Load()),
+                                args=[
+                                    Name(id='timestamp', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='check',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='block_number',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='timestamp',
+                                annotation=Name(id='U256', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Check whether the timestamp has been reached.\n\n        Returns `True` when the given `timestamp` is equal to or greater than\n        [`timestamp`], and `False` otherwise.\n\n        [`timestamp`]: ref:ethereum.fork_criteria.ByTimestamp.timestamp\n        ')),
+                        Return(
+                            value=Compare(
+                                left=Name(id='timestamp', ctx=Load()),
+                                ops=[
+                                    GtE()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='timestamp',
+                                        ctx=Load())]))],
+                    decorator_list=[],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        String representation of this object.\n        ')),
+                        Return(
+                            value=JoinedStr(
+                                values=[
+                                    Constant(value='ByTimestamp('),
+                                    FormattedValue(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='timestamp',
+                                            ctx=Load()),
+                                        conversion=-1),
+                                    Constant(value=')')]))],
+                    decorator_list=[],
+                    returns=Name(id='str', ctx=Load()))],
+            decorator_list=[]),
+        ClassDef(
+            name='Unscheduled',
+            bases=[
+                Name(id='ForkCriteria', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Forks that have not been scheduled.\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='_internal',
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='ForkCriteria', ctx=Load()),
+                                        attr='UNSCHEDULED',
+                                        ctx=Load()),
+                                    Constant(value=0)],
+                                ctx=Load()))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='check',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='block_number',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='timestamp',
+                                annotation=Name(id='U256', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Unscheduled forks never occur; always returns `False`.\n        ')),
+                        Return(
+                            value=Constant(value=False))],
+                    decorator_list=[],
+                    returns=Subscript(
+                        value=Name(id='Literal', ctx=Load()),
+                        slice=Constant(value=False),
+                        ctx=Load())),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        String representation of this object.\n        ')),
+                        Return(
+                            value=Constant(value='Unscheduled()'))],
+                    decorator_list=[],
+                    returns=Name(id='str', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

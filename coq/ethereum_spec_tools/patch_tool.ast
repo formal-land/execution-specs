@@ -1,0 +1,379 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nSimple patching tool\n')),
+        Import(
+            names=[
+                alias(name='argparse')]),
+        Import(
+            names=[
+                alias(name='subprocess')]),
+        ImportFrom(
+            module='sys',
+            names=[
+                alias(name='stderr'),
+                alias(name='stdout')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='DESCRIPTION', ctx=Store())],
+            value=Constant(value="\nApply the unstaged changes in SOURCE_FORK to each TARGET_FORK. If some of the\nchange didn't apply, '.rej' files listing the unapplied changes will be left in\nTARGET_FORK.\n")),
+        Assign(
+            targets=[
+                Name(id='parser', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='argparse', ctx=Load()),
+                    attr='ArgumentParser',
+                    ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='description',
+                        value=Name(id='DESCRIPTION', ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='source_fork')],
+                keywords=[
+                    keyword(
+                        arg='metavar',
+                        value=Constant(value='SOURCE_FORK')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load())),
+                    keyword(
+                        arg='nargs',
+                        value=Constant(value=1))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='targets')],
+                keywords=[
+                    keyword(
+                        arg='metavar',
+                        value=Constant(value='TARGET_FORK')),
+                    keyword(
+                        arg='type',
+                        value=Name(id='str', ctx=Load())),
+                    keyword(
+                        arg='nargs',
+                        value=Constant(value='*'))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='parser', ctx=Load()),
+                    attr='add_argument',
+                    ctx=Load()),
+                args=[
+                    Constant(value='--tests')],
+                keywords=[
+                    keyword(
+                        arg='action',
+                        value=Constant(value='store_const')),
+                    keyword(
+                        arg='const',
+                        value=Constant(value='tests/')),
+                    keyword(
+                        arg='dest',
+                        value=Constant(value='prefix')),
+                    keyword(
+                        arg='help',
+                        value=Constant(value='Patch the tests instead'))])),
+        FunctionDef(
+            name='main',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Patch the changes from one fork into the others.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='options', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='parser', ctx=Load()),
+                            attr='parse_args',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                If(
+                    test=UnaryOp(
+                        op=Not(),
+                        operand=Attribute(
+                            value=Name(id='options', ctx=Load()),
+                            attr='prefix',
+                            ctx=Load())),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='prefix',
+                                    ctx=Store())],
+                            value=Constant(value='src/ethereum/'))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='source_fork_path', ctx=Store())],
+                    value=BinOp(
+                        left=Attribute(
+                            value=Name(id='options', ctx=Load()),
+                            attr='prefix',
+                            ctx=Load()),
+                        op=Add(),
+                        right=Subscript(
+                            value=Attribute(
+                                value=Name(id='options', ctx=Load()),
+                                attr='source_fork',
+                                ctx=Load()),
+                            slice=Constant(value=0),
+                            ctx=Load()))),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            Compare(
+                                left=Attribute(
+                                    value=Name(id='options', ctx=Load()),
+                                    attr='prefix',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='tests/')]),
+                            Compare(
+                                left=Constant(value='dao_fork'),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='options', ctx=Load()),
+                                        attr='targets',
+                                        ctx=Load())])]),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    Constant(value='dao_fork has no tests')],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='git_diff', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='subprocess', ctx=Load()),
+                            attr='run',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value='git'),
+                                    Constant(value='diff'),
+                                    Name(id='source_fork_path', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='capture_output',
+                                value=Constant(value=True)),
+                            keyword(
+                                arg='text',
+                                value=Constant(value=True))])),
+                Assign(
+                    targets=[
+                        Name(id='output_lines', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='git_diff', ctx=Load()),
+                                attr='stdout',
+                                ctx=Load()),
+                            attr='splitlines',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='keepends',
+                                value=Constant(value=True))])),
+                For(
+                    target=Name(id='target', ctx=Store()),
+                    iter=Attribute(
+                        value=Name(id='options', ctx=Load()),
+                        attr='targets',
+                        ctx=Load()),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='patch', ctx=Store())],
+                            value=Constant(value='')),
+                        For(
+                            target=Name(id='line', ctx=Store()),
+                            iter=Name(id='output_lines', ctx=Load()),
+                            body=[
+                                If(
+                                    test=Call(
+                                        func=Attribute(
+                                            value=Name(id='line', ctx=Load()),
+                                            attr='startswith',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='diff --git')],
+                                        keywords=[]),
+                                    body=[
+                                        Pass()],
+                                    orelse=[
+                                        If(
+                                            test=Call(
+                                                func=Attribute(
+                                                    value=Name(id='line', ctx=Load()),
+                                                    attr='startswith',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Constant(value='index')],
+                                                keywords=[]),
+                                            body=[
+                                                Pass()],
+                                            orelse=[
+                                                If(
+                                                    test=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='line', ctx=Load()),
+                                                            attr='startswith',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Constant(value='--- a/')],
+                                                        keywords=[]),
+                                                    body=[
+                                                        AugAssign(
+                                                            target=Name(id='patch', ctx=Store()),
+                                                            op=Add(),
+                                                            value=Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='line', ctx=Load()),
+                                                                    attr='replace',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    BinOp(
+                                                                        left=BinOp(
+                                                                            left=Constant(value='--- a/'),
+                                                                            op=Add(),
+                                                                            right=Attribute(
+                                                                                value=Name(id='options', ctx=Load()),
+                                                                                attr='prefix',
+                                                                                ctx=Load())),
+                                                                        op=Add(),
+                                                                        right=Subscript(
+                                                                            value=Attribute(
+                                                                                value=Name(id='options', ctx=Load()),
+                                                                                attr='source_fork',
+                                                                                ctx=Load()),
+                                                                            slice=Constant(value=0),
+                                                                            ctx=Load())),
+                                                                    BinOp(
+                                                                        left=BinOp(
+                                                                            left=Constant(value='--- '),
+                                                                            op=Add(),
+                                                                            right=Attribute(
+                                                                                value=Name(id='options', ctx=Load()),
+                                                                                attr='prefix',
+                                                                                ctx=Load())),
+                                                                        op=Add(),
+                                                                        right=Name(id='target', ctx=Load()))],
+                                                                keywords=[]))],
+                                                    orelse=[
+                                                        If(
+                                                            test=Call(
+                                                                func=Attribute(
+                                                                    value=Name(id='line', ctx=Load()),
+                                                                    attr='startswith',
+                                                                    ctx=Load()),
+                                                                args=[
+                                                                    Constant(value='+++ b/')],
+                                                                keywords=[]),
+                                                            body=[
+                                                                AugAssign(
+                                                                    target=Name(id='patch', ctx=Store()),
+                                                                    op=Add(),
+                                                                    value=Call(
+                                                                        func=Attribute(
+                                                                            value=Name(id='line', ctx=Load()),
+                                                                            attr='replace',
+                                                                            ctx=Load()),
+                                                                        args=[
+                                                                            BinOp(
+                                                                                left=BinOp(
+                                                                                    left=Constant(value='+++ b/'),
+                                                                                    op=Add(),
+                                                                                    right=Attribute(
+                                                                                        value=Name(id='options', ctx=Load()),
+                                                                                        attr='prefix',
+                                                                                        ctx=Load())),
+                                                                                op=Add(),
+                                                                                right=Subscript(
+                                                                                    value=Attribute(
+                                                                                        value=Name(id='options', ctx=Load()),
+                                                                                        attr='source_fork',
+                                                                                        ctx=Load()),
+                                                                                    slice=Constant(value=0),
+                                                                                    ctx=Load())),
+                                                                            BinOp(
+                                                                                left=BinOp(
+                                                                                    left=Constant(value='+++ '),
+                                                                                    op=Add(),
+                                                                                    right=Attribute(
+                                                                                        value=Name(id='options', ctx=Load()),
+                                                                                        attr='prefix',
+                                                                                        ctx=Load())),
+                                                                                op=Add(),
+                                                                                right=Name(id='target', ctx=Load()))],
+                                                                        keywords=[]))],
+                                                            orelse=[
+                                                                AugAssign(
+                                                                    target=Name(id='patch', ctx=Store()),
+                                                                    op=Add(),
+                                                                    value=Name(id='line', ctx=Load()))])])])])],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='subprocess', ctx=Load()),
+                                    attr='run',
+                                    ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value='patch'),
+                                            Constant(value='-p0'),
+                                            Constant(value='--no-backup-if-mismatch')],
+                                        ctx=Load())],
+                                keywords=[
+                                    keyword(
+                                        arg='input',
+                                        value=Name(id='patch', ctx=Load())),
+                                    keyword(
+                                        arg='text',
+                                        value=Constant(value=True)),
+                                    keyword(
+                                        arg='stdout',
+                                        value=Name(id='stdout', ctx=Load())),
+                                    keyword(
+                                        arg='stderr',
+                                        value=Name(id='stderr', ctx=Load()))]))],
+                    orelse=[])],
+            decorator_list=[],
+            returns=Constant(value=None))],
+    type_ignores=[])

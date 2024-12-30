@@ -1,0 +1,421 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nUtility Functions For Numeric Operations\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nNumeric operations specific utility functions used in this specification.\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Sequence'),
+                alias(name='SupportsInt'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U32'),
+                alias(name='Uint')],
+            level=0),
+        FunctionDef(
+            name='get_sign',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='int', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Determines the sign of a number.\n\n    Parameters\n    ----------\n    value :\n        The value whose sign is to be determined.\n\n    Returns\n    -------\n    sign : `int`\n        The sign of the number (-1 or 0 or 1).\n        The return value is based on math signum function.\n    ')),
+                If(
+                    test=Compare(
+                        left=Name(id='value', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Return(
+                            value=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='value', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Return(
+                                    value=Constant(value=0))],
+                            orelse=[
+                                Return(
+                                    value=Constant(value=1))])])],
+            decorator_list=[],
+            returns=Name(id='int', ctx=Load())),
+        FunctionDef(
+            name='ceil32',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='value',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Converts a unsigned integer to the next closest multiple of 32.\n\n    Parameters\n    ----------\n    value :\n        The value whose ceil32 is to be calculated.\n\n    Returns\n    -------\n    ceil32 : `ethereum.base_types.U256`\n        The same value if it's a perfect multiple of 32\n        else it returns the smallest multiple of 32\n        that is greater than `value`.\n    ")),
+                Assign(
+                    targets=[
+                        Name(id='ceiling', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=32)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='remainder', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='value', ctx=Load()),
+                        op=Mod(),
+                        right=Name(id='ceiling', ctx=Load()))),
+                If(
+                    test=Compare(
+                        left=Name(id='remainder', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[])]),
+                    body=[
+                        Return(
+                            value=Name(id='value', ctx=Load()))],
+                    orelse=[
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='value', ctx=Load()),
+                                    op=Add(),
+                                    right=Name(id='ceiling', ctx=Load())),
+                                op=Sub(),
+                                right=Name(id='remainder', ctx=Load())))])],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='is_prime',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='number',
+                        annotation=Name(id='SupportsInt', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Checks if `number` is a prime number.\n\n    Parameters\n    ----------\n    number :\n        The number to check for primality.\n\n    Returns\n    -------\n    is_number_prime : `bool`\n        Boolean indicating if `number` is prime or not.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='number', ctx=Store())],
+                    value=Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Name(id='number', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Name(id='number', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Constant(value=1)]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    orelse=[]),
+                For(
+                    target=Name(id='x', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[
+                                        BinOp(
+                                            left=Name(id='number', ctx=Load()),
+                                            op=Pow(),
+                                            right=Constant(value=0.5))],
+                                    keywords=[]),
+                                op=Add(),
+                                right=Constant(value=1))],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='number', ctx=Load()),
+                                    op=Mod(),
+                                    right=Name(id='x', ctx=Load())),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Return(
+                                    value=Constant(value=False))],
+                            orelse=[])],
+                    orelse=[]),
+                Return(
+                    value=Constant(value=True))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='le_bytes_to_uint32_sequence',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='data',
+                        annotation=Name(id='bytes', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert little endian byte stream `data` to a little endian U32\n    sequence i.e., the first U32 number of the sequence is the least\n    significant U32 number.\n\n    Parameters\n    ----------\n    data :\n        The byte stream (little endian) which is to be converted to a U32\n        stream.\n\n    Returns\n    -------\n    uint32_sequence : `Tuple[U32, ...]`\n        Sequence of U32 numbers obtained from the little endian byte\n        stream.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='sequence', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load())],
+                                keywords=[]),
+                            Constant(value=4)],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='sequence', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='U32', ctx=Load()),
+                                            attr='from_le_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Slice(
+                                                    lower=Name(id='i', ctx=Load()),
+                                                    upper=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Constant(value=4))),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[
+                            Name(id='sequence', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Tuple', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='U32', ctx=Load()),
+                        Constant(value=Ellipsis)],
+                    ctx=Load()),
+                ctx=Load())),
+        FunctionDef(
+            name='le_uint32_sequence_to_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='sequence',
+                        annotation=Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Name(id='U32', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Obtain little endian byte stream from a little endian U32 sequence\n    i.e., the first U32 number of the sequence is the least significant\n    U32 number.\n\n    Note - In this conversion, the most significant byte (byte at the end of\n    the little endian stream) may have leading zeroes. This function doesn't\n    take care of removing these leading zeroes as shown in below example.\n\n    >>> le_uint32_sequence_to_bytes([U32(8)])\n    b'\\x08\\x00\\x00\\x00'\n\n\n    Parameters\n    ----------\n    sequence :\n        The U32 stream (little endian) which is to be converted to a\n        little endian byte stream.\n\n    Returns\n    -------\n    result : `bytes`\n        The byte stream obtained from the little endian U32 stream.\n    ")),
+                Assign(
+                    targets=[
+                        Name(id='result_bytes', ctx=Store())],
+                    value=Constant(value=b'')),
+                For(
+                    target=Name(id='item', ctx=Store()),
+                    iter=Name(id='sequence', ctx=Load()),
+                    body=[
+                        AugAssign(
+                            target=Name(id='result_bytes', ctx=Store()),
+                            op=Add(),
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='item', ctx=Load()),
+                                    attr='to_le_bytes4',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='result_bytes', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='bytes', ctx=Load())),
+        FunctionDef(
+            name='le_uint32_sequence_to_uint',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='sequence',
+                        annotation=Subscript(
+                            value=Name(id='Sequence', ctx=Load()),
+                            slice=Name(id='U32', ctx=Load()),
+                            ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Obtain Uint from a U32 sequence assuming that this sequence is little\n    endian i.e., the first U32 number of the sequence is the least\n    significant U32 number.\n\n    Parameters\n    ----------\n    sequence :\n        The U32 stream (little endian) which is to be converted to a Uint.\n\n    Returns\n    -------\n    value : `Uint`\n        The Uint number obtained from the conversion of the little endian\n        U32 stream.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='sequence_as_bytes', ctx=Store())],
+                    value=Call(
+                        func=Name(id='le_uint32_sequence_to_bytes', ctx=Load()),
+                        args=[
+                            Name(id='sequence', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='Uint', ctx=Load()),
+                            attr='from_le_bytes',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sequence_as_bytes', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='taylor_exponential',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='factor',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='numerator',
+                        annotation=Name(id='Uint', ctx=Load())),
+                    arg(
+                        arg='denominator',
+                        annotation=Name(id='Uint', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Approximates factor * e ** (numerator / denominator) using\n    Taylor expansion.\n\n    Parameters\n    ----------\n    factor :\n        The factor.\n    numerator :\n        The numerator of the exponential.\n    denominator :\n        The denominator of the exponential.\n\n    Returns\n    -------\n    output : `ethereum.base_types.Uint`\n        The approximation of factor * e ** (numerator / denominator).\n\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='output', ctx=Store())],
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='numerator_accumulated', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='factor', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='denominator', ctx=Load()))),
+                While(
+                    test=Compare(
+                        left=Name(id='numerator_accumulated', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[])]),
+                    body=[
+                        AugAssign(
+                            target=Name(id='output', ctx=Store()),
+                            op=Add(),
+                            value=Name(id='numerator_accumulated', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='numerator_accumulated', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='numerator_accumulated', ctx=Load()),
+                                    op=Mult(),
+                                    right=Name(id='numerator', ctx=Load())),
+                                op=FloorDiv(),
+                                right=BinOp(
+                                    left=Name(id='denominator', ctx=Load()),
+                                    op=Mult(),
+                                    right=Name(id='i', ctx=Load())))),
+                        AugAssign(
+                            target=Name(id='i', ctx=Store()),
+                            op=Add(),
+                            value=Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=BinOp(
+                        left=Name(id='output', ctx=Load()),
+                        op=FloorDiv(),
+                        right=Name(id='denominator', ctx=Load())))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load()))],
+    type_ignores=[])

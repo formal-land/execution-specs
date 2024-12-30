@@ -1,0 +1,18 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe Muir Glacier fork delays the difficulty bomb. There are no other changes\nin this fork.\n')),
+        ImportFrom(
+            module='ethereum.fork_criteria',
+            names=[
+                alias(name='ByBlockNumber')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='FORK_CRITERIA', ctx=Store())],
+            value=Call(
+                func=Name(id='ByBlockNumber', ctx=Load()),
+                args=[
+                    Constant(value=9200000)],
+                keywords=[]))],
+    type_ignores=[])

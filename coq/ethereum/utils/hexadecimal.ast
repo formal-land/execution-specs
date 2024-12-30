@@ -1,0 +1,406 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nUtility Functions For Hexadecimal Strings\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nHexadecimal strings specific utility functions used in this specification.\n')),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes8'),
+                alias(name='Bytes20'),
+                alias(name='Bytes32'),
+                alias(name='Bytes256')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U64'),
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=0),
+        FunctionDef(
+            name='has_hex_prefix',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Check if a hex string starts with hex prefix (0x).\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be checked for presence of prefix.\n\n    Returns\n    -------\n    has_prefix : `bool`\n        Boolean indicating whether the hex string has 0x prefix.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='hex_string', ctx=Load()),
+                            attr='startswith',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='0x')],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='bool', ctx=Load())),
+        FunctionDef(
+            name='remove_hex_prefix',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value="\n    Remove 0x prefix from a hex string if present. This function returns the\n    passed hex string if it isn't prefixed with 0x.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string whose prefix is to be removed.\n\n    Returns\n    -------\n    modified_hex_string : `str`\n        The hexadecimal string with the 0x prefix removed if present.\n    ")),
+                If(
+                    test=Call(
+                        func=Name(id='has_hex_prefix', ctx=Load()),
+                        args=[
+                            Name(id='hex_string', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Return(
+                            value=Subscript(
+                                value=Name(id='hex_string', ctx=Load()),
+                                slice=Slice(
+                                    lower=Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Constant(value='0x')],
+                                        keywords=[])),
+                                ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='hex_string', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='str', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bytes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to bytes.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to bytes.\n\n    Returns\n    -------\n    byte_stream : `bytes`\n        Byte stream corresponding to the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='bytes', ctx=Load()),
+                            attr='fromhex',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                args=[
+                                    Name(id='hex_string', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bytes8',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to 8 bytes.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to 8 bytes.\n\n    Returns\n    -------\n    8_byte_stream : `Bytes8`\n        8-byte stream corresponding to the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes8', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                                args=[
+                                                    Name(id='hex_string', ctx=Load())],
+                                                keywords=[]),
+                                            attr='rjust',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=16),
+                                            Constant(value='0')],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes8', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bytes20',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to 20 bytes.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to 20 bytes.\n\n    Returns\n    -------\n    20_byte_stream : `Bytes20`\n        20-byte stream corresponding to the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes20', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                                args=[
+                                                    Name(id='hex_string', ctx=Load())],
+                                                keywords=[]),
+                                            attr='rjust',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=20),
+                                            Constant(value='0')],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes20', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bytes32',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to 32 bytes.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to 32 bytes.\n\n    Returns\n    -------\n    32_byte_stream : `Bytes32`\n        32-byte stream corresponding to the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes32', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                                args=[
+                                                    Name(id='hex_string', ctx=Load())],
+                                                keywords=[]),
+                                            attr='rjust',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=64),
+                                            Constant(value='0')],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes32', ctx=Load())),
+        FunctionDef(
+            name='hex_to_bytes256',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to 256 bytes.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to 256 bytes.\n\n    Returns\n    -------\n    256_byte_stream : `Bytes256`\n        256-byte stream corresponding to the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Bytes256', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Call(
+                                                func=Name(id='remove_hex_prefix', ctx=Load()),
+                                                args=[
+                                                    Name(id='hex_string', ctx=Load())],
+                                                keywords=[]),
+                                            attr='rjust',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=512),
+                                            Constant(value='0')],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Bytes256', ctx=Load())),
+        FunctionDef(
+            name='hex_to_hash',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to hash32 (32 bytes).\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to hash32.\n\n    Returns\n    -------\n    hash : `Hash32`\n        32-byte stream obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Hash32', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='bytes', ctx=Load()),
+                                    attr='fromhex',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Hash32', ctx=Load())),
+        FunctionDef(
+            name='hex_to_uint',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to Uint.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to Uint.\n\n    Returns\n    -------\n    converted : `Uint`\n        The unsigned integer obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value=16)],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='Uint', ctx=Load())),
+        FunctionDef(
+            name='hex_to_u64',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to U64.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to U256.\n\n    Returns\n    -------\n    converted : `U64`\n        The U64 integer obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='U64', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value=16)],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U64', ctx=Load())),
+        FunctionDef(
+            name='hex_to_u256',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='hex_string',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Convert hex string to U256.\n\n    Parameters\n    ----------\n    hex_string :\n        The hexadecimal string to be converted to U256.\n\n    Returns\n    -------\n    converted : `U256`\n        The U256 integer obtained from the given hexadecimal string.\n    ')),
+                Return(
+                    value=Call(
+                        func=Name(id='U256', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='remove_hex_prefix', ctx=Load()),
+                                        args=[
+                                            Name(id='hex_string', ctx=Load())],
+                                        keywords=[]),
+                                    Constant(value=16)],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[],
+            returns=Name(id='U256', ctx=Load()))],
+    type_ignores=[])

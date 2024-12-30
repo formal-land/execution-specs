@@ -1,0 +1,257 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nDefines the functions required for creating EVM traces during execution.\n\nA _trace_ is a log of operations that took place during an event or period of\ntime. In the case of an EVM trace, the log is built from a series of\n[`TraceEvent`]s emitted during the execution of a transaction.\n\nNote that this module _does not_ contain a trace implementation. Instead, it\ndefines only the events that can be collected into a trace by some other\npackage. See [`EvmTracer`].\n\nSee [EIP-3155] for more details on EVM traces.\n\n[`EvmTracer`]: ref:ethereum.trace.EvmTracer\n[`TraceEvent`]: ref:ethereum.trace.TraceEvent\n[EIP-3155]: https://eips.ethereum.org/EIPS/eip-3155\n')),
+        Import(
+            names=[
+                alias(name='enum')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Optional'),
+                alias(name='Protocol'),
+                alias(name='Union')],
+            level=0),
+        ClassDef(
+            name='TransactionStart',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered at the start of a transaction.\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='TransactionEnd',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered at the end of a transaction.\n    ')),
+                AnnAssign(
+                    target=Name(id='gas_used', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Total gas consumed by this transaction.\n    ')),
+                AnnAssign(
+                    target=Name(id='output', ctx=Store()),
+                    annotation=Name(id='bytes', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Return value or revert reason of the outermost frame of execution.\n    ')),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Exception', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    The exception, if any, that caused the transaction to fail.\n\n    See [`ethereum.exceptions`] as well as fork-specific modules like\n    [`ethereum.frontier.vm.exceptions`][vm] for details.\n\n    [`ethereum.exceptions`]: ref:ethereum.exceptions\n    [vm]: ref:ethereum.frontier.vm.exceptions\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='PrecompileStart',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered before executing a precompile.\n    ')),
+                AnnAssign(
+                    target=Name(id='address', ctx=Store()),
+                    annotation=Name(id='bytes', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Precompile that is about to be executed.\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='PrecompileEnd',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered after executing a precompile.\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='OpStart',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered before executing an opcode.\n    ')),
+                AnnAssign(
+                    target=Name(id='op', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='enum', ctx=Load()),
+                        attr='Enum',
+                        ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Opcode that is about to be executed.\n\n    Will be an instance of a fork-specific type like, for example,\n    [`ethereum.frontier.vm.instructions.Ops`][ops].\n\n    [ops]: ref:ethereum.frontier.vm.instructions.Ops\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='OpEnd',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered after executing an opcode.\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='OpException',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered when an opcode raises an exception.\n    ')),
+                AnnAssign(
+                    target=Name(id='error', ctx=Store()),
+                    annotation=Name(id='Exception', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Exception that was raised.\n\n    See [`ethereum.exceptions`] as well as fork-specific modules like\n    [`ethereum.frontier.vm.exceptions`][vm] for examples of exceptions that\n    might be raised.\n\n    [`ethereum.exceptions`]: ref:ethereum.exceptions\n    [vm]: ref:ethereum.frontier.vm.exceptions\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='EvmStop',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered when the EVM stops.\n    ')),
+                AnnAssign(
+                    target=Name(id='op', ctx=Store()),
+                    annotation=Attribute(
+                        value=Name(id='enum', ctx=Load()),
+                        attr='Enum',
+                        ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Last opcode executed.\n\n    Will be an instance of a fork-specific type like, for example,\n    [`ethereum.frontier.vm.instructions.Ops`][ops].\n\n    [ops]: ref:ethereum.frontier.vm.instructions.Ops\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='GasAndRefund',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Trace event that is triggered when gas is deducted.\n    ')),
+                AnnAssign(
+                    target=Name(id='gas_cost', ctx=Store()),
+                    annotation=Name(id='int', ctx=Load()),
+                    simple=1),
+                Expr(
+                    value=Constant(value='\n    Amount of gas charged or refunded.\n    '))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        Assign(
+            targets=[
+                Name(id='TraceEvent', ctx=Store())],
+            value=Subscript(
+                value=Name(id='Union', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='TransactionStart', ctx=Load()),
+                        Name(id='TransactionEnd', ctx=Load()),
+                        Name(id='PrecompileStart', ctx=Load()),
+                        Name(id='PrecompileEnd', ctx=Load()),
+                        Name(id='OpStart', ctx=Load()),
+                        Name(id='OpEnd', ctx=Load()),
+                        Name(id='OpException', ctx=Load()),
+                        Name(id='EvmStop', ctx=Load()),
+                        Name(id='GasAndRefund', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load())),
+        Expr(
+            value=Constant(value='\nAll possible types of events that an [`EvmTracer`] is expected to handle.\n\n[`EvmTracer`]: ref:ethereum.trace.EvmTracer\n')),
+        FunctionDef(
+            name='discard_evm_trace',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='evm',
+                        annotation=Name(id='object', ctx=Load())),
+                    arg(
+                        arg='event',
+                        annotation=Name(id='TraceEvent', ctx=Load())),
+                    arg(
+                        arg='trace_memory',
+                        annotation=Name(id='bool', ctx=Load())),
+                    arg(
+                        arg='trace_stack',
+                        annotation=Name(id='bool', ctx=Load())),
+                    arg(
+                        arg='trace_return_data',
+                        annotation=Name(id='bool', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=False),
+                    Constant(value=True),
+                    Constant(value=False)]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    An [`EvmTracer`] that discards all events.\n\n    [`EvmTracer`]: ref:ethereum.trace.EvmTracer\n    '))],
+            decorator_list=[],
+            returns=Constant(value=None)),
+        ClassDef(
+            name='EvmTracer',
+            bases=[
+                Name(id='Protocol', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    [`Protocol`] that describes tracer functions.\n\n    See [`ethereum.trace`] for details about tracing in general, and\n    [`__call__`] for more on how to implement a tracer.\n\n    [`Protocol`]: https://docs.python.org/3/library/typing.html#typing.Protocol\n    [`ethereum.trace`]: ref:ethereum.trace\n    [`__call__`]: ref:ethereum.trace.EvmTracer.__call__\n    ')),
+                FunctionDef(
+                    name='__call__',
+                    args=arguments(
+                        posonlyargs=[
+                            arg(arg='self'),
+                            arg(
+                                arg='evm',
+                                annotation=Name(id='object', ctx=Load())),
+                            arg(
+                                arg='event',
+                                annotation=Name(id='TraceEvent', ctx=Load()))],
+                        args=[
+                            arg(
+                                arg='trace_memory',
+                                annotation=Name(id='bool', ctx=Load())),
+                            arg(
+                                arg='trace_stack',
+                                annotation=Name(id='bool', ctx=Load())),
+                            arg(
+                                arg='trace_return_data',
+                                annotation=Name(id='bool', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=False),
+                            Constant(value=True),
+                            Constant(value=False)]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Call `self` as a function, recording a trace event.\n\n        `evm` is the live state of the EVM, and will be a fork-specific type\n        like [`ethereum.frontier.vm.Evm`][evm].\n\n        `event`, a [`TraceEvent`], is the reason why the tracer was triggered.\n\n        `trace_memory` requests a full memory dump in the resulting trace.\n\n        `trace_stack` requests the full stack in the resulting trace.\n\n        `trace_return_data` requests that return data be included in the\n        resulting trace.\n\n        See [`discard_evm_trace`] for an example function implementing this\n        protocol.\n\n        [`discard_evm_trace`]: ref:ethereum.trace.discard_evm_trace\n        [evm]: ref:ethereum.frontier.vm.Evm\n        [`TraceEvent`]: ref:ethereum.trace.TraceEvent\n        '))],
+                    decorator_list=[],
+                    returns=Constant(value=None))],
+            decorator_list=[]),
+        AnnAssign(
+            target=Name(id='evm_trace', ctx=Store()),
+            annotation=Name(id='EvmTracer', ctx=Load()),
+            value=Name(id='discard_evm_trace', ctx=Load()),
+            simple=1),
+        Expr(
+            value=Constant(value='\nActive [`EvmTracer`] that is used for generating traces.\n\n[`EvmTracer`]: ref:ethereum.trace.EvmTracer\n'))],
+    type_ignores=[])

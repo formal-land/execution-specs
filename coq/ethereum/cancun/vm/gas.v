@@ -1,0 +1,277 @@
+(* Generated *)
+(*
+Ethereum Virtual Machine (EVM) Gas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. contents:: Table of Contents
+    :backlinks: none
+    :local:
+
+Introduction
+------------
+
+EVM gas constants and calculators.
+*)
+
+Require dataclasses.
+Require typing.
+Require ethereum_types.numeric.
+Require ethereum.trace.
+Require ethereum.utils.numeric.
+Require ethereum.cancun.blocks.
+Require ethereum.cancun.transactions.
+Require ethereum.cancun.vm.__init__.
+Require ethereum.cancun.vm.exceptions.
+
+Definition charge_gas (evm : Evm) (amount : Uint) : M unit :=
+  (*
+      Subtracts `amount` from `evm.gas_left`.
+
+      Parameters
+      ----------
+      evm :
+          The current EVM.
+      amount :
+          The amount of gas the current operation requires.
+
+      *)
+  do* [[ ethereum.trace.evm_trace ~(|
+    evm,
+    ethereum.trace.GasAndRefund ~(|
+      M.get_local ~(| "int" |) ~(|
+        amount
+      |)
+    |)
+  |) ]] in
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_memory_gas_cost (size_in_bytes : Uint) : M Uint :=
+  (*
+      Calculates the gas cost for allocating memory
+      to the smallest multiple of 32 bytes,
+      such that the allocated size is at least as big as the given size.
+
+      Parameters
+      ----------
+      size_in_bytes :
+          The size of the data in bytes.
+
+      Returns
+      -------
+      total_gas_cost : `ethereum.base_types.Uint`
+          The gas cost for storing data in memory.
+      *)
+  do* M.assign "size_in_words" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "linear_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "quadratic_cost" [[
+    (* TODO expression *) in
+  ]] in
+  do* M.assign "total_gas_cost" [[
+    (* TODO expression *) in
+  ]] in
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_gas_extend_memory (memory : bytearray) (extensions : (* TODO type *)) : M ExtendMemory :=
+  (*
+      Calculates the gas amount to extend memory
+
+      Parameters
+      ----------
+      memory :
+          Memory contents of the EVM.
+      extensions:
+          List of extensions to be made to the memory.
+          Consists of a tuple of start position and size.
+
+      Returns
+      -------
+      extend_memory: `ExtendMemory`
+      *)
+  do* M.assign "size_to_extend" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "to_be_paid" [[
+    ethereum_types.numeric.Uint ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "current_size" [[
+    ethereum_types.numeric.Uint ~(|
+      M.get_local ~(| "len" |) ~(|
+        memory
+      |)
+    |) in
+  ]] in
+  (* TODO statement *)
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_message_call_gas (value : U256) (gas : Uint) (gas_left : Uint) (memory_cost : Uint) (extra_gas : Uint) (call_stipend : Uint) : M MessageCallGas :=
+  (*
+      Calculates the MessageCallGas (cost and stipend) for
+      executing call Opcodes.
+
+      Parameters
+      ----------
+      value:
+          The amount of `ETH` that needs to be transferred.
+      gas :
+          The amount of gas provided to the message-call.
+      gas_left :
+          The amount of gas left in the current frame.
+      memory_cost :
+          The amount needed to extend the memory in the current frame.
+      extra_gas :
+          The amount of gas needed for transferring value + creating a new
+          account inside a message call.
+      call_stipend :
+          The amount of stipend provided to a message call to execute code while
+          transferring value(ETH).
+
+      Returns
+      -------
+      message_call_gas: `MessageCallGas`
+      *)
+  do* M.assign "call_stipend" [[
+    (* TODO expression *) in
+  ]] in
+  (* TODO statement *)
+  do* M.assign "gas" [[
+    M.get_local ~(| "min" |) ~(|
+      gas,
+      M.get_local ~(| "max_message_call_gas" |) ~(|
+        (* TODO expression *)
+      |)
+    |) in
+  ]] in
+  (* TODO statement *)
+  M.pure tt.
+
+Definition max_message_call_gas (gas : Uint) : M Uint :=
+  (*
+      Calculates the maximum gas that is allowed for making a message call
+
+      Parameters
+      ----------
+      gas :
+          The amount of gas provided to the message-call.
+
+      Returns
+      -------
+      max_allowed_message_call_gas: `ethereum.base_types.Uint`
+          The maximum gas allowed for making the message-call.
+      *)
+  (* TODO statement *)
+  M.pure tt.
+
+Definition init_code_cost (init_code_length : Uint) : M Uint :=
+  (*
+      Calculates the gas to be charged for the init code in CREAT*
+      opcodes as well as create transactions.
+
+      Parameters
+      ----------
+      init_code_length :
+          The length of the init code provided to the opcode
+          or a create transaction
+
+      Returns
+      -------
+      init_code_gas: `ethereum.base_types.Uint`
+          The gas to be charged for the init code.
+      *)
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_excess_blob_gas (parent_header : Header) : M U64 :=
+  (*
+      Calculated the excess blob gas for the current block based
+      on the gas used in the parent block.
+
+      Parameters
+      ----------
+      parent_header :
+          The parent block of the current block.
+
+      Returns
+      -------
+      excess_blob_gas: `ethereum.base_types.U64`
+          The excess blob gas for the current block.
+      *)
+  do* M.assign "excess_blob_gas" [[
+    ethereum_types.numeric.U64 ~(|
+      0
+    |) in
+  ]] in
+  do* M.assign "blob_gas_used" [[
+    ethereum_types.numeric.U64 ~(|
+      0
+    |) in
+  ]] in
+  (* TODO statement *)
+  do* M.assign "parent_blob_gas" [[
+    (* TODO expression *) in
+  ]] in
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_total_blob_gas (tx : Transaction) : M Uint :=
+  (*
+      Calculate the total blob gas for a transaction.
+
+      Parameters
+      ----------
+      tx :
+          The transaction for which the blob gas is to be calculated.
+
+      Returns
+      -------
+      total_blob_gas: `ethereum.base_types.Uint`
+          The total blob gas for the transaction.
+      *)
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_blob_gas_price (excess_blob_gas : U64) : M Uint :=
+  (*
+      Calculate the blob gasprice for a block.
+
+      Parameters
+      ----------
+      excess_blob_gas :
+          The excess blob gas for the block.
+
+      Returns
+      -------
+      blob_gasprice: `Uint`
+          The blob gasprice.
+      *)
+  (* TODO statement *)
+  M.pure tt.
+
+Definition calculate_data_fee (excess_blob_gas : U64) (tx : Transaction) : M Uint :=
+  (*
+      Calculate the blob data fee for a transaction.
+
+      Parameters
+      ----------
+      excess_blob_gas :
+          The excess_blob_gas for the execution.
+      tx :
+          The transaction for which the blob data fee is to be calculated.
+
+      Returns
+      -------
+      data_fee: `Uint`
+          The blob data fee.
+      *)
+  (* TODO statement *)
+  M.pure tt.

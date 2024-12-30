@@ -1,0 +1,967 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nElliptic Curves\n^^^^^^^^^^^^^^^\n')),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Generic'),
+                alias(name='Type'),
+                alias(name='TypeVar')],
+            level=0),
+        Import(
+            names=[
+                alias(name='coincurve')]),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256')],
+            level=0),
+        ImportFrom(
+            module='finite_field',
+            names=[
+                alias(name='Field')],
+            level=1),
+        ImportFrom(
+            module='hash',
+            names=[
+                alias(name='Hash32')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='SECP256K1N', ctx=Store())],
+            value=Call(
+                func=Name(id='U256', ctx=Load()),
+                args=[
+                    Constant(value=115792089237316195423570985008687907852837564279074904382605163141518161494337)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='F', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='F')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Name(id='Field', ctx=Load()))])),
+        Assign(
+            targets=[
+                Name(id='T', ctx=Store())],
+            value=Call(
+                func=Name(id='TypeVar', ctx=Load()),
+                args=[
+                    Constant(value='T')],
+                keywords=[
+                    keyword(
+                        arg='bound',
+                        value=Constant(value='EllipticCurve'))])),
+        FunctionDef(
+            name='secp256k1_recover',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='r',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='s',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='v',
+                        annotation=Name(id='U256', ctx=Load())),
+                    arg(
+                        arg='msg_hash',
+                        annotation=Name(id='Hash32', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Recovers the public key from a given signature.\n\n    Parameters\n    ----------\n    r :\n        TODO\n    s :\n        TODO\n    v :\n        TODO\n    msg_hash :\n        Hash of the message being recovered.\n\n    Returns\n    -------\n    public_key : `ethereum.base_types.Bytes`\n        Recovered public key.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='r_bytes', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='r', ctx=Load()),
+                            attr='to_be_bytes32',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='s_bytes', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='to_be_bytes32',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='signature', ctx=Store())],
+                    value=Call(
+                        func=Name(id='bytearray', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=List(
+                                    elts=[
+                                        Constant(value=0)],
+                                    ctx=Load()),
+                                op=Mult(),
+                                right=Constant(value=65))],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Subscript(
+                            value=Name(id='signature', ctx=Load()),
+                            slice=Slice(
+                                lower=BinOp(
+                                    left=Constant(value=32),
+                                    op=Sub(),
+                                    right=Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='r_bytes', ctx=Load())],
+                                        keywords=[])),
+                                upper=Constant(value=32)),
+                            ctx=Store())],
+                    value=Name(id='r_bytes', ctx=Load())),
+                Assign(
+                    targets=[
+                        Subscript(
+                            value=Name(id='signature', ctx=Load()),
+                            slice=Slice(
+                                lower=BinOp(
+                                    left=Constant(value=64),
+                                    op=Sub(),
+                                    right=Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='s_bytes', ctx=Load())],
+                                        keywords=[])),
+                                upper=Constant(value=64)),
+                            ctx=Store())],
+                    value=Name(id='s_bytes', ctx=Load())),
+                Assign(
+                    targets=[
+                        Subscript(
+                            value=Name(id='signature', ctx=Load()),
+                            slice=Constant(value=64),
+                            ctx=Store())],
+                    value=Name(id='v', ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='public_key', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='coincurve', ctx=Load()),
+                                attr='PublicKey',
+                                ctx=Load()),
+                            attr='from_signature_and_message',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='bytes', ctx=Load()),
+                                args=[
+                                    Name(id='signature', ctx=Load())],
+                                keywords=[]),
+                            Name(id='msg_hash', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='hasher',
+                                value=Constant(value=None))])),
+                Assign(
+                    targets=[
+                        Name(id='public_key', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='public_key', ctx=Load()),
+                                attr='format',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[
+                                keyword(
+                                    arg='compressed',
+                                    value=Constant(value=False))]),
+                        slice=Slice(
+                            lower=Constant(value=1)),
+                        ctx=Load())),
+                Return(
+                    value=Name(id='public_key', ctx=Load()))],
+            decorator_list=[],
+            returns=Name(id='Bytes', ctx=Load())),
+        ClassDef(
+            name='EllipticCurve',
+            bases=[
+                Subscript(
+                    value=Name(id='Generic', ctx=Load()),
+                    slice=Name(id='F', ctx=Load()),
+                    ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Superclass for integers modulo a prime. Not intended to be used\n    directly, but rather to be subclassed.\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='__slots__', ctx=Store())],
+                    value=Tuple(
+                        elts=[
+                            Constant(value='x'),
+                            Constant(value='y')],
+                        ctx=Load())),
+                AnnAssign(
+                    target=Name(id='FIELD', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Type', ctx=Load()),
+                        slice=Name(id='F', ctx=Load()),
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='A', ctx=Store()),
+                    annotation=Name(id='F', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='B', ctx=Store()),
+                    annotation=Name(id='F', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='x', ctx=Store()),
+                    annotation=Name(id='F', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='y', ctx=Store()),
+                    annotation=Name(id='F', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='__new__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='x',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='y',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Make new point on the curve. The point is not checked to see if it is\n        on the curve.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='res', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='object', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='res', ctx=Load()),
+                                    attr='x',
+                                    ctx=Store())],
+                            value=Name(id='x', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='res', ctx=Load()),
+                                    attr='y',
+                                    ctx=Store())],
+                            value=Name(id='y', ctx=Load())),
+                        Return(
+                            value=Name(id='res', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='x',
+                                annotation=Name(id='F', ctx=Load())),
+                            arg(
+                                arg='y',
+                                annotation=Name(id='F', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Checks if the point is on the curve. To skip this check call\n        `__new__()` directly.\n        ')),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    BoolOp(
+                                        op=Or(),
+                                        values=[
+                                            Compare(
+                                                left=Name(id='x', ctx=Load()),
+                                                ops=[
+                                                    NotEq()],
+                                                comparators=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='FIELD',
+                                                                ctx=Load()),
+                                                            attr='zero',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])]),
+                                            Compare(
+                                                left=Name(id='y', ctx=Load()),
+                                                ops=[
+                                                    NotEq()],
+                                                comparators=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='self', ctx=Load()),
+                                                                attr='FIELD',
+                                                                ctx=Load()),
+                                                            attr='zero',
+                                                            ctx=Load()),
+                                                        args=[],
+                                                        keywords=[])])]),
+                                    Compare(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=BinOp(
+                                                    left=BinOp(
+                                                        left=Name(id='y', ctx=Load()),
+                                                        op=Pow(),
+                                                        right=Constant(value=2)),
+                                                    op=Sub(),
+                                                    right=BinOp(
+                                                        left=Name(id='x', ctx=Load()),
+                                                        op=Pow(),
+                                                        right=Constant(value=3))),
+                                                op=Sub(),
+                                                right=BinOp(
+                                                    left=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='A',
+                                                        ctx=Load()),
+                                                    op=Mult(),
+                                                    right=Name(id='x', ctx=Load()))),
+                                            op=Sub(),
+                                            right=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='B',
+                                                ctx=Load())),
+                                        ops=[
+                                            NotEq()],
+                                        comparators=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='FIELD',
+                                                        ctx=Load()),
+                                                    attr='zero',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[])])]),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='ValueError', ctx=Load()),
+                                        args=[
+                                            Constant(value='Point not on curve')],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='__eq__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='other',
+                                annotation=Name(id='object', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Test two points for equality.\n        ')),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='other', ctx=Load()),
+                                        Call(
+                                            func=Name(id='type', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[])],
+                                    keywords=[])),
+                            body=[
+                                Return(
+                                    value=Constant(value=False))],
+                            orelse=[]),
+                        Return(
+                            value=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='x',
+                                            ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='other', ctx=Load()),
+                                                attr='x',
+                                                ctx=Load())]),
+                                    Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='y',
+                                            ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='other', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load())])]))],
+                    decorator_list=[],
+                    returns=Name(id='bool', ctx=Load())),
+                FunctionDef(
+                    name='__str__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Stringify a point as its coordinates.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='str', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='x',
+                                                ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='y',
+                                                ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='str', ctx=Load())),
+                FunctionDef(
+                    name='point_at_infinity',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='cls',
+                                annotation=Subscript(
+                                    value=Name(id='Type', ctx=Load()),
+                                    slice=Name(id='T', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value="\n        Return the point at infinity. This is the identity element of the group\n        operation.\n\n        The point at infinity doesn't actually have coordinates so we use\n        `(0, 0)` (which isn't on the curve) to represent it.\n        ")),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='cls', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='cls', ctx=Load()),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='cls', ctx=Load()),
+                                                attr='FIELD',
+                                                ctx=Load()),
+                                            attr='zero',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='cls', ctx=Load()),
+                                                attr='FIELD',
+                                                ctx=Load()),
+                                            attr='zero',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='classmethod', ctx=Load())],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='double',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Add a point to itself.\n        ')),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='x', ctx=Store()),
+                                        Name(id='y', ctx=Store()),
+                                        Name(id='F', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='FIELD',
+                                        ctx=Load())],
+                                ctx=Load())),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    Compare(
+                                        left=Name(id='y', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)])]),
+                            body=[
+                                Return(
+                                    value=Name(id='self', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='lam', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Call(
+                                            func=Attribute(
+                                                value=Name(id='F', ctx=Load()),
+                                                attr='from_int',
+                                                ctx=Load()),
+                                            args=[
+                                                Constant(value=3)],
+                                            keywords=[]),
+                                        op=Mult(),
+                                        right=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Pow(),
+                                            right=Constant(value=2))),
+                                    op=Add(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='A',
+                                        ctx=Load())),
+                                op=Div(),
+                                right=BinOp(
+                                    left=Call(
+                                        func=Attribute(
+                                            value=Name(id='F', ctx=Load()),
+                                            attr='from_int',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=2)],
+                                        keywords=[]),
+                                    op=Mult(),
+                                    right=Name(id='y', ctx=Load())))),
+                        Assign(
+                            targets=[
+                                Name(id='new_x', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Name(id='lam', ctx=Load()),
+                                        op=Pow(),
+                                        right=Constant(value=2)),
+                                    op=Sub(),
+                                    right=Name(id='x', ctx=Load())),
+                                op=Sub(),
+                                right=Name(id='x', ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Name(id='new_y', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='lam', ctx=Load()),
+                                    op=Mult(),
+                                    right=BinOp(
+                                        left=Name(id='x', ctx=Load()),
+                                        op=Sub(),
+                                        right=Name(id='new_x', ctx=Load()))),
+                                op=Sub(),
+                                right=Name(id='y', ctx=Load()))),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='new_x', ctx=Load()),
+                                    Name(id='new_y', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='__add__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='other',
+                                annotation=Name(id='T', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Add two points together.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='ZERO', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='FIELD',
+                                        ctx=Load()),
+                                    attr='zero',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='self_x', ctx=Store()),
+                                        Name(id='self_y', ctx=Store()),
+                                        Name(id='other_x', ctx=Store()),
+                                        Name(id='other_y', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='other', ctx=Load()),
+                                        attr='x',
+                                        ctx=Load()),
+                                    Attribute(
+                                        value=Name(id='other', ctx=Load()),
+                                        attr='y',
+                                        ctx=Load())],
+                                ctx=Load())),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Name(id='self_x', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='ZERO', ctx=Load())]),
+                                    Compare(
+                                        left=Name(id='self_y', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='ZERO', ctx=Load())])]),
+                            body=[
+                                Return(
+                                    value=Name(id='other', ctx=Load()))],
+                            orelse=[]),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Name(id='other_x', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='ZERO', ctx=Load())]),
+                                    Compare(
+                                        left=Name(id='other_y', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='ZERO', ctx=Load())])]),
+                            body=[
+                                Return(
+                                    value=Name(id='self', ctx=Load()))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='self_x', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Name(id='other_x', ctx=Load())]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='self_y', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='other_y', ctx=Load())]),
+                                    body=[
+                                        Return(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='double',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Return(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='point_at_infinity',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))])],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='lam', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='other_y', ctx=Load()),
+                                    op=Sub(),
+                                    right=Name(id='self_y', ctx=Load())),
+                                op=Div(),
+                                right=BinOp(
+                                    left=Name(id='other_x', ctx=Load()),
+                                    op=Sub(),
+                                    right=Name(id='self_x', ctx=Load())))),
+                        Assign(
+                            targets=[
+                                Name(id='x', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Name(id='lam', ctx=Load()),
+                                        op=Pow(),
+                                        right=Constant(value=2)),
+                                    op=Sub(),
+                                    right=Name(id='self_x', ctx=Load())),
+                                op=Sub(),
+                                right=Name(id='other_x', ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Name(id='y', ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Name(id='lam', ctx=Load()),
+                                    op=Mult(),
+                                    right=BinOp(
+                                        left=Name(id='self_x', ctx=Load()),
+                                        op=Sub(),
+                                        right=Name(id='x', ctx=Load()))),
+                                op=Sub(),
+                                right=Name(id='self_y', ctx=Load()))),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='x', ctx=Load()),
+                                    Name(id='y', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load())),
+                FunctionDef(
+                    name='mul_by',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='self',
+                                annotation=Name(id='T', ctx=Load())),
+                            arg(
+                                arg='n',
+                                annotation=Name(id='int', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Multiply `self` by `n` using the double and add algorithm.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='res', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='__new__',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='FIELD',
+                                                ctx=Load()),
+                                            attr='zero',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='FIELD',
+                                                ctx=Load()),
+                                            attr='zero',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='s', ctx=Store())],
+                            value=Name(id='self', ctx=Load())),
+                        While(
+                            test=Compare(
+                                left=Name(id='n', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=BinOp(
+                                            left=Name(id='n', ctx=Load()),
+                                            op=Mod(),
+                                            right=Constant(value=2)),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=1)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='res', ctx=Store())],
+                                            value=BinOp(
+                                                left=Name(id='res', ctx=Load()),
+                                                op=Add(),
+                                                right=Name(id='s', ctx=Load())))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Name(id='s', ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='s', ctx=Load()),
+                                        op=Add(),
+                                        right=Name(id='s', ctx=Load()))),
+                                AugAssign(
+                                    target=Name(id='n', ctx=Store()),
+                                    op=FloorDiv(),
+                                    value=Constant(value=2))],
+                            orelse=[]),
+                        Return(
+                            value=Name(id='res', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='T', ctx=Load()))],
+            decorator_list=[])],
+    type_ignores=[])

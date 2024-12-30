@@ -1,0 +1,1714 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value='\nThe Blake2 Implementation\n^^^^^^^^^^^^^^^^^^^^^^^^^^\n')),
+        Import(
+            names=[
+                alias(name='struct')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Final'),
+                alias(name='List'),
+                alias(name='Tuple')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='Uint')],
+            level=0),
+        FunctionDef(
+            name='spit_le_to_uint',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='data',
+                        annotation=Name(id='bytes', ctx=Load())),
+                    arg(
+                        arg='start',
+                        annotation=Name(id='int', ctx=Load())),
+                    arg(
+                        arg='num_words',
+                        annotation=Name(id='int', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Extracts 8 byte words from a given data.\n\n    Parameters\n    ----------\n    data :\n        The data in bytes from which the words need to be extracted\n    start :\n        Position to start the extraction\n    num_words:\n        The number of words to be extracted\n    ')),
+                Assign(
+                    targets=[
+                        Name(id='words', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='num_words', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='start_position', ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='start', ctx=Load()),
+                                op=Add(),
+                                right=BinOp(
+                                    left=Name(id='i', ctx=Load()),
+                                    op=Mult(),
+                                    right=Constant(value=8)))),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='words', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='Uint', ctx=Load()),
+                                            attr='from_le_bytes',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data', ctx=Load()),
+                                                slice=Slice(
+                                                    lower=Name(id='start_position', ctx=Load()),
+                                                    upper=BinOp(
+                                                        left=Name(id='start_position', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Constant(value=8))),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='words', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='List', ctx=Load()),
+                slice=Name(id='Uint', ctx=Load()),
+                ctx=Load())),
+        ClassDef(
+            name='Blake2',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Implementation of the BLAKE2 cryptographic hashing algorithm.\n\n    Please refer the following document for details:\n    https://datatracker.ietf.org/doc/html/rfc7693\n    ')),
+                AnnAssign(
+                    target=Name(id='w', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='mask_bits', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='word_format', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R1', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R2', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R3', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R4', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='max_word',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Largest value for a given Blake2 flavor.\n        ')),
+                        Return(
+                            value=BinOp(
+                                left=Call(
+                                    func=Name(id='Uint', ctx=Load()),
+                                    args=[
+                                        Constant(value=2)],
+                                    keywords=[]),
+                                op=Pow(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Load())))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='w_R1',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        (w - R1) value for a given Blake2 flavor.\n        Used in the function G\n        ')),
+                        Return(
+                            value=BinOp(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='R1',
+                                    ctx=Load())))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='w_R2',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        (w - R2) value for a given Blake2 flavor.\n        Used in the function G\n        ')),
+                        Return(
+                            value=BinOp(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='R2',
+                                    ctx=Load())))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='w_R3',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        (w - R3) value for a given Blake2 flavor.\n        Used in the function G\n        ')),
+                        Return(
+                            value=BinOp(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='R3',
+                                    ctx=Load())))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='Uint', ctx=Load())),
+                FunctionDef(
+                    name='w_R4',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        (w - R4) value for a given Blake2 flavor.\n        Used in the function G\n        ')),
+                        Return(
+                            value=BinOp(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Load()),
+                                op=Sub(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='R4',
+                                    ctx=Load())))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='Uint', ctx=Load())),
+                AnnAssign(
+                    target=Name(id='sigma', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Subscript(
+                                    value=Name(id='Tuple', ctx=Load()),
+                                    slice=Tuple(
+                                        elts=[
+                                            Name(id='int', ctx=Load()),
+                                            Constant(value=Ellipsis)],
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Tuple(
+                        elts=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=0),
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4),
+                                    Constant(value=5),
+                                    Constant(value=6),
+                                    Constant(value=7),
+                                    Constant(value=8),
+                                    Constant(value=9),
+                                    Constant(value=10),
+                                    Constant(value=11),
+                                    Constant(value=12),
+                                    Constant(value=13),
+                                    Constant(value=14),
+                                    Constant(value=15)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=14),
+                                    Constant(value=10),
+                                    Constant(value=4),
+                                    Constant(value=8),
+                                    Constant(value=9),
+                                    Constant(value=15),
+                                    Constant(value=13),
+                                    Constant(value=6),
+                                    Constant(value=1),
+                                    Constant(value=12),
+                                    Constant(value=0),
+                                    Constant(value=2),
+                                    Constant(value=11),
+                                    Constant(value=7),
+                                    Constant(value=5),
+                                    Constant(value=3)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=11),
+                                    Constant(value=8),
+                                    Constant(value=12),
+                                    Constant(value=0),
+                                    Constant(value=5),
+                                    Constant(value=2),
+                                    Constant(value=15),
+                                    Constant(value=13),
+                                    Constant(value=10),
+                                    Constant(value=14),
+                                    Constant(value=3),
+                                    Constant(value=6),
+                                    Constant(value=7),
+                                    Constant(value=1),
+                                    Constant(value=9),
+                                    Constant(value=4)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=7),
+                                    Constant(value=9),
+                                    Constant(value=3),
+                                    Constant(value=1),
+                                    Constant(value=13),
+                                    Constant(value=12),
+                                    Constant(value=11),
+                                    Constant(value=14),
+                                    Constant(value=2),
+                                    Constant(value=6),
+                                    Constant(value=5),
+                                    Constant(value=10),
+                                    Constant(value=4),
+                                    Constant(value=0),
+                                    Constant(value=15),
+                                    Constant(value=8)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=9),
+                                    Constant(value=0),
+                                    Constant(value=5),
+                                    Constant(value=7),
+                                    Constant(value=2),
+                                    Constant(value=4),
+                                    Constant(value=10),
+                                    Constant(value=15),
+                                    Constant(value=14),
+                                    Constant(value=1),
+                                    Constant(value=11),
+                                    Constant(value=12),
+                                    Constant(value=6),
+                                    Constant(value=8),
+                                    Constant(value=3),
+                                    Constant(value=13)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=12),
+                                    Constant(value=6),
+                                    Constant(value=10),
+                                    Constant(value=0),
+                                    Constant(value=11),
+                                    Constant(value=8),
+                                    Constant(value=3),
+                                    Constant(value=4),
+                                    Constant(value=13),
+                                    Constant(value=7),
+                                    Constant(value=5),
+                                    Constant(value=15),
+                                    Constant(value=14),
+                                    Constant(value=1),
+                                    Constant(value=9)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=12),
+                                    Constant(value=5),
+                                    Constant(value=1),
+                                    Constant(value=15),
+                                    Constant(value=14),
+                                    Constant(value=13),
+                                    Constant(value=4),
+                                    Constant(value=10),
+                                    Constant(value=0),
+                                    Constant(value=7),
+                                    Constant(value=6),
+                                    Constant(value=3),
+                                    Constant(value=9),
+                                    Constant(value=2),
+                                    Constant(value=8),
+                                    Constant(value=11)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=13),
+                                    Constant(value=11),
+                                    Constant(value=7),
+                                    Constant(value=14),
+                                    Constant(value=12),
+                                    Constant(value=1),
+                                    Constant(value=3),
+                                    Constant(value=9),
+                                    Constant(value=5),
+                                    Constant(value=0),
+                                    Constant(value=15),
+                                    Constant(value=4),
+                                    Constant(value=8),
+                                    Constant(value=6),
+                                    Constant(value=2),
+                                    Constant(value=10)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=6),
+                                    Constant(value=15),
+                                    Constant(value=14),
+                                    Constant(value=9),
+                                    Constant(value=11),
+                                    Constant(value=3),
+                                    Constant(value=0),
+                                    Constant(value=8),
+                                    Constant(value=12),
+                                    Constant(value=2),
+                                    Constant(value=13),
+                                    Constant(value=7),
+                                    Constant(value=1),
+                                    Constant(value=4),
+                                    Constant(value=10),
+                                    Constant(value=5)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=10),
+                                    Constant(value=2),
+                                    Constant(value=8),
+                                    Constant(value=4),
+                                    Constant(value=7),
+                                    Constant(value=6),
+                                    Constant(value=1),
+                                    Constant(value=5),
+                                    Constant(value=15),
+                                    Constant(value=11),
+                                    Constant(value=9),
+                                    Constant(value=14),
+                                    Constant(value=3),
+                                    Constant(value=12),
+                                    Constant(value=13),
+                                    Constant(value=0)],
+                                ctx=Load())],
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='IV', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Tuple', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='Uint', ctx=Load()),
+                                Constant(value=Ellipsis)],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=7640891576956012808)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=13503953896175478587)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=4354685564936845355)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=11912009170470909681)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=5840696475078001361)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=11170449401992604703)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=2270897969802886507)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='Uint', ctx=Load()),
+                                args=[
+                                    Constant(value=6620516959819538809)],
+                                keywords=[])],
+                        ctx=Load()),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='MIX_TABLE', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Final', ctx=Load()),
+                        slice=Subscript(
+                            value=Name(id='Tuple', ctx=Load()),
+                            slice=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='Tuple', ctx=Load()),
+                                        slice=Tuple(
+                                            elts=[
+                                                Name(id='Uint', ctx=Load()),
+                                                Name(id='Uint', ctx=Load()),
+                                                Name(id='Uint', ctx=Load()),
+                                                Name(id='Uint', ctx=Load())],
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    Constant(value=Ellipsis)],
+                                ctx=Load()),
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Tuple(
+                        elts=[
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=4)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=8)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=12)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=1)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=5)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=9)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=13)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=2)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=6)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=10)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=14)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=3)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=7)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=11)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=15)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=5)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=10)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=15)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=1)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=6)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=11)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=12)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=2)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=7)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=8)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=13)],
+                                        keywords=[])],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=3)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=4)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=9)],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='Uint', ctx=Load()),
+                                        args=[
+                                            Constant(value=14)],
+                                        keywords=[])],
+                                ctx=Load())],
+                        ctx=Load()),
+                    simple=1),
+                FunctionDef(
+                    name='sigma_len',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Length of the sigma parameter.\n        ')),
+                        Return(
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='sigma',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Name(id='property', ctx=Load())],
+                    returns=Name(id='int', ctx=Load())),
+                FunctionDef(
+                    name='get_blake2_parameters',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='data',
+                                annotation=Name(id='bytes', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Extract the parameters required in the Blake2 compression function\n        from the provided bytes data.\n\n        Parameters\n        ----------\n        data :\n            The bytes data that has been passed in the message.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='rounds', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='Uint', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Slice(
+                                            upper=Constant(value=4)),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='h', ctx=Store())],
+                            value=Call(
+                                func=Name(id='spit_le_to_uint', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Constant(value=4),
+                                    Constant(value=8)],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='m', ctx=Store())],
+                            value=Call(
+                                func=Name(id='spit_le_to_uint', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Constant(value=68),
+                                    Constant(value=16)],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='t_0', ctx=Store()),
+                                        Name(id='t_1', ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='spit_le_to_uint', ctx=Load()),
+                                args=[
+                                    Name(id='data', ctx=Load()),
+                                    Constant(value=196),
+                                    Constant(value=2)],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='f', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='Uint', ctx=Load()),
+                                    attr='from_be_bytes',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data', ctx=Load()),
+                                        slice=Slice(
+                                            lower=Constant(value=212)),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Tuple(
+                                elts=[
+                                    Name(id='rounds', ctx=Load()),
+                                    Name(id='h', ctx=Load()),
+                                    Name(id='m', ctx=Load()),
+                                    Name(id='t_0', ctx=Load()),
+                                    Name(id='t_1', ctx=Load()),
+                                    Name(id='f', ctx=Load())],
+                                ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='Tuple', ctx=Load())),
+                FunctionDef(
+                    name='G',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='v',
+                                annotation=Name(id='List', ctx=Load())),
+                            arg(
+                                arg='a',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='b',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='c',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='d',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='x',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='y',
+                                annotation=Name(id='Uint', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        The mixing function used in Blake2\n        https://datatracker.ietf.org/doc/html/rfc7693#section-3.1\n\n        Parameters\n        ----------\n        v :\n            The working vector to be mixed.\n        a, b, c, d :\n            Indexes within v of the words to be mixed.\n        x, y :\n            The two input words for the mixing.\n        ')),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='a', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='b', ctx=Load()),
+                                            ctx=Load())),
+                                    op=Add(),
+                                    right=Name(id='x', ctx=Load())),
+                                op=Mod(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='max_word',
+                                    ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='d', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='d', ctx=Load()),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Load())),
+                                    op=RShift(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='R1',
+                                        ctx=Load())),
+                                op=BitXor(),
+                                right=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='d', ctx=Load()),
+                                                ctx=Load()),
+                                            op=BitXor(),
+                                            right=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='a', ctx=Load()),
+                                                ctx=Load())),
+                                        op=LShift(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='w_R1',
+                                            ctx=Load())),
+                                    op=Mod(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='max_word',
+                                        ctx=Load())))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='c', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Subscript(
+                                        value=Name(id='v', ctx=Load()),
+                                        slice=Name(id='c', ctx=Load()),
+                                        ctx=Load()),
+                                    op=Add(),
+                                    right=Subscript(
+                                        value=Name(id='v', ctx=Load()),
+                                        slice=Name(id='d', ctx=Load()),
+                                        ctx=Load())),
+                                op=Mod(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='max_word',
+                                    ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='b', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='b', ctx=Load()),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='c', ctx=Load()),
+                                            ctx=Load())),
+                                    op=RShift(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='R2',
+                                        ctx=Load())),
+                                op=BitXor(),
+                                right=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='b', ctx=Load()),
+                                                ctx=Load()),
+                                            op=BitXor(),
+                                            right=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='c', ctx=Load()),
+                                                ctx=Load())),
+                                        op=LShift(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='w_R2',
+                                            ctx=Load())),
+                                    op=Mod(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='max_word',
+                                        ctx=Load())))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='a', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Load()),
+                                        op=Add(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='b', ctx=Load()),
+                                            ctx=Load())),
+                                    op=Add(),
+                                    right=Name(id='y', ctx=Load())),
+                                op=Mod(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='max_word',
+                                    ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='d', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='d', ctx=Load()),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Load())),
+                                    op=RShift(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='R3',
+                                        ctx=Load())),
+                                op=BitXor(),
+                                right=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='d', ctx=Load()),
+                                                ctx=Load()),
+                                            op=BitXor(),
+                                            right=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='a', ctx=Load()),
+                                                ctx=Load())),
+                                        op=LShift(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='w_R3',
+                                            ctx=Load())),
+                                    op=Mod(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='max_word',
+                                        ctx=Load())))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='c', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Subscript(
+                                        value=Name(id='v', ctx=Load()),
+                                        slice=Name(id='c', ctx=Load()),
+                                        ctx=Load()),
+                                    op=Add(),
+                                    right=Subscript(
+                                        value=Name(id='v', ctx=Load()),
+                                        slice=Name(id='d', ctx=Load()),
+                                        ctx=Load())),
+                                op=Mod(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='max_word',
+                                    ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Name(id='b', ctx=Load()),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='b', ctx=Load()),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='c', ctx=Load()),
+                                            ctx=Load())),
+                                    op=RShift(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='R4',
+                                        ctx=Load())),
+                                op=BitXor(),
+                                right=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='b', ctx=Load()),
+                                                ctx=Load()),
+                                            op=BitXor(),
+                                            right=Subscript(
+                                                value=Name(id='v', ctx=Load()),
+                                                slice=Name(id='c', ctx=Load()),
+                                                ctx=Load())),
+                                        op=LShift(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='w_R4',
+                                            ctx=Load())),
+                                    op=Mod(),
+                                    right=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='max_word',
+                                        ctx=Load())))),
+                        Return(
+                            value=Name(id='v', ctx=Load()))],
+                    decorator_list=[],
+                    returns=Name(id='List', ctx=Load())),
+                FunctionDef(
+                    name='compress',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(
+                                arg='num_rounds',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='h',
+                                annotation=Subscript(
+                                    value=Name(id='List', ctx=Load()),
+                                    slice=Name(id='Uint', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='m',
+                                annotation=Subscript(
+                                    value=Name(id='List', ctx=Load()),
+                                    slice=Name(id='Uint', ctx=Load()),
+                                    ctx=Load())),
+                            arg(
+                                arg='t_0',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='t_1',
+                                annotation=Name(id='Uint', ctx=Load())),
+                            arg(
+                                arg='f',
+                                annotation=Name(id='bool', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value="\n        'F Compression' from section 3.2 of RFC 7693:\n        https://tools.ietf.org/html/rfc7693#section-3.2\n\n        Parameters\n        ----------\n        num_rounds :\n            The number of rounds. A 32-bit unsigned big-endian word\n        h :\n            The state vector. 8 unsigned 64-bit little-endian words\n        m :\n            The message block vector. 16 unsigned 64-bit little-endian words\n        t_0, t_1 :\n            Offset counters. 2 unsigned 64-bit little-endian words\n        f:\n            The final block indicator flag. An 8-bit word\n        ")),
+                        Assign(
+                            targets=[
+                                Name(id='v', ctx=Store())],
+                            value=BinOp(
+                                left=List(
+                                    elts=[
+                                        Call(
+                                            func=Name(id='Uint', ctx=Load()),
+                                            args=[
+                                                Constant(value=0)],
+                                            keywords=[])],
+                                    ctx=Load()),
+                                op=Mult(),
+                                right=Constant(value=16))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Slice(
+                                        lower=Constant(value=0),
+                                        upper=Constant(value=8)),
+                                    ctx=Store())],
+                            value=Name(id='h', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Slice(
+                                        lower=Constant(value=8),
+                                        upper=Constant(value=15)),
+                                    ctx=Store())],
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='IV',
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Constant(value=12),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='t_0', ctx=Load()),
+                                op=BitXor(),
+                                right=Subscript(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='IV',
+                                        ctx=Load()),
+                                    slice=Constant(value=4),
+                                    ctx=Load()))),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='v', ctx=Load()),
+                                    slice=Constant(value=13),
+                                    ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='t_1', ctx=Load()),
+                                op=BitXor(),
+                                right=Subscript(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='IV',
+                                        ctx=Load()),
+                                    slice=Constant(value=5),
+                                    ctx=Load()))),
+                        If(
+                            test=Name(id='f', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Constant(value=14),
+                                            ctx=Store())],
+                                    value=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Constant(value=14),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='mask_bits',
+                                            ctx=Load())))],
+                            orelse=[]),
+                        For(
+                            target=Name(id='r', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='num_rounds', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='s', ctx=Store())],
+                                    value=Subscript(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='sigma',
+                                            ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='r', ctx=Load()),
+                                            op=Mod(),
+                                            right=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='sigma_len',
+                                                ctx=Load())),
+                                        ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=0),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=0),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=1),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=1),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=2),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=3),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=2),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=4),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=5),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=3),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=6),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=7),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=4),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=8),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=9),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=5),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=10),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=11),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=6),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=12),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=13),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='v', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='G',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='v', ctx=Load()),
+                                            Starred(
+                                                value=Subscript(
+                                                    value=Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='MIX_TABLE',
+                                                        ctx=Load()),
+                                                    slice=Constant(value=7),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=14),
+                                                    ctx=Load()),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='m', ctx=Load()),
+                                                slice=Subscript(
+                                                    value=Name(id='s', ctx=Load()),
+                                                    slice=Constant(value=15),
+                                                    ctx=Load()),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='result_message_words', ctx=Store())],
+                            value=GeneratorExp(
+                                elt=BinOp(
+                                    left=BinOp(
+                                        left=Subscript(
+                                            value=Name(id='h', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load()),
+                                        op=BitXor(),
+                                        right=Subscript(
+                                            value=Name(id='v', ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Load())),
+                                    op=BitXor(),
+                                    right=Subscript(
+                                        value=Name(id='v', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Add(),
+                                            right=Constant(value=8)),
+                                        ctx=Load())),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='i', ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='range', ctx=Load()),
+                                            args=[
+                                                Constant(value=8)],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='struct', ctx=Load()),
+                                    attr='pack',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='<8%s'),
+                                        op=Mod(),
+                                        right=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='word_format',
+                                            ctx=Load())),
+                                    Starred(
+                                        value=Name(id='result_message_words', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Name(id='bytes', ctx=Load()))],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())]),
+        ClassDef(
+            name='Blake2b',
+            bases=[
+                Name(id='Blake2', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    The Blake2b flavor (64-bits) of Blake2.\n    This version is used in the pre-compiled contract.\n    ')),
+                AnnAssign(
+                    target=Name(id='w', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=64)],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='mask_bits', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=18446744073709551615)],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='word_format', ctx=Store()),
+                    annotation=Name(id='str', ctx=Load()),
+                    value=Constant(value='Q'),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R1', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=32)],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R2', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=24)],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R3', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[]),
+                    simple=1),
+                AnnAssign(
+                    target=Name(id='R4', ctx=Store()),
+                    annotation=Name(id='Uint', ctx=Load()),
+                    value=Call(
+                        func=Name(id='Uint', ctx=Load()),
+                        args=[
+                            Constant(value=63)],
+                        keywords=[]),
+                    simple=1)],
+            decorator_list=[
+                Name(id='dataclass', ctx=Load())])],
+    type_ignores=[])

@@ -1,0 +1,2332 @@
+Module(
+    body=[
+        Expr(
+            value=Constant(value="\nOptimized State\n^^^^^^^^^^^^^^^\n\n.. contents:: Table of Contents\n    :backlinks: none\n    :local:\n\nIntroduction\n------------\n\nThis module contains functions can be monkey patched into the fork's `state`\nmodule to use an optimized database backed state.\n")),
+        Import(
+            names=[
+                alias(name='logging')]),
+        ImportFrom(
+            module='dataclasses',
+            names=[
+                alias(name='dataclass')],
+            level=0),
+        ImportFrom(
+            module='importlib',
+            names=[
+                alias(name='import_module')],
+            level=0),
+        ImportFrom(
+            module='typing',
+            names=[
+                alias(name='Any'),
+                alias(name='ClassVar'),
+                alias(name='Dict'),
+                alias(name='List'),
+                alias(name='Optional'),
+                alias(name='Set'),
+                alias(name='cast')],
+            level=0),
+        Try(
+            body=[
+                Import(
+                    names=[
+                        alias(name='rust_pyspec_glue')])],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ImportError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Raise(
+                            exc=Name(id='e', ctx=Load()),
+                            cause=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    Constant(value="Install with `pip install 'ethereum[optimized]'` to enable this package")],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        ImportFrom(
+            module='ethereum_types.bytes',
+            names=[
+                alias(name='Bytes'),
+                alias(name='Bytes20')],
+            level=0),
+        ImportFrom(
+            module='ethereum_types.numeric',
+            names=[
+                alias(name='U256'),
+                alias(name='Uint')],
+            level=0),
+        ImportFrom(
+            module='ethereum.crypto.hash',
+            names=[
+                alias(name='Hash32')],
+            level=0),
+        ImportFrom(
+            module='utils',
+            names=[
+                alias(name='add_item')],
+            level=1),
+        Assign(
+            targets=[
+                Name(id='Address', ctx=Store())],
+            value=Name(id='Bytes20', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='Root', ctx=Store())],
+            value=Name(id='Hash32', ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='Account_', ctx=Store())],
+            value=Name(id='Any', ctx=Load())),
+        ClassDef(
+            name='UnmodifiedType',
+            bases=[],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value="\n    Sentinel type to represent a value that hasn't been modified.\n    ")),
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='Unmodified', ctx=Store())],
+            value=Call(
+                func=Name(id='UnmodifiedType', ctx=Load()),
+                args=[],
+                keywords=[])),
+        FunctionDef(
+            name='get_optimized_state_patches',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(
+                        arg='fork',
+                        annotation=Name(id='str', ctx=Load()))],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Constant(value='\n    Get a dictionary of functions/objects to be monkey patched into the state\n    to make it optimized.\n    ')),
+                AnnAssign(
+                    target=Name(id='patches', ctx=Store()),
+                    annotation=Subscript(
+                        value=Name(id='Dict', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Name(id='str', ctx=Load()),
+                                Name(id='Any', ctx=Load())],
+                            ctx=Load()),
+                        ctx=Load()),
+                    value=Dict(keys=[], values=[]),
+                    simple=1),
+                Assign(
+                    targets=[
+                        Name(id='types_mod', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cast', ctx=Load()),
+                        args=[
+                            Name(id='Any', ctx=Load()),
+                            Call(
+                                func=Name(id='import_module', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='ethereum.'),
+                                            op=Add(),
+                                            right=Name(id='fork', ctx=Load())),
+                                        op=Add(),
+                                        right=Constant(value='.fork_types'))],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='state_mod', ctx=Store())],
+                    value=Call(
+                        func=Name(id='cast', ctx=Load()),
+                        args=[
+                            Name(id='Any', ctx=Load()),
+                            Call(
+                                func=Name(id='import_module', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='ethereum.'),
+                                            op=Add(),
+                                            right=Name(id='fork', ctx=Load())),
+                                        op=Add(),
+                                        right=Constant(value='.state'))],
+                                keywords=[])],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='Account', ctx=Store())],
+                    value=Attribute(
+                        value=Name(id='types_mod', ctx=Load()),
+                        attr='Account',
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='has_transient_storage', ctx=Store())],
+                    value=Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='state_mod', ctx=Load()),
+                            Constant(value='TransientStorage')],
+                        keywords=[])),
+                ClassDef(
+                    name='State',
+                    bases=[],
+                    keywords=[],
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        The State, backed by a LMDB database.\n\n        When created with `State()` store the db in a temporary directory. When\n        created with `State(path)` open or create the db located at `path`.\n        ')),
+                        AnnAssign(
+                            target=Name(id='default_path', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='ClassVar', ctx=Load()),
+                                slice=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='str', ctx=Load()),
+                                    ctx=Load()),
+                                ctx=Load()),
+                            value=Constant(value=None),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='db', ctx=Store()),
+                            annotation=Name(id='Any', ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='dirty_accounts', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Dict', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='Address', ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='Optional', ctx=Load()),
+                                            slice=Name(id='Account_', ctx=Load()),
+                                            ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='dirty_storage', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Dict', ctx=Load()),
+                                slice=Tuple(
+                                    elts=[
+                                        Name(id='Address', ctx=Load()),
+                                        Subscript(
+                                            value=Name(id='Dict', ctx=Load()),
+                                            slice=Tuple(
+                                                elts=[
+                                                    Name(id='Bytes', ctx=Load()),
+                                                    Name(id='U256', ctx=Load())],
+                                                ctx=Load()),
+                                            ctx=Load())],
+                                    ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='destroyed_accounts', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Set', ctx=Load()),
+                                slice=Name(id='Address', ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='tx_restore_points', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='List', ctx=Load()),
+                                slice=Name(id='int', ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='journal', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='List', ctx=Load()),
+                                slice=Name(id='Any', ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        AnnAssign(
+                            target=Name(id='created_accounts', ctx=Store()),
+                            annotation=Subscript(
+                                value=Name(id='Set', ctx=Load()),
+                                slice=Name(id='Address', ctx=Load()),
+                                ctx=Load()),
+                            simple=1),
+                        FunctionDef(
+                            name='__init__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self'),
+                                    arg(
+                                        arg='path',
+                                        annotation=Subscript(
+                                            value=Name(id='Optional', ctx=Load()),
+                                            slice=Name(id='str', ctx=Load()),
+                                            ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[
+                                    Constant(value=None)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='logging', ctx=Load()),
+                                            attr='info',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value='using optimized state db at %s'),
+                                            Name(id='path', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='path', ctx=Load()),
+                                        ops=[
+                                            Is()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='path', ctx=Store())],
+                                            value=Attribute(
+                                                value=Name(id='State', ctx=Load()),
+                                                attr='default_path',
+                                                ctx=Load()))],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='db',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='rust_pyspec_glue', ctx=Load()),
+                                            attr='DB',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='path', ctx=Load())],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='dirty_accounts',
+                                            ctx=Store())],
+                                    value=Dict(keys=[], values=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='dirty_storage',
+                                            ctx=Store())],
+                                    value=Dict(keys=[], values=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='destroyed_accounts',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='set', ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='tx_restore_points',
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='journal',
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='created_accounts',
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='set', ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='db',
+                                                ctx=Load()),
+                                            attr='begin_mutable',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))],
+                            decorator_list=[],
+                            returns=Constant(value=None)),
+                        FunctionDef(
+                            name='__eq__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self'),
+                                    arg(
+                                        arg='other',
+                                        annotation=Name(id='object', ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            Test for equality by comparing state roots.\n            ')),
+                                If(
+                                    test=UnaryOp(
+                                        op=Not(),
+                                        operand=Call(
+                                            func=Name(id='isinstance', ctx=Load()),
+                                            args=[
+                                                Name(id='other', ctx=Load()),
+                                                Name(id='State', ctx=Load())],
+                                            keywords=[])),
+                                    body=[
+                                        Return(
+                                            value=Name(id='NotImplemented', ctx=Load()))],
+                                    orelse=[]),
+                                Return(
+                                    value=Compare(
+                                        left=Call(
+                                            func=Name(id='state_root', ctx=Load()),
+                                            args=[
+                                                Name(id='self', ctx=Load())],
+                                            keywords=[]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='state_root', ctx=Load()),
+                                                args=[
+                                                    Name(id='other', ctx=Load())],
+                                                keywords=[])]))],
+                            decorator_list=[],
+                            returns=Name(id='bool', ctx=Load())),
+                        FunctionDef(
+                            name='__enter__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='Support with statements')),
+                                Return(
+                                    value=Name(id='self', ctx=Load()))],
+                            decorator_list=[],
+                            returns=Constant(value='State')),
+                        FunctionDef(
+                            name='__exit__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                vararg=arg(
+                                    arg='args',
+                                    annotation=Name(id='Any', ctx=Load())),
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='Support with statements')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='close_state', ctx=Load()),
+                                        args=[
+                                            Name(id='self', ctx=Load())],
+                                        keywords=[]))],
+                            decorator_list=[],
+                            returns=Constant(value=None))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[]),
+                        Name(id='dataclass', ctx=Load())]),
+                FunctionDef(
+                    name='close_state',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Close a state, releasing all resources it holds')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='close',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='db',
+                                    ctx=Store())],
+                            value=Constant(value=None)),
+                        Delete(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='dirty_accounts',
+                                    ctx=Del())]),
+                        Delete(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='dirty_storage',
+                                    ctx=Del())]),
+                        Delete(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='destroyed_accounts',
+                                    ctx=Del())]),
+                        Delete(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='journal',
+                                    ctx=Del())]),
+                        Delete(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='created_accounts',
+                                    ctx=Del())])],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='get_metadata',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='key',
+                                annotation=Name(id='Bytes', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Get a piece of metadata')),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='get_metadata',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='key', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Bytes', ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='set_metadata',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='key',
+                                annotation=Name(id='Bytes', ctx=Load())),
+                            arg(
+                                arg='value',
+                                annotation=Name(id='Bytes', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='Set a piece of metadata')),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='set_metadata',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='key', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='begin_db_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Start a database transaction. A transaction is automatically started\n        when a `State` is created. Nesting of DB transactions is not supported\n        (unlike non-db transactions).\n\n        No operations are supported when not in a transaction.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='begin_mutable',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='tx_restore_points',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='journal',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load()))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='commit_db_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Commit the current database transaction.\n        ')),
+                        If(
+                            test=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='tx_restore_points',
+                                ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='In a non-db transaction')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flush', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='commit_mutable',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='state_root',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='tx_restore_points',
+                                ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='In a non-db transaction')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flush', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='state_root',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Name(id='Root', ctx=Load())),
+                FunctionDef(
+                    name='storage_root',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='tx_restore_points',
+                                ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='In a non-db transaction')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='flush', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load())],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='storage_root',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='address', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Name(id='Root', ctx=Load())),
+                FunctionDef(
+                    name='flush',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Send everything in the internal caches to the Rust layer.\n        ')),
+                        If(
+                            test=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='tx_restore_points',
+                                ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='In a non-db transaction')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        For(
+                            target=Name(id='address', ctx=Store()),
+                            iter=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='destroyed_accounts',
+                                ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='db',
+                                                ctx=Load()),
+                                            attr='destroy_storage',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='address', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='address', ctx=Store()),
+                                    Name(id='account', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load()),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='db',
+                                                ctx=Load()),
+                                            attr='set_account',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='address', ctx=Load()),
+                                            Name(id='account', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        For(
+                            target=Tuple(
+                                elts=[
+                                    Name(id='address', ctx=Store()),
+                                    Name(id='storage', ctx=Store())],
+                                ctx=Store()),
+                            iter=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_storage',
+                                        ctx=Load()),
+                                    attr='items',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            body=[
+                                For(
+                                    target=Tuple(
+                                        elts=[
+                                            Name(id='key', ctx=Store()),
+                                            Name(id='value', ctx=Store())],
+                                        ctx=Store()),
+                                    iter=Call(
+                                        func=Attribute(
+                                            value=Name(id='storage', ctx=Load()),
+                                            attr='items',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='state', ctx=Load()),
+                                                        attr='db',
+                                                        ctx=Load()),
+                                                    attr='set_storage',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='key', ctx=Load()),
+                                                    Name(id='value', ctx=Load())],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='destroyed_accounts',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load()),
+                                    attr='clear',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_storage',
+                                        ctx=Load()),
+                                    attr='clear',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='rollback_db_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        Rollback the current database transaction.\n        ')),
+                        If(
+                            test=Attribute(
+                                value=Name(id='state', ctx=Load()),
+                                attr='tx_restore_points',
+                                ctx=Load()),
+                            body=[
+                                Raise(
+                                    exc=Call(
+                                        func=Name(id='Exception', ctx=Load()),
+                                        args=[
+                                            Constant(value='In a non-db transaction')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='rollback_mutable',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load()),
+                                    attr='clear',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_storage',
+                                        ctx=Load()),
+                                    attr='clear',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='destroyed_accounts',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='_begin_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='tx_restore_points',
+                                    ctx=Load())),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='flush', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='tx_restore_points',
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                If(
+                    test=Name(id='has_transient_storage', ctx=Load()),
+                    body=[
+                        FunctionDef(
+                            name='begin_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load())),
+                                    arg(
+                                        arg='transient_storage',
+                                        annotation=Subscript(
+                                            value=Name(id='Optional', ctx=Load()),
+                                            slice=Name(id='Any', ctx=Load()),
+                                            ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[
+                                    Constant(value=None)]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_begin_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='transient_storage', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Constant(value=None)]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='transient_storage', ctx=Load()),
+                                                        attr='_snapshots',
+                                                        ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    DictComp(
+                                                        key=Name(id='k', ctx=Load()),
+                                                        value=Call(
+                                                            func=Attribute(
+                                                                value=Name(id='state_mod', ctx=Load()),
+                                                                attr='copy_trie',
+                                                                ctx=Load()),
+                                                            args=[
+                                                                Name(id='t', ctx=Load())],
+                                                            keywords=[]),
+                                                        generators=[
+                                                            comprehension(
+                                                                target=Tuple(
+                                                                    elts=[
+                                                                        Name(id='k', ctx=Store()),
+                                                                        Name(id='t', ctx=Store())],
+                                                                    ctx=Store()),
+                                                                iter=Call(
+                                                                    func=Attribute(
+                                                                        value=Attribute(
+                                                                            value=Name(id='transient_storage', ctx=Load()),
+                                                                            attr='_tries',
+                                                                            ctx=Load()),
+                                                                        attr='items',
+                                                                        ctx=Load()),
+                                                                    args=[],
+                                                                    keywords=[]),
+                                                                ifs=[],
+                                                                is_async=0)])],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))],
+                    orelse=[
+                        FunctionDef(
+                            name='begin_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_begin_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))]),
+                FunctionDef(
+                    name='_commit_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='tx_restore_points',
+                                        ctx=Load()),
+                                    attr='pop',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='tx_restore_points',
+                                    ctx=Load())),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='clear',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='created_accounts',
+                                                ctx=Load()),
+                                            attr='clear',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='flush', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                If(
+                    test=Name(id='has_transient_storage', ctx=Load()),
+                    body=[
+                        FunctionDef(
+                            name='commit_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load())),
+                                    arg(
+                                        arg='transient_storage',
+                                        annotation=Subscript(
+                                            value=Name(id='Optional', ctx=Load()),
+                                            slice=Name(id='Any', ctx=Load()),
+                                            ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[
+                                    Constant(value=None)]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`.\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_commit_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Name(id='transient_storage', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='transient_storage', ctx=Load()),
+                                                attr='_snapshots',
+                                                ctx=Load())]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='transient_storage', ctx=Load()),
+                                                        attr='_snapshots',
+                                                        ctx=Load()),
+                                                    attr='pop',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))],
+                    orelse=[
+                        FunctionDef(
+                            name='commit_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`.\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_commit_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))]),
+                FunctionDef(
+                    name='_rollback_transaction',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        Assign(
+                            targets=[
+                                Name(id='restore_point', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='tx_restore_points',
+                                        ctx=Load()),
+                                    attr='pop',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])),
+                        While(
+                            test=Compare(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='state', ctx=Load()),
+                                            attr='journal',
+                                            ctx=Load())],
+                                    keywords=[]),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Name(id='restore_point', ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='item', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='pop',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])),
+                                If(
+                                    test=Compare(
+                                        left=Call(
+                                            func=Name(id='len', ctx=Load()),
+                                            args=[
+                                                Name(id='item', ctx=Load())],
+                                            keywords=[]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=3)]),
+                                    body=[
+                                        If(
+                                            test=Compare(
+                                                left=Subscript(
+                                                    value=Name(id='item', ctx=Load()),
+                                                    slice=Constant(value=2),
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Is()],
+                                                comparators=[
+                                                    Name(id='Unmodified', ctx=Load())]),
+                                            body=[
+                                                Delete(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Subscript(
+                                                                value=Attribute(
+                                                                    value=Name(id='state', ctx=Load()),
+                                                                    attr='dirty_storage',
+                                                                    ctx=Load()),
+                                                                slice=Subscript(
+                                                                    value=Name(id='item', ctx=Load()),
+                                                                    slice=Constant(value=0),
+                                                                    ctx=Load()),
+                                                                ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='item', ctx=Load()),
+                                                                slice=Constant(value=1),
+                                                                ctx=Load()),
+                                                            ctx=Del())])],
+                                            orelse=[
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Subscript(
+                                                                value=Attribute(
+                                                                    value=Name(id='state', ctx=Load()),
+                                                                    attr='dirty_storage',
+                                                                    ctx=Load()),
+                                                                slice=Subscript(
+                                                                    value=Name(id='item', ctx=Load()),
+                                                                    slice=Constant(value=0),
+                                                                    ctx=Load()),
+                                                                ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='item', ctx=Load()),
+                                                                slice=Constant(value=1),
+                                                                ctx=Load()),
+                                                            ctx=Store())],
+                                                    value=Subscript(
+                                                        value=Name(id='item', ctx=Load()),
+                                                        slice=Constant(value=2),
+                                                        ctx=Load()))])],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Call(
+                                                    func=Name(id='type', ctx=Load()),
+                                                    args=[
+                                                        Subscript(
+                                                            value=Name(id='item', ctx=Load()),
+                                                            slice=Constant(value=1),
+                                                            ctx=Load())],
+                                                    keywords=[]),
+                                                ops=[
+                                                    Is()],
+                                                comparators=[
+                                                    Name(id='dict', ctx=Load())]),
+                                            body=[
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Attribute(
+                                                                value=Name(id='state', ctx=Load()),
+                                                                attr='destroyed_accounts',
+                                                                ctx=Load()),
+                                                            attr='remove',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Subscript(
+                                                                value=Name(id='item', ctx=Load()),
+                                                                slice=Constant(value=0),
+                                                                ctx=Load())],
+                                                        keywords=[])),
+                                                Assign(
+                                                    targets=[
+                                                        Subscript(
+                                                            value=Attribute(
+                                                                value=Name(id='state', ctx=Load()),
+                                                                attr='dirty_storage',
+                                                                ctx=Load()),
+                                                            slice=Subscript(
+                                                                value=Name(id='item', ctx=Load()),
+                                                                slice=Constant(value=0),
+                                                                ctx=Load()),
+                                                            ctx=Store())],
+                                                    value=Subscript(
+                                                        value=Name(id='item', ctx=Load()),
+                                                        slice=Constant(value=1),
+                                                        ctx=Load()))],
+                                            orelse=[
+                                                If(
+                                                    test=Compare(
+                                                        left=Subscript(
+                                                            value=Name(id='item', ctx=Load()),
+                                                            slice=Constant(value=1),
+                                                            ctx=Load()),
+                                                        ops=[
+                                                            Is()],
+                                                        comparators=[
+                                                            Name(id='Unmodified', ctx=Load())]),
+                                                    body=[
+                                                        Delete(
+                                                            targets=[
+                                                                Subscript(
+                                                                    value=Attribute(
+                                                                        value=Name(id='state', ctx=Load()),
+                                                                        attr='dirty_accounts',
+                                                                        ctx=Load()),
+                                                                    slice=Subscript(
+                                                                        value=Name(id='item', ctx=Load()),
+                                                                        slice=Constant(value=0),
+                                                                        ctx=Load()),
+                                                                    ctx=Del())])],
+                                                    orelse=[
+                                                        Assign(
+                                                            targets=[
+                                                                Subscript(
+                                                                    value=Attribute(
+                                                                        value=Name(id='state', ctx=Load()),
+                                                                        attr='dirty_accounts',
+                                                                        ctx=Load()),
+                                                                    slice=Subscript(
+                                                                        value=Name(id='item', ctx=Load()),
+                                                                        slice=Constant(value=0),
+                                                                        ctx=Load()),
+                                                                    ctx=Store())],
+                                                            value=Subscript(
+                                                                value=Name(id='item', ctx=Load()),
+                                                                slice=Constant(value=1),
+                                                                ctx=Load()))])])])],
+                            orelse=[]),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Attribute(
+                                    value=Name(id='state', ctx=Load()),
+                                    attr='tx_restore_points',
+                                    ctx=Load())),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='created_accounts',
+                                                ctx=Load()),
+                                            attr='clear',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[],
+                    returns=Constant(value=None)),
+                If(
+                    test=Name(id='has_transient_storage', ctx=Load()),
+                    body=[
+                        FunctionDef(
+                            name='rollback_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load())),
+                                    arg(
+                                        arg='transient_storage',
+                                        annotation=Subscript(
+                                            value=Name(id='Optional', ctx=Load()),
+                                            slice=Name(id='Any', ctx=Load()),
+                                            ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[
+                                    Constant(value=None)]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_rollback_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Name(id='transient_storage', ctx=Load()),
+                                            Attribute(
+                                                value=Name(id='transient_storage', ctx=Load()),
+                                                attr='_snapshots',
+                                                ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Attribute(
+                                                    value=Name(id='transient_storage', ctx=Load()),
+                                                    attr='_tries',
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='transient_storage', ctx=Load()),
+                                                        attr='_snapshots',
+                                                        ctx=Load()),
+                                                    attr='pop',
+                                                    ctx=Load()),
+                                                args=[],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))],
+                    orelse=[
+                        FunctionDef(
+                            name='rollback_transaction',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(
+                                        arg='state',
+                                        annotation=Name(id='State', ctx=Load()))],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Expr(
+                                    value=Constant(value='\n            See `state`.\n            ')),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='_rollback_transaction', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load())],
+                                        keywords=[]))],
+                            decorator_list=[
+                                Call(
+                                    func=Name(id='add_item', ctx=Load()),
+                                    args=[
+                                        Name(id='patches', ctx=Load())],
+                                    keywords=[])],
+                            returns=Constant(value=None))]),
+                FunctionDef(
+                    name='get_storage',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load())),
+                            arg(
+                                arg='key',
+                                annotation=Name(id='Bytes', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=BoolOp(
+                                op=And(),
+                                values=[
+                                    Compare(
+                                        left=Name(id='address', ctx=Load()),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='dirty_storage',
+                                                ctx=Load())]),
+                                    Compare(
+                                        left=Name(id='key', ctx=Load()),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Subscript(
+                                                value=Attribute(
+                                                    value=Name(id='state', ctx=Load()),
+                                                    attr='dirty_storage',
+                                                    ctx=Load()),
+                                                slice=Name(id='address', ctx=Load()),
+                                                ctx=Load())])]),
+                            body=[
+                                Return(
+                                    value=Subscript(
+                                        value=Subscript(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='dirty_storage',
+                                                ctx=Load()),
+                                            slice=Name(id='address', ctx=Load()),
+                                            ctx=Load()),
+                                        slice=Name(id='key', ctx=Load()),
+                                        ctx=Load()))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='destroyed_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]))],
+                            orelse=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='state', ctx=Load()),
+                                                        attr='db',
+                                                        ctx=Load()),
+                                                    attr='get_storage',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='key', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))])],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='get_storage_original',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load())),
+                            arg(
+                                arg='key',
+                                annotation=Name(id='Bytes', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='created_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[]))],
+                            orelse=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='U256', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='state', ctx=Load()),
+                                                        attr='db',
+                                                        ctx=Load()),
+                                                    attr='get_storage',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='key', ctx=Load())],
+                                                keywords=[])],
+                                        keywords=[]))])],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Name(id='U256', ctx=Load())),
+                FunctionDef(
+                    name='set_storage',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load())),
+                            arg(
+                                arg='key',
+                                annotation=Name(id='Bytes', ctx=Load())),
+                            arg(
+                                arg='value',
+                                annotation=Name(id='U256', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='dirty_accounts',
+                                                ctx=Load()),
+                                            slice=Name(id='address', ctx=Load()),
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='get_account_optional', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load()),
+                                            Name(id='address', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_storage',
+                                        ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='dirty_storage',
+                                                ctx=Load()),
+                                            slice=Name(id='address', ctx=Load()),
+                                            ctx=Store())],
+                                    value=Dict(keys=[], values=[]))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='key', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Subscript(
+                                        value=Attribute(
+                                            value=Name(id='state', ctx=Load()),
+                                            attr='dirty_storage',
+                                            ctx=Load()),
+                                        slice=Name(id='address', ctx=Load()),
+                                        ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='key', ctx=Load()),
+                                                    Name(id='Unmodified', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='key', ctx=Load()),
+                                                    Subscript(
+                                                        value=Subscript(
+                                                            value=Attribute(
+                                                                value=Name(id='state', ctx=Load()),
+                                                                attr='dirty_storage',
+                                                                ctx=Load()),
+                                                            slice=Name(id='address', ctx=Load()),
+                                                            ctx=Load()),
+                                                        slice=Name(id='key', ctx=Load()),
+                                                        ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]))]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Subscript(
+                                        value=Attribute(
+                                            value=Name(id='state', ctx=Load()),
+                                            attr='dirty_storage',
+                                            ctx=Load()),
+                                        slice=Name(id='address', ctx=Load()),
+                                        ctx=Load()),
+                                    slice=Name(id='key', ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='value', ctx=Load()))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='get_account_optional',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Subscript(
+                                        value=Attribute(
+                                            value=Name(id='state', ctx=Load()),
+                                            attr='dirty_accounts',
+                                            ctx=Load()),
+                                        slice=Name(id='address', ctx=Load()),
+                                        ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='account', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='db',
+                                        ctx=Load()),
+                                    attr='get_account_optional',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='address', ctx=Load())],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='account', ctx=Load()),
+                                ops=[
+                                    IsNot()],
+                                comparators=[
+                                    Constant(value=None)]),
+                            body=[
+                                Return(
+                                    value=Call(
+                                        func=Name(id='Account', ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Name(id='Uint', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='account', ctx=Load()),
+                                                        slice=Constant(value=0),
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='U256', ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='account', ctx=Load()),
+                                                        slice=Constant(value=1),
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            Subscript(
+                                                value=Name(id='account', ctx=Load()),
+                                                slice=Constant(value=2),
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[
+                                Return(
+                                    value=Constant(value=None))])],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Subscript(
+                        value=Name(id='Optional', ctx=Load()),
+                        slice=Name(id='Account_', ctx=Load()),
+                        ctx=Load())),
+                FunctionDef(
+                    name='set_account',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load())),
+                            arg(
+                                arg='account',
+                                annotation=Subscript(
+                                    value=Name(id='Optional', ctx=Load()),
+                                    slice=Name(id='Account_', ctx=Load()),
+                                    ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Name(id='Unmodified', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='address', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='state', ctx=Load()),
+                                                attr='journal',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Subscript(
+                                                        value=Attribute(
+                                                            value=Name(id='state', ctx=Load()),
+                                                            attr='dirty_accounts',
+                                                            ctx=Load()),
+                                                        slice=Name(id='address', ctx=Load()),
+                                                        ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='dirty_accounts',
+                                        ctx=Load()),
+                                    slice=Name(id='address', ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='account', ctx=Load()))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='destroy_storage',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='journal',
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='address', ctx=Load()),
+                                            Call(
+                                                func=Attribute(
+                                                    value=Attribute(
+                                                        value=Name(id='state', ctx=Load()),
+                                                        attr='dirty_storage',
+                                                        ctx=Load()),
+                                                    attr='pop',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='address', ctx=Load()),
+                                                    Dict(keys=[], values=[])],
+                                                keywords=[])],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='destroyed_accounts',
+                                        ctx=Load()),
+                                    attr='add',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='address', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='set_account', ctx=Load()),
+                                args=[
+                                    Name(id='state', ctx=Load()),
+                                    Name(id='address', ctx=Load()),
+                                    Call(
+                                        func=Name(id='get_account_optional', ctx=Load()),
+                                        args=[
+                                            Name(id='state', ctx=Load()),
+                                            Name(id='address', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                FunctionDef(
+                    name='mark_account_created',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(
+                                arg='state',
+                                annotation=Name(id='State', ctx=Load())),
+                            arg(
+                                arg='address',
+                                annotation=Name(id='Address', ctx=Load()))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='\n        See `state`.\n        ')),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='state', ctx=Load()),
+                                        attr='created_accounts',
+                                        ctx=Load()),
+                                    attr='add',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='address', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[
+                        Call(
+                            func=Name(id='add_item', ctx=Load()),
+                            args=[
+                                Name(id='patches', ctx=Load())],
+                            keywords=[])],
+                    returns=Constant(value=None)),
+                Return(
+                    value=Name(id='patches', ctx=Load()))],
+            decorator_list=[],
+            returns=Subscript(
+                value=Name(id='Dict', ctx=Load()),
+                slice=Tuple(
+                    elts=[
+                        Name(id='str', ctx=Load()),
+                        Name(id='Any', ctx=Load())],
+                    ctx=Load()),
+                ctx=Load()))],
+    type_ignores=[])
